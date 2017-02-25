@@ -16,6 +16,7 @@ public class Entry {
     public static final String RATING = "rating";
     public static final String COMMENT = "comment";
     public static final String STATUS = "status";
+    public static final String QUOTE = "quote";
 
     private String mId;
 
@@ -25,6 +26,7 @@ public class Entry {
     private String mRating;
     private String mComment;
     private String mStatus;
+    private String mQuote;
 
 
     public void setId(String id){
@@ -81,6 +83,14 @@ public class Entry {
 
     public String getStatus() {
         return mStatus;
+    }
+    
+    public void setQuote(String quote) {
+        mQuote = quote;
+    }
+
+    public String getQuote() {
+        return mQuote;
     }
 
 }
