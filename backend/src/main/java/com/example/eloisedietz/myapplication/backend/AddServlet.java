@@ -23,6 +23,7 @@ public class AddServlet extends HttpServlet {
         String rating = request.getParameter("rating");
         String comment = request.getParameter("comment");
         String status = request.getParameter("status");
+        String quote = request.getParameter("quote");
 
         Entry entry = new Entry();
         entry.setId(id);
@@ -31,6 +32,7 @@ public class AddServlet extends HttpServlet {
         entry.setRating(rating);
         entry.setComment(comment);
         entry.setStatus(status);
+        entry.setQuote(quote);
 
         EntryDatastore entryDatastore = new EntryDatastore();
         entryDatastore.addEntry2Datastore(entry);
