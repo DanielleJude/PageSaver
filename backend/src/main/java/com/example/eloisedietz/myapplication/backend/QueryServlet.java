@@ -51,7 +51,8 @@ public class QueryServlet extends HttpServlet {
                 "<TH> Genre </TH>" +
                 "<TH> Rating </TH>" +
                 "<TH> Comment </TH>" +
-                "<TH> Status </TH> </tr>"
+                "<TH> Status </TH>" +
+                "<TH> Quote </TH> </tr>"
         );
 
 
@@ -63,7 +64,9 @@ public class QueryServlet extends HttpServlet {
                         "<TH>" + entry.getGenre() + "</TH>" +
                         "<TH>" + entry.getRating() +" </TH>" +
                         "<TH> "+entry.getComment()+" </TH>" +
-                        "<TH>" + entry.getStatus()+"</TH> <TH><input type=\"button\" onclick=\"location.href='/delete.do?id=" + entry.getId() + "'\" value=\"Delete\"> </TH> </tr>"
+                        "<TH>" + entry.getStatus()+"</TH>" +
+                        "<TH>" + entry.getQuote()+"</TH>" +
+                        "<TH><input type=\"button\" onclick=\"location.href='/delete.do?id=" + entry.getId() + "'\" value=\"Delete\"> </TH> </tr>"
                 );
             }
         }
