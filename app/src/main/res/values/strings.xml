@@ -32,5 +32,7 @@
     <string name="analytics_title">Reading Analytics</string>
     <string name="analytics_time_title">Time of Day When You Read</string>
     <string name="analytics_month_title">How Much You Read Per Month</string>
+    <string name="title_activity_view_goal">ViewGoalActivity</string>
+    <string name="title_activity_add_goal">AddGoalActivity</string>
 
 </resources>

@@ -45,7 +45,15 @@
             android:name=".EditBookActivity"
             android:label="@string/title_activity_edit_book"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MarkCompleteActivity"></activity>
+        <activity android:name=".MarkCompleteActivity" />
+        <activity
+            android:name=".ViewGoalActivity"
+            android:label="@string/title_activity_view_goal"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddGoalActivity"
+            android:label="@string/title_activity_add_goal"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

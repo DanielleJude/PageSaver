@@ -17,12 +17,11 @@
     </TextView>
 
     <Button
-        android:id="@+id/cancelButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/addButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:layout_marginRight="5dp"
-        android:onClick="onAddClicked"
+        android:gravity="center"
         android:text="@string/button_add_goals">
     </Button>
 
