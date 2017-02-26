@@ -1,9 +1,12 @@
 package kled.pagesaver;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,7 +16,7 @@ import android.widget.ListView;
  * Created by Danielle on 2/24/17.
  */
 
-public class PreviousBooksFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class CurrentBooksFragment extends Fragment implements AdapterView.OnItemClickListener {
     private View view;
     private ListView listView;
     private DBEntryAdapter adapter;
@@ -30,6 +33,7 @@ public class PreviousBooksFragment extends Fragment implements AdapterView.OnIte
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 
+
         return view;
     }
 
@@ -40,7 +44,7 @@ public class PreviousBooksFragment extends Fragment implements AdapterView.OnIte
         //Reset the adapter to reflect any changes made to the database;
         adapter.clearAdapter();
 
-        task = new ReadInEntriesAsyncTask(ReadInEntriesAsyncTask.PAST_MODE, adapter);
+        task = new ReadInEntriesAsyncTask(ReadInEntriesAsyncTask.CURRENT_MODE, adapter);
         task.execute();
     }
 
@@ -48,4 +52,7 @@ public class PreviousBooksFragment extends Fragment implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
     }
+
+
+
 }

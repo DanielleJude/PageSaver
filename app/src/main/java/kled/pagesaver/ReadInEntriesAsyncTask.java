@@ -7,39 +7,37 @@ import android.os.AsyncTask;
  * Created by Danielle on 2/24/17.
  */
 
+
+
 public class ReadInEntriesAsyncTask extends AsyncTask<Void, Entry, Void> {
-    ExerciseDataSource dataSource;
+    public final static int PAST_MODE = 1;
+    public final static int CURRENT_MODE = 2;
+    public final static int ALL_MODE = 3;
+
+    private int mode;
+    private DBEntryAdapter adapter;
+
+    public ReadInEntriesAsyncTask(int MODE, DBEntryAdapter adapter) {
+        mode = MODE;
+        this.adapter = adapter;
+
+    }
+
     @Override
     protected void onPreExecute() {
-        dataSource = new ExerciseDataSource(getActivity());
+
     }
 
     @Override
     protected Void doInBackground (Void... params) {
-        Cursor cursor = dataSource.getCursorToAllEntries();
-        ExerciseEntry entry = dataSource.getNextEntryFromCursor(cursor);
-        while(entry != null)
-        {
-            if(isCancelled())
-            {
-                cursor.close();
-                dataSource.closeDB();
-                return null;
-            }
-            publishProgress(entry);
-            entry = dataSource.getNextEntryFromCursor(cursor);
 
-        }
 
         return null;
     }
 
     @Override
-    protected void onProgressUpdate (ExerciseEntry... param) {
-        // Add to adapter
-        ExerciseEntry entry = param[0];
-        if(entry != null)
-            adapter.addToAdapter(entry);
+    protected void onProgressUpdate (Entry... param) {
+
     }
 
     @Override

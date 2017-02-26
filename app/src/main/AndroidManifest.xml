@@ -29,6 +29,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".AddBookActivity"
+            android:label="@string/title_activity_add_book"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ViewCurrentBookActivity"
+            android:label="@string/title_activity_view_current_book"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PastBookViewActivity"
+            android:label="@string/title_activity_past_book_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EditBookActivity"
+            android:label="@string/title_activity_edit_book"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MarkCompleteActivity"></activity>
     </application>
 
 </manifest>

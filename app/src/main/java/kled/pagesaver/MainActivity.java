@@ -1,11 +1,13 @@
 package kled.pagesaver;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,11 +28,15 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<Fragment> mFragmentList;
     private PSFragmentPagerAdapter mViewPagerAdapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //register with the server
         new GcmRegistrationAsyncTask(this).execute();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -48,9 +54,9 @@ public class MainActivity extends AppCompatActivity
         mViewPager = (ViewPager)findViewById(R.id.view_pager);
 
         mFragmentList = new ArrayList<Fragment>(3);
-        mFragmentList.add(new StartFragment());
-        mFragmentList.add(new HistoryFragment());
-        mFragmentList.add(new SettingsFragment());
+        mFragmentList.add(new PreviousBooksFragment());
+        mFragmentList.add(new CurrentBooksFragment());
+        mFragmentList.add(new SearchFragment());
         //Add the start, history, and settings fragments
 
         //Bind the tab bar and the view pager for seamless transitions between tabs and fragments
@@ -58,6 +64,19 @@ public class MainActivity extends AppCompatActivity
         mViewPager.setAdapter(mViewPagerAdapter);
         mTabBar.setupWithViewPager(mViewPager);
         mTabBar.setTabMode(TabLayout.MODE_FIXED);
+
+    }
+
+    @Override
+    protected void onResume() {
+        //start to get the entries from the server!
+        super.onResume();
+
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
 
     }
 
@@ -85,9 +104,11 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id) {
+            case R.id.add_menu_item:
+                Intent intent = new Intent(this, AddBookActivity.class);
+                startActivity(intent);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
