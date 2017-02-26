@@ -9,6 +9,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
+
 /**
  * Created by eloisedietz on 2/24/17.
  */
@@ -27,8 +36,8 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
     public static final String KEY_RATING = "_rating";
     public static final String KEY_COMMENT = "_comment";
     public static final String KEY_STATUS = "_status";
+    public static final String KEY_QUOTE = "_quote";
     public static final String KEY_LOCATIONS = "_locations";
-    public static final String KEY_TIMES = "_times";
 
     private static final String CREATE_TABLE_ENTRIES = "CREATE TABLE IF NOT EXISTS"
             + TABLE_NAME_ENTRIES
@@ -46,10 +55,15 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
             + KEY_COMMENT
             +" TEXT, "
             + KEY_STATUS
-            + " INTEGER NOT NULL " + "):";
+            + " INTEGER NOT NULL "
+            + KEY_QUOTE
+            + " TEXT, "
+            + KEY_LOCATIONS
+            + " BLOB "
+            + "):";
 
     public static final String[] columns = new String[]{KEY_ID, KEY_TITLE, KEY_AUTHOR,
-            KEY_GENRE, KEY_RATING, KEY_COMMENT, KEY_STATUS};
+            KEY_GENRE, KEY_RATING, KEY_COMMENT, KEY_STATUS, KEY_QUOTE, KEY_LOCATIONS};
 
 
     public BookEntryDbHelper(Context context){
@@ -75,6 +89,12 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         value.put(KEY_RATING, entry.getRating());
         value.put(KEY_COMMENT, entry.getComment());
         value.put(KEY_STATUS, entry.getStatus());
+        value.put(KEY_QUOTE, entry.getQuote());
+
+        byte[] byteLocations = entry.getLocationByteArray();
+        if (byteLocations.length > 0) {
+            value.put(KEY_LOCATIONS, byteLocations);
+        }
 
         SQLiteDatabase database = getWritableDatabase();
         long id = database.insert(TABLE_NAME_ENTRIES, null, value);
@@ -108,7 +128,8 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getReadableDatabase();
         ArrayList<BookEntry> entryList = new ArrayList<BookEntry>();
 
-        Cursor cursor = database.query(TABLE_NAME_ENTRIES, columns, null, null, null, null, null);
+        Cursor cursor = database.query(TABLE_NAME_ENTRIES, columns, 
+                null, null, null, null, null);
 
         while(cursor.moveToNext()) {
             BookEntry entry = cursorToEntry(cursor);
@@ -130,10 +151,14 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         entry.setRating(cursor.getInt(cursor.getColumnIndex(KEY_RATING)));
         entry.setComment(cursor.getString(cursor.getColumnIndex(KEY_COMMENT)));
         entry.setStatus(cursor.getInt(cursor.getColumnIndex(KEY_STATUS)));
+        entry.setQuote(cursor.getString(cursor.getColumnIndex(KEY_QUOTE)));
+
+        byte[] byteTrack = cursor.getBlob(cursor
+                .getColumnIndex(KEY_LOCATIONS));
+        entry.setLocationListFromByteArray(byteTrack);
 
         return entry;
 
     }
-
 
 }

@@ -53,6 +53,7 @@ public class EntryDatastore {
         entry.setRating(entity.getProperty(Entry.RATING).toString());
         entry.setComment(entity.getProperty(Entry.COMMENT).toString());
         entry.setStatus(entity.getProperty(Entry.STATUS).toString());
+        entry.setQuote(entity.getProperty(Entry.QUOTE).toString());
 
         return entry;
     }
@@ -72,6 +73,7 @@ public class EntryDatastore {
             entity.setProperty(Entry.RATING, entry.getRating());
             entity.setProperty(Entry.COMMENT, entry.getComment());
             entity.setProperty(Entry.STATUS, entry.getStatus());
+            entity.setProperty(Entry.QUOTE, entry.getQuote());
 
             mDatastore.put(entity);
             return true;
