@@ -24,6 +24,13 @@
     <string name="title_activity_past_book_view">PastBookViewActivity</string>
     <string name="title_activity_edit_book">EditBookActivity</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Goals -->
+    <string name="goals_title">Current Goals</string>
+    <string name="button_add_goals">Add Goal</string>
+
+    <!-- Analytics -->
+    <string name="analytics_title">Reading Analytics</string>
+    <string name="analytics_time_title">Time of Day When You Read</string>
+    <string name="analytics_month_title">How Much You Read Per Month</string>
+
 </resources>

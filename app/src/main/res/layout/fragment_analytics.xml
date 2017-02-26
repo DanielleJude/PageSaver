@@ -18,7 +18,7 @@ tools:context="kled.pagesaver.AnalyticsFragment">
             android:gravity="center"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="Reading Analytics" >
+            android:text="@string/analytics_title" >
         </TextView>
 
         <TextView
@@ -28,7 +28,7 @@ tools:context="kled.pagesaver.AnalyticsFragment">
             android:gravity="center"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:text="Time You Start Reading" >
+            android:text="@string/analytics_time_title" >
         </TextView>
 
         <lecho.lib.hellocharts.view.ColumnChartView
@@ -43,7 +43,7 @@ tools:context="kled.pagesaver.AnalyticsFragment">
             android:gravity="center"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:text="How Many Days Per Month You Read" >
+            android:text="@string/analytics_month_title" >
         </TextView>
 
         <lecho.lib.hellocharts.view.ColumnChartView

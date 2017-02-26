@@ -81,9 +81,9 @@ public class AnalyticsFragment extends Fragment {
         hoursArray = new ArrayList<Integer>();
         monthsArray = new ArrayList<Integer>();
 
-        for (int i = 0; i < 24; i++) {
-            hoursArray.add(i);
-            monthsArray.add(i/2);
+        for (int i = 0; i < 50; i++) {
+            hoursArray.add((int)(Math.random() * 24));
+            monthsArray.add((int)(Math.random() * 12));
         }
     }
 
