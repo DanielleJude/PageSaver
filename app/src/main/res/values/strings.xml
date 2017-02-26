@@ -23,4 +23,7 @@
     <string name="title_activity_view_current_book">ViewCurrentBookActivity</string>
     <string name="title_activity_past_book_view">PastBookViewActivity</string>
     <string name="title_activity_edit_book">EditBookActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

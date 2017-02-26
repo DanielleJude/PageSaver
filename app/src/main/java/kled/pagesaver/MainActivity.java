@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.MenuInflater;
 import android.view.View;
@@ -118,14 +119,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
         int id = item.getItemId();
 
         switch(id) {
             case R.id.nav_map:
                 break;
             case R.id.nav_analytics:
+                fragmentManager.beginTransaction().replace(R.id.content_main,
+                        AnalyticsFragment.newInstance("hello", "hello") ).commit();
                 break;
             case R.id.nav_goal_tracker:
+                fragmentManager.beginTransaction().replace(R.id.content_main,
+                        GoalsFragment.newInstance("hello", "hello") ).commit();
                 break;
             default:
                 break;
