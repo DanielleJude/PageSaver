@@ -1,33 +1,34 @@
 package kled.pagesaver;
 
-import android.content.Context;
-import android.net.Uri;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
+import lecho.lib.hellocharts.model.Column;
+import lecho.lib.hellocharts.model.ColumnChartData;
+import lecho.lib.hellocharts.model.SubcolumnValue;
+import lecho.lib.hellocharts.view.ColumnChartView;
+
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link AnalyticsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AnalyticsFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Created by kelley
  */
 public class AnalyticsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
+    private ColumnChartView monthsChart;
+    private ColumnChartData monthsData;
+    private ColumnChartView hoursChart;
+    private ColumnChartData hoursData;
+    private ArrayList<Integer> hoursArray;
+    private ArrayList<Integer> monthsArray;
 
     public AnalyticsFragment() {
         // Required empty public constructor
@@ -36,73 +37,180 @@ public class AnalyticsFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment AnalyticsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AnalyticsFragment newInstance(String param1, String param2) {
+    public static AnalyticsFragment newInstance() {
         AnalyticsFragment fragment = new AnalyticsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_analytics, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_analytics, container, false);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+        getPoints();
+        buildTimesGraph(view);
+        buildMonthsGraph(view);
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+        return view;
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * Dummy Points - will eventually take in list of longs from database entries
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    public void getPoints() {
+
+        /* Later - for getting hours and months from list of Longs
+        http://stackoverflow.com/questions/907170/java-getminutes-and-gethours
+        Date date = new Date();   // given date
+        Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+        calendar.setTime(date);   // assigns calendar to given date
+        calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
+        calendar.get(Calendar.HOUR);        // gets hour in 12h format
+        calendar.get(Calendar.MONTH);       // gets month number, NOTE this is zero based!
+         */
+
+        hoursArray = new ArrayList<Integer>();
+        monthsArray = new ArrayList<Integer>();
+
+        for (int i = 0; i < 24; i++) {
+            hoursArray.add(i);
+            monthsArray.add(i/2);
+        }
+    }
+
+    /**
+     * Draw chart of time of day
+     */
+    public void buildTimesGraph(View v) {
+
+        hoursChart = (ColumnChartView)v.findViewById(R.id.time_chart);
+
+        // Create columns from entries
+        int[] hours = new int[24];
+
+        for (int i = 0; i < hoursArray.size(); i++) {
+            int hourObtained = hoursArray.get(i);
+            hours[hourObtained]++;
+        }
+
+        List<Column> columns = new ArrayList<Column>();
+
+        for (int i = 0; i < hours.length; ++i) {
+
+            List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
+            SubcolumnValue value = new SubcolumnValue(hours[i]);
+            values.add(value);
+
+            Column column = new Column(values);
+            columns.add(column);
+
+        }
+
+        hoursData = new ColumnChartData(columns);
+
+        // Format axes
+        List<AxisValue> hoursLabels = new ArrayList<AxisValue>();
+
+        for (int i = 0; i < hours.length; i++) {
+
+            AxisValue value = new AxisValue(i);
+
+            if (i < 12) {
+                if (i == 0) value.setLabel("12 AM");
+                else value.setLabel(i + "AM");
+            } else {
+                if (i == 12) value.setLabel("12 PM");
+                else value.setLabel((i - 12) + "PM");
+            }
+
+            hoursLabels.add(value);
+        }
+
+        Axis axisX = new Axis(hoursLabels);
+        axisX.setName("Hour of Day You Start Reading");
+
+        Axis axisY = new Axis().setHasLines(true);
+        axisY.setName("Number of Days");
+
+        hoursData.setAxisXBottom(axisX);
+        hoursData.setAxisYLeft(axisY);
+
+        // Set data
+        hoursChart.setColumnChartData(hoursData);
+    }
+
+    /**
+     * Draw chart of months of reading
+     */
+    public void buildMonthsGraph(View v) {
+
+        monthsChart = (ColumnChartView)v.findViewById(R.id.month_chart);
+
+        // Create columns from entries
+        int[] months = new int[12];
+
+        for (int i = 0; i < monthsArray.size(); i++) {
+            int monthObtained = monthsArray.get(i);
+            months[monthObtained]++;
+        }
+
+        List<Column> columns = new ArrayList<Column>();
+
+        for (int i = 0; i < months.length; ++i) {
+
+            List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
+            SubcolumnValue value = new SubcolumnValue(months[i]);
+            values.add(value);
+
+            Column column = new Column(values);
+            columns.add(column);
+
+        }
+
+        monthsData = new ColumnChartData(columns);
+
+        // Format axes
+        List<AxisValue> monthLabels = new ArrayList<AxisValue>();
+
+        for (int i = 0; i < months.length; i++) {
+
+            AxisValue value = new AxisValue(i);
+
+            if (i == 0) value.setLabel("Jan");
+            else if (i == 1) value.setLabel("Feb");
+            else if (i == 2) value.setLabel("Mar");
+            else if (i == 3) value.setLabel("Apr");
+            else if (i == 4) value.setLabel("May");
+            else if (i == 5) value.setLabel("Jun");
+            else if (i == 6) value.setLabel("Jul");
+            else if (i == 7) value.setLabel("Aug");
+            else if (i == 8) value.setLabel("Sep");
+            else if (i == 9) value.setLabel("Oct");
+            else if (i == 10) value.setLabel("Nov");
+            else if (i == 11) value.setLabel("Dec");
+
+            monthLabels.add(value);
+        }
+
+        Axis axisX = new Axis(monthLabels);
+        axisX.setName("Month");
+
+        Axis axisY = new Axis().setHasLines(true);
+        axisY.setName("Number of Times");
+
+        monthsData.setAxisXBottom(axisX);
+        monthsData.setAxisYLeft(axisY);
+
+        // Set data
+        monthsChart.setColumnChartData(monthsData);
     }
 }

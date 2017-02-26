@@ -128,11 +128,11 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_analytics:
                 fragmentManager.beginTransaction().replace(R.id.content_main,
-                        AnalyticsFragment.newInstance("hello", "hello") ).commit();
+                        AnalyticsFragment.newInstance() ).commit();
                 break;
             case R.id.nav_goal_tracker:
                 fragmentManager.beginTransaction().replace(R.id.content_main,
-                        GoalsFragment.newInstance("hello", "hello") ).commit();
+                        GoalsFragment.newInstance() ).commit();
                 break;
             default:
                 break;
