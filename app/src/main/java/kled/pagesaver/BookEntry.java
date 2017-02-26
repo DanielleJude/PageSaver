@@ -154,6 +154,11 @@ public class BookEntry {
         return mStatus;
     }
 
+    public boolean isCompleted() {
+
+        return mStatus == STATUS_PAST;
+    }
+
     public void setQuote(String quote) {
         mQuote = quote;
     }
@@ -287,6 +292,15 @@ public class BookEntry {
 
     public void addPageRange(int start, int end) {
         mPageList.add(new StartEndPages(start, end));
+    }
+
+    public int getFurthestPageRead() {
+        int last = mPageList.size() - 1;
+        if(last < 0)
+            return 0;
+
+
+        return mPageList.get(last).endPage;
     }
 
     public void setTotalPages(int totalPages) {

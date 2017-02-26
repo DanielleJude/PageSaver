@@ -28,6 +28,18 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
     private EditText mDurationHour;
     private EditText mDurationMinute;
 
+    //bundle keys
+    private final static String TITLE_KEY = "title";
+    private final static String AUTHOR_KEY = "author";
+    private final static String GENRE_KEY = "genre";
+    private final static String PROGRESS_SO_FAR_KEY = "psf";
+    private final static String TOTAL_PAGES_KEY = "totalpages";
+    private final static String TIME_KEY = "time";
+    private final static String DHOUR_KEY = "dhour";
+    private final static String DMINUTE_KEY = "dminute";
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +56,7 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
 
     //REGION button call backs
     public void onAddLocationClick(View view) {
-        //Get a location from the mapview!
+        //TODO Get a location from the mapview!
     }
 
     public void onClick(View view) {
@@ -62,7 +74,7 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    //TODO: orientation changes --> saving state
+
 
     //TODO: retrieving info and sending to server to add
     private BookEntry retrieveUIInfo() {
@@ -81,14 +93,8 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
 
         entry.setTotalPages(Integer.parseInt(mTotalPagesView.getText().toString()));
 
-        Calendar cal = Calendar.getInstance();
-        int year = mDatePicker.getYear();
-        int month = mDatePicker.getMonth();
-        int day = mDatePicker.getDayOfMonth();
-        int hour = mTimePicker.getHour();
-        int minute = mTimePicker.getMinute();
-        cal.set(year, month, day, hour, minute);
-        long startTime = cal.getTimeInMillis();
+
+        long startTime = getChosenTime();
 
         //Get end time
         long minutes = Long.parseLong(mDurationMinute.getText().toString());
@@ -107,6 +113,17 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    private long getChosenTime() {
+        Calendar cal = Calendar.getInstance();
+        int year = mDatePicker.getYear();
+        int month = mDatePicker.getMonth();
+        int day = mDatePicker.getDayOfMonth();
+        int hour = mTimePicker.getHour();
+        int minute = mTimePicker.getMinute();
+        cal.set(year, month, day, hour, minute);
+        return cal.getTimeInMillis();
+    }
+
     private void setUpUIConnections() {
         mTitleView = (EditText)findViewById(R.id.add_book_title);
         mAuthorView = (EditText)findViewById(R.id.add_book_author);
@@ -119,5 +136,45 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
         mDurationMinute = (EditText)findViewById(R.id.add_book_duration_minute);
 
     }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle saveInstanceState) {
+        saveInstanceState.putString(TITLE_KEY, mTitleView.getText().toString());
+        saveInstanceState.putString(AUTHOR_KEY, mAuthorView.getText().toString());
+        saveInstanceState.putString(GENRE_KEY, mGenreView.getText().toString());
+        saveInstanceState.putString(PROGRESS_SO_FAR_KEY,
+                mProgressSoFarView.getText().toString());
+        saveInstanceState.putInt(TOTAL_PAGES_KEY,
+                Integer.parseInt(mTotalPagesView.getText().toString()));
+
+        saveInstanceState.putLong(TIME_KEY, getChosenTime());
+        saveInstanceState.putString(DHOUR_KEY,
+                mDurationHour.getText().toString());
+        saveInstanceState.putString(DMINUTE_KEY,
+                mDurationMinute.getText().toString());
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        mTitleView.setText(savedInstanceState.getString(TITLE_KEY, ""));
+        mAuthorView.setText(savedInstanceState.getString(AUTHOR_KEY, ""));
+        mGenreView.setText(savedInstanceState.getString(GENRE_KEY, ""));
+        mProgressSoFarView.setText(savedInstanceState.getString(PROGRESS_SO_FAR_KEY, ""));
+        mTotalPagesView.setText(savedInstanceState.getString(TOTAL_PAGES_KEY, ""));
+        mDurationHour.setText(savedInstanceState.getString(DHOUR_KEY, ""));
+        mDurationMinute.setText(savedInstanceState.getString(DMINUTE_KEY, ""));
+
+        long time = savedInstanceState.getLong(TIME_KEY);
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time);
+
+        mDatePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        mTimePicker.setHour(cal.get(Calendar.HOUR));
+        mTimePicker.setMinute(cal.get(Calendar.MINUTE));
+
+    }
+
 
 }

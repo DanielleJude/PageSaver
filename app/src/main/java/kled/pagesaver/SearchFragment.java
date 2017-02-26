@@ -27,7 +27,7 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemClickL
 
         // Set up the adapter and the listView, but don't add database items.
         //They will be added in onResume.
-        adapter = new DBEntryAdapter(getActivity());
+        adapter = new DBEntryAdapter(getActivity(), DBEntryAdapter.ALL_MODE);
 
         view = inflater.inflate(R.layout.search_frag, container, false);
 

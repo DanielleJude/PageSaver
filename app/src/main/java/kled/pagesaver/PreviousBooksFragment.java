@@ -24,7 +24,7 @@ public class PreviousBooksFragment extends Fragment implements AdapterView.OnIte
 
         // Set up the adapter and the listView, but don't add database items.
         //They will be added in onResume.
-        adapter = new DBEntryAdapter(getActivity());
+        adapter = new DBEntryAdapter(getActivity(), DBEntryAdapter.PAST_MODE);
         view = inflater.inflate(R.layout.book_list_view, container, false);
         listView = (ListView)view.findViewById(R.id.book_lv);
         listView.setAdapter(adapter);
