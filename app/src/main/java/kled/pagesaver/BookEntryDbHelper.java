@@ -174,11 +174,11 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
     private BookEntry cursorToEntry(Cursor cursor) {
         BookEntry entry = new BookEntry();
         entry.setRowId(cursor.getLong(cursor.getColumnIndex(KEY_ROW_ID)));
-        entry.setRegId(cursor.getLong(cursor.getColumnIndex(KEY_REG_ID)));
-        entry.setPhoneId(cursor.getLong(cursor.getColumnIndex(KEY_PHONE_ID)));
+        entry.setRegId(cursor.getString(cursor.getColumnIndex(KEY_REG_ID)));
+        entry.setPhoneId(cursor.getString(cursor.getColumnIndex(KEY_PHONE_ID)));
         entry.setTitle(cursor.getString(cursor.getColumnIndex(KEY_TITLE)));
         entry.setAuthor(cursor.getString(cursor.getColumnIndex(KEY_AUTHOR)));
-        entry.setGenre(cursor.getInt(cursor.getColumnIndex(KEY_GENRE)));
+        entry.setGenre(cursor.getString(cursor.getColumnIndex(KEY_GENRE)));
         entry.setRating(cursor.getInt(cursor.getColumnIndex(KEY_RATING)));
         entry.setComment(cursor.getString(cursor.getColumnIndex(KEY_COMMENT)));
         entry.setStatus(cursor.getInt(cursor.getColumnIndex(KEY_STATUS)));

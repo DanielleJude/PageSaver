@@ -1,5 +1,7 @@
 package com.example.eloisedietz.myapplication.backend;
 
+
+
 /**
  * Created by eloisedietz on 2/24/17.
  */
@@ -17,6 +19,7 @@ public class Entry {
     public static final String COMMENT = "comment";
     public static final String STATUS = "status";
     public static final String QUOTE = "quote";
+
 
     private String mId;
 

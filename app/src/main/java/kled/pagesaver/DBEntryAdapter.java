@@ -17,11 +17,11 @@ import java.util.List;
 
 public class DBEntryAdapter extends BaseAdapter {
     private Activity context;
-    private List<Entry> mList;
+    private List<BookEntry> mList;
 
     public DBEntryAdapter(Activity context) {
         this.context = context;
-        mList = new ArrayList<Entry>();
+        mList = new ArrayList<BookEntry>();
     }
 
     /* Clear adapter for when you want to reload fragment*/
@@ -39,12 +39,12 @@ public class DBEntryAdapter extends BaseAdapter {
     }
 
     public long getItemId(int position) {
-        return Long.parseLong(mList.get(position).getId());
+        return mList.get(position).getRowId();
     }
 
 
     /** Update and refresh list*/
-    public void addToAdapter(Entry entry) {
+    public void addToAdapter(BookEntry entry) {
         mList.add(entry);
         notifyDataSetChanged();
     }
@@ -60,7 +60,7 @@ public class DBEntryAdapter extends BaseAdapter {
         TextView headerTV = (TextView)rowView.findViewById(R.id.first_tv);
         RatingBar ratingBar = (RatingBar)rowView.findViewById(R.id.rating_bar_lv);
 
-        Entry entry = mList.get(position);
+        BookEntry entry = mList.get(position);
 
         String headerString = entry.getTitle() + ": " + entry.getAuthor();
         headerTV.setText(headerString);

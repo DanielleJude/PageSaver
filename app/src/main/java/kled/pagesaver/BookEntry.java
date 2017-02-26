@@ -1,11 +1,14 @@
 package kled.pagesaver;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.api.client.util.Base64;
+
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by eloisedietz on 2/24/17.
@@ -13,12 +16,12 @@ import java.util.ArrayList;
 
 public class BookEntry {
     private Long mRowId;
-    private Long mRegId;   // registration ID
-    private Long mPhoneId; // unique phone ID
+    private String mRegId;   // registration ID
+    private String mPhoneId; // unique phone ID
 
     private String mTitle;
     private String mAuthor;
-    private int mGenre;
+    private String mGenre;
     private int mRating;
     private String mComment;
     private int mStatus;
@@ -27,6 +30,33 @@ public class BookEntry {
     private ArrayList<StartEndTimes> mTimeList;
     private ArrayList<StartEndPages> mPageList;
     private int mTotalPages;   // number of total pages
+
+    public static final String ID = "id";
+    public static final String REG_ID = "reg_id";
+    public static final String PHONE_ID = "phone_id";
+    public static final String TITLE = "title";
+    public static final String AUTHOR = "author";
+    public static final String GENRE = "genre";
+    public static final String RATING = "rating";
+    public static final String COMMENT = "comment";
+    public static final String STATUS = "status";
+    public static final String QUOTE = "quote";
+    public static final String LOCATION_LIST = "location_list";
+    public static final String TIMES_LIST = "times_list";
+    public static final String PAGES_LIST = "pages_list";
+    public static final String PAGES = "total_pages";
+
+    public static final int STATUS_PAST = 1;
+    public static final int STATUS_CURRENT = 0;
+
+    public BookEntry() {
+
+        mRowId = -1l;
+        mLocationList = new ArrayList<>();
+        mTimeList = new ArrayList<>();
+        mPageList = new ArrayList<>();
+
+    }
 
     /* List of duration ranges for each individual reading period */
     public class StartEndTimes {
@@ -39,6 +69,7 @@ public class BookEntry {
         }
     }
 
+
     /* List of page ranges for each individual reading period */
     public class StartEndPages {
         int startPage;  // page number where this reading starts
@@ -50,6 +81,7 @@ public class BookEntry {
         }
     }
 
+
     public void setRowId(Long rowId){
         mRowId = rowId;
     }
@@ -58,19 +90,19 @@ public class BookEntry {
         return mRowId;
     }
 
-    public void setRegId(Long regId){
+    public void setRegId(String regId){
         mRegId = regId;
     }
 
-    public Long getRegId() {
+    public String getRegId() {
         return mRegId;
     }
 
-    public void setPhoneId(Long phoneId){
+    public void setPhoneId(String phoneId){
         mPhoneId = phoneId;
     }
 
-    public Long getPhoneId() {
+    public String getPhoneId() {
         return mPhoneId;
     }
 
@@ -90,11 +122,11 @@ public class BookEntry {
         return mAuthor;
     }
 
-    public void setGenre(int genre) {
+    public void setGenre(String genre) {
         mGenre = genre;
     }
 
-    public int getGenre() {
+    public String getGenre() {
         return mGenre;
     }
 
@@ -169,6 +201,10 @@ public class BookEntry {
         }
     }
 
+    public void addLatLng(LatLng latLng) {
+        mLocationList.add(latLng);
+    }
+
     public ArrayList<StartEndTimes> getTimeList() {
         return mTimeList;
     }
@@ -205,6 +241,10 @@ public class BookEntry {
             StartEndTimes startEndTimes = new StartEndTimes(longArray[i * 2], longArray[i * 2 + 1]);
             mTimeList.add(startEndTimes);
         }
+    }
+
+    public void addStartEndTime(Long start, Long end) {
+        mTimeList.add(new StartEndTimes(start, end));
     }
 
     public ArrayList<StartEndPages> getPageList() {
@@ -245,12 +285,45 @@ public class BookEntry {
         }
     }
 
+    public void addPageRange(int start, int end) {
+        mPageList.add(new StartEndPages(start, end));
+    }
+
     public void setTotalPages(int totalPages) {
         mTotalPages = totalPages;
     }
 
     public int getTotalPages() {
         return mTotalPages;
+    }
+
+    //Put the current entry into a map to send to server;
+    public void entryToMap(Map<String, String> map) {
+        map.put(ID, ""+ mRowId);
+        map.put(REG_ID, mRegId);
+        map.put(PHONE_ID, mPhoneId);
+        map.put(TITLE, mTitle);
+        map.put(AUTHOR, mAuthor);
+        map.put(GENRE, mGenre);
+        map.put(RATING, ""+mRating);
+        map.put(COMMENT, mComment);
+        map.put(STATUS, ""+mStatus);
+        //TODO add quotes as list
+        //map.put(QUOTE, quotes.toString);
+
+        //Convert the locations to byte array then to string using base64
+        String byteArrayLocation= new String(Base64.encodeBase64(getLocationByteArray()));
+        map.put(LOCATION_LIST, byteArrayLocation);
+
+        //Convert the times to byte array then to string using base64
+        String byteArrayTimes= new String(Base64.encodeBase64(getTimeByteArray()));
+        map.put(TIMES_LIST, byteArrayTimes);
+
+        //Convert the pages to byte array then to string using base64
+        String byteArrayPages= new String(Base64.encodeBase64(getPageByteArray()));
+        map.put(PAGES_LIST, byteArrayPages);
+
+        map.put(PAGES, ""+mTotalPages);
     }
 
 

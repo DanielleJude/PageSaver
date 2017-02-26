@@ -5,6 +5,7 @@ package kled.pagesaver;
  */
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -19,14 +20,20 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
     private static Registration regService = null;
     private GoogleCloudMessaging gcm;
     private Context context;
-    private String SERVER_ADDR = "https://promising-cairn-157921.appspot.com";
+    public final static String SERVER_ADDR = "https://promising-cairn-157921.appspot.com";
+    //public static String SERVER_ADDR = "http://127.0.0.1:8080";
     // Google Developers Console project number
     private static final String SENDER_ID = "571085842510";
+
+    public final static String GCM_PREF_KEY = "gcm_pref_key";
+    public final static String REG_ID_PREF_KEY = "registration_id";
 
     public GcmRegistrationAsyncTask(Context context) {
         this.context = context;
@@ -48,9 +55,23 @@ class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
                             abstractGoogleClientRequest.setDisableGZipContent(true);
                         }
                     });
-            /* Registration.Builder builder = new Registration
-            .Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
-                        .setRootUrl(SERVER_ADDR+"/_ah/api/");*/
+
+
+//        if (regService == null) {
+//            Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(),
+//                    new AndroidJsonFactory(), null)
+//                    // Need setRootUrl and setGoogleClientRequestInitializer only for local testing,
+//                    // otherwise they can be skipped
+//                    .setRootUrl("http://127.0.0.1:8080/_ah/api/")
+//                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+//                        @Override
+//                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+//                            abstractGoogleClientRequest.setDisableGZipContent(true);
+//                        }
+//                    });
+//            Registration.Builder builder = new Registration
+//            .Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+//                        .setRootUrl(SERVER_ADDR+"/_ah/api/");
             // end of optional local run code
             regService = builder.build();
         }
@@ -62,6 +83,8 @@ class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
             }
             String regId = gcm.register(SENDER_ID);
             msg = "Device registered, registration ID=" + regId;
+
+            setRegID(regId);
 
             regService.register(regId).execute();
 
@@ -76,5 +99,21 @@ class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
         Logger.getLogger("REGISTRATION").log(Level.INFO, msg);
+    }
+
+    private void setRegID(String regID) {
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(GCM_PREF_KEY, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.putString(REG_ID_PREF_KEY, regID);
+        editor.commit();
+    }
+
+    public String getRegID() {
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(GCM_PREF_KEY, MODE_PRIVATE);
+
+        return sharedPreferences.getString(GCM_PREF_KEY, null);
     }
 }

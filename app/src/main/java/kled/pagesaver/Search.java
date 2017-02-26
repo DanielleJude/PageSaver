@@ -57,7 +57,7 @@ public class Search {
     public ArrayList<BookEntry> findGenre(){
         ArrayList<BookEntry> result = new ArrayList<>();
         for(BookEntry entry : database.fetchEntries()) {
-            if(entry.getGenre() == Integer.valueOf(keyWord)){
+            if(entry.getGenre().equals(keyWord)){
                 result.add(entry);
             }
         }
