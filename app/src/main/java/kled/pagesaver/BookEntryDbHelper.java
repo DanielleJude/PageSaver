@@ -29,7 +29,9 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME_ENTRIES = "ENTRIES";
     public static final int DATABASE_VERSION = 1;
 
-    public static final String KEY_ID = "_id";
+    public static final String KEY_ROW_ID = "_row_id";
+    public static final String KEY_REG_ID = "_reg_id";
+    public static final String KEY_PHONE_ID = "_phone_id";
     public static final String KEY_TITLE= "_title";
     public static final String KEY_AUTHOR = "_author";
     public static final String KEY_GENRE = "_genre";
@@ -38,12 +40,19 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
     public static final String KEY_STATUS = "_status";
     public static final String KEY_QUOTE = "_quote";
     public static final String KEY_LOCATIONS = "_locations";
+    public static final String KEY_START_END_TIMES = "_start_end_times";
+    public static final String KEY_START_END_PAGES = "start_end_pages";
+    public static final String KEY_TOTAL_PAGES = "_total_pages";
 
     private static final String CREATE_TABLE_ENTRIES = "CREATE TABLE IF NOT EXISTS"
             + TABLE_NAME_ENTRIES
             + " ("
-            + KEY_ID
+            + KEY_ROW_ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + KEY_REG_ID
+            + " INTEGER "
+            + KEY_PHONE_ID
+            + " INTEGER "
             + KEY_TITLE
             + " TEXT, "
             + KEY_AUTHOR
@@ -60,11 +69,18 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
             + " TEXT, "
             + KEY_LOCATIONS
             + " BLOB "
+            + KEY_START_END_TIMES
+            + " BLOB "
+            + KEY_START_END_PAGES
+            + " BLOB "
+            + KEY_TOTAL_PAGES
+            + " INTEGER NOT NULL "
             + "):";
 
-    public static final String[] columns = new String[]{KEY_ID, KEY_TITLE, KEY_AUTHOR,
-            KEY_GENRE, KEY_RATING, KEY_COMMENT, KEY_STATUS, KEY_QUOTE, KEY_LOCATIONS};
-
+    public static final String[] columns = new String[]{KEY_ROW_ID, KEY_REG_ID,
+            KEY_PHONE_ID, KEY_TITLE, KEY_AUTHOR, KEY_GENRE, KEY_RATING,
+            KEY_COMMENT, KEY_STATUS, KEY_QUOTE, KEY_LOCATIONS,
+            KEY_START_END_TIMES, KEY_START_END_PAGES, KEY_TOTAL_PAGES};
 
     public BookEntryDbHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -83,6 +99,8 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
 
     public long insertEntry(BookEntry entry){
         ContentValues value = new ContentValues();
+        value.put(KEY_REG_ID, entry.getRegId());
+        value.put(KEY_PHONE_ID, entry.getPhoneId());
         value.put(KEY_TITLE, entry.getTitle());
         value.put(KEY_AUTHOR, entry.getAuthor());
         value.put(KEY_GENRE, entry.getGenre());
@@ -90,10 +108,21 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         value.put(KEY_COMMENT, entry.getComment());
         value.put(KEY_STATUS, entry.getStatus());
         value.put(KEY_QUOTE, entry.getQuote());
+        value.put(KEY_TOTAL_PAGES, entry.getTotalPages());
 
         byte[] byteLocations = entry.getLocationByteArray();
         if (byteLocations.length > 0) {
             value.put(KEY_LOCATIONS, byteLocations);
+        }
+
+        byte[] byteTimes = entry.getTimeByteArray();
+        if (byteTimes.length > 0) {
+            value.put(KEY_START_END_TIMES, byteTimes);
+        }
+
+        byte[] bytePages = entry.getPageByteArray();
+        if (bytePages.length > 0) {
+            value.put(KEY_START_END_PAGES, bytePages);
         }
 
         SQLiteDatabase database = getWritableDatabase();
@@ -104,7 +133,7 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
     }
     public void removeEntry(long index){
         SQLiteDatabase database = getWritableDatabase();
-        database.delete(TABLE_NAME_ENTRIES, KEY_ID + "=" + index, null);
+        database.delete(TABLE_NAME_ENTRIES, KEY_ROW_ID + "=" + index, null);
         database.close();
     }
 
@@ -112,7 +141,7 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getReadableDatabase();
         BookEntry entry = null;
 
-        Cursor cursor = database.query(true, TABLE_NAME_ENTRIES, columns, KEY_ID + "="
+        Cursor cursor = database.query(true, TABLE_NAME_ENTRIES, columns, KEY_ROW_ID + "="
                 + id, null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
@@ -144,7 +173,9 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
 
     private BookEntry cursorToEntry(Cursor cursor) {
         BookEntry entry = new BookEntry();
-        entry.setId(cursor.getLong(cursor.getColumnIndex(KEY_ID)));
+        entry.setRowId(cursor.getLong(cursor.getColumnIndex(KEY_ROW_ID)));
+        entry.setRegId(cursor.getLong(cursor.getColumnIndex(KEY_REG_ID)));
+        entry.setPhoneId(cursor.getLong(cursor.getColumnIndex(KEY_PHONE_ID)));
         entry.setTitle(cursor.getString(cursor.getColumnIndex(KEY_TITLE)));
         entry.setAuthor(cursor.getString(cursor.getColumnIndex(KEY_AUTHOR)));
         entry.setGenre(cursor.getInt(cursor.getColumnIndex(KEY_GENRE)));
@@ -152,10 +183,19 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         entry.setComment(cursor.getString(cursor.getColumnIndex(KEY_COMMENT)));
         entry.setStatus(cursor.getInt(cursor.getColumnIndex(KEY_STATUS)));
         entry.setQuote(cursor.getString(cursor.getColumnIndex(KEY_QUOTE)));
+        entry.setTotalPages(cursor.getInt(cursor.getColumnIndex(KEY_TOTAL_PAGES)));
 
-        byte[] byteTrack = cursor.getBlob(cursor
+        byte[] byteTrackLocations = cursor.getBlob(cursor
                 .getColumnIndex(KEY_LOCATIONS));
-        entry.setLocationListFromByteArray(byteTrack);
+        entry.setLocationListFromByteArray(byteTrackLocations);
+
+        byte[] byteTrackTimes = cursor.getBlob(cursor
+                .getColumnIndex(KEY_START_END_TIMES));
+        entry.setTimeListFromByteArray(byteTrackTimes);
+
+        byte[] byteTrackPages = cursor.getBlob(cursor
+                .getColumnIndex(KEY_START_END_PAGES));
+        entry.setPageListFromByteArray(byteTrackPages);
 
         return entry;
 
