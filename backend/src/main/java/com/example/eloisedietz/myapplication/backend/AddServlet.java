@@ -17,6 +17,7 @@ public class AddServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         String id = request.getParameter("id");
+        String phone = request.getParameter("phone_id");
         String title = request.getParameter("title");
         String author = request.getParameter("author");
         String genre = request.getParameter("genre");
@@ -28,6 +29,7 @@ public class AddServlet extends HttpServlet {
         Entry entry = new Entry();
         //entry.setId(""+-1);
         entry.setId(id);
+        entry.setPhoneId(phone);
         entry.setAuthor(author) ;
         entry.setTitle(title);
         entry.setGenre(genre);
