@@ -33,6 +33,7 @@ public class EntryDatastore {
 
     public Entry getEntryByIdentifier(String id){
         Entity entity = null;
+        //Key key = KeyFactory.createKey(getParentKey(), Entry.ID, id);
         Key key = KeyFactory.createKey(getParentKey(), Entry.ENTITY_NAME, id);
         try {
             entity = mDatastore.get(key);
@@ -53,7 +54,7 @@ public class EntryDatastore {
         entry.setRating(entity.getProperty(Entry.RATING).toString());
         entry.setComment(entity.getProperty(Entry.COMMENT).toString());
         entry.setStatus(entity.getProperty(Entry.STATUS).toString());
-        entry.setQuote(entity.getProperty(Entry.QUOTE).toString());
+//        entry.setQuote(entity.getProperty(Entry.QUOTE).toString());
 
         return entry;
     }
@@ -65,6 +66,8 @@ public class EntryDatastore {
         if(getEntryByIdentifier(entry.getId()) != null)
             return false;
         else{
+            //This makes the datastore autogenerate ids
+            //Entity entity = new Entity(Entry.ID);
             Entity entity = new Entity(Entry.ENTITY_NAME, entry.getId(), getParentKey());
             entity.setProperty(Entry.ID, entry.getId());
             entity.setProperty(Entry.TITLE, entry.getTitle());
@@ -73,7 +76,7 @@ public class EntryDatastore {
             entity.setProperty(Entry.RATING, entry.getRating());
             entity.setProperty(Entry.COMMENT, entry.getComment());
             entity.setProperty(Entry.STATUS, entry.getStatus());
-            entity.setProperty(Entry.QUOTE, entry.getQuote());
+            //entity.setProperty(Entry.QUOTE, entry.getQuote());
 
             mDatastore.put(entity);
             return true;
@@ -83,6 +86,7 @@ public class EntryDatastore {
 
     public boolean delete(String id) {
         Query.Filter filter = new Query.FilterPredicate(Entry.ID, Query.FilterOperator.EQUAL, id);
+        //Query query = new Query(Entry.ID);
         Query query = new Query(Entry.ENTITY_NAME);
         query.setFilter(filter);
         query.setAncestor(getParentKey());
@@ -101,6 +105,7 @@ public class EntryDatastore {
      */
     public ArrayList<Entry> query() {
         ArrayList<Entry> result = new ArrayList<Entry>();
+        //Query query = new Query(Entry.ID);
         Query query = new Query(Entry.ENTITY_NAME);
         query.setFilter(null);
         query.setAncestor(getParentKey());

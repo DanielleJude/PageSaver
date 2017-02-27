@@ -26,6 +26,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/add_book_title"
             android:hint="@string/title_hint"
             android:inputType="textCapWords"
             android:layout_marginBottom="10dp"/>
@@ -38,6 +39,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/add_book_author"
             android:hint="@string/author_hint"
             android:inputType="textPersonName"
             android:layout_marginBottom="10dp"/>
@@ -50,6 +52,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/add_book_genre"
             android:hint="@string/genre_hint"
             android:inputType="text"
             android:layout_marginBottom="10dp"/>
@@ -70,7 +73,8 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:hint="# Pages read"
+                android:id="@+id/add_book_progress_so_far"
                 android:layout_column="0"
                 android:layout_columnWeight="1"
                 android:inputType="number"/>
@@ -86,6 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="enter page count"
+                android:id="@+id/add_book_total_pages"
                 android:layout_column="2"
                 android:layout_columnWeight="1"
                 android:inputType="number"/>
@@ -140,6 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Enter a number"
+                android:id="@+id/add_book_duration_hour"
                 android:inputType="number"
                 android:layout_column="0"
                 android:layout_columnWeight="1"/>
@@ -155,6 +161,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Enter a number"
+                android:id="@+id/add_book_duration_minute"
                 android:inputType="number"
                 android:layout_column="2"
                 android:layout_columnWeight="1"/>

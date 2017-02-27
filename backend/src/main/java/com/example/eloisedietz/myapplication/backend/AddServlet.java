@@ -26,13 +26,15 @@ public class AddServlet extends HttpServlet {
         String quote = request.getParameter("quote");
 
         Entry entry = new Entry();
+        //entry.setId(""+-1);
         entry.setId(id);
         entry.setAuthor(author) ;
+        entry.setTitle(title);
         entry.setGenre(genre);
         entry.setRating(rating);
         entry.setComment(comment);
         entry.setStatus(status);
-        entry.setQuote(quote);
+        //entry.setQuote(quote);
 
         EntryDatastore entryDatastore = new EntryDatastore();
         entryDatastore.addEntry2Datastore(entry);

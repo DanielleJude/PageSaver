@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 
 
 
-public class ReadInEntriesAsyncTask extends AsyncTask<Void, Entry, Void> {
+public class ReadInEntriesAsyncTask extends AsyncTask<Void, BookEntry, Void> {
     public final static int PAST_MODE = 1;
     public final static int CURRENT_MODE = 2;
     public final static int ALL_MODE = 3;
@@ -36,7 +36,7 @@ public class ReadInEntriesAsyncTask extends AsyncTask<Void, Entry, Void> {
     }
 
     @Override
-    protected void onProgressUpdate (Entry... param) {
+    protected void onProgressUpdate (BookEntry... param) {
 
     }
 

@@ -40,9 +40,12 @@
     <string name="title_activity_add_goal">Add Goal</string>
 
     <!-- Analytics -->
+    <string name="title_activity_analytics">Analytics</string>
     <string name="analytics_title">Reading Analytics</string>
     <string name="analytics_time_title">Time of Day When You Read</string>
     <string name="analytics_month_title">How Much You Read Per Month</string>
-    <string name="title_activity_analytics">Analytics</string>
+    <string name="title_activity_view_goal">ViewGoalActivity</string>
+    <string name="title_activity_add_goal">AddGoalActivity</string>
+    <string name="title_activity_psmap">Map</string>
 
 </resources>
