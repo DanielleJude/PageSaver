@@ -8,10 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,8 +37,9 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
     public static final String BOOKS_LIST = "books list";
     public static final String VIEW_ALL_ENTRIES = "view all entries";
     public static final String VIEW_SINGLE_ENTRY = "view single entry";
-    public static final String LAT_KEY = "latitude_bundle_key";
-    public static final String LNG_KEY = "longitude_bundle_key";
+    public static final String LAT_KEY = "lat";
+    public static final String LNG_KEY = "long";
+
 
     MyTrackingService myTrackingService;
     private Intent mServiceIntent;
@@ -46,7 +48,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
     AlertDialog alert;
 
 
-    private boolean doRedraw;
+    private boolean doRedraw = true;
     private boolean isBound;
     ArrayList<LatLng> savedLocations;
     ArrayList<String> booksAtLocation;
@@ -60,6 +62,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
         public void onServiceConnected(ComponentName name, IBinder service) {
             MyTrackingService.TrackingServiceBinder binder = (MyTrackingService.TrackingServiceBinder) service;
             myTrackingService = binder.getService();
+
         }
 
 
@@ -84,20 +87,19 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                     //Toast.makeText(getApplicationContext(), "Lat: " + String.valueOf(curLat) + " Long: " + String.valueOf(curLong),Toast.LENGTH_SHORT).show();
                 }
             }
-            //Redraw the UI
-            if (doRedraw) {
-                doRedraw = false;
-                redrawUI();
-            }
+
+            redrawUI();
         }
+
     }
 
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("MAP", "oncreate called");
+
         setContentView(R.layout.activity_psmap);
+
 
 
         //Initialize arrays for storage of locations and the corresponding books
@@ -130,7 +132,8 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                 isPlaceMarkerMode = false;
 
                 byte[] byteArray = extras.getByteArray(LOCATIONS_LIST);
-                setLocationListFromByteArray(byteArray, savedLocations);
+                if (byteArray != null)
+                    setLocationListFromByteArray(byteArray, savedLocations);
                 booksAtLocation = extras.getStringArrayList(BOOKS_LIST);
 
             }
@@ -138,20 +141,27 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
             //i.e. How long you read, how many pages etc...
             if (extras.get(MAP_MODE).equals(VIEW_SINGLE_ENTRY)) {
                 isPlaceMarkerMode = false;
+
+                byte[] byteArray = extras.getByteArray(LOCATIONS_LIST);
+                if(byteArray!= null)
                 setLocationListFromByteArray(extras.getByteArray(LOCATIONS_LIST), savedLocations);
                 booksAtLocation = extras.getStringArrayList(BOOKS_LIST);
             }
         }
+        Log.d("MAP", "Map Mode: " + extras.get(MAP_MODE));
 
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+
         mMap = googleMap;
+
         //If in Place Marker Mode, set up to map click listener and dialog box
         if (isPlaceMarkerMode) {
             startTrackingService();
+
             redrawUI();
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
@@ -169,14 +179,18 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
         }
         //Else we are in one of the view entry modes therefore just draw the stored locations
         else {
+
+            startTrackingService();
             redrawUI();
 
         }
+
 
     }
 
     //Function that starts the tracking service
     private void startTrackingService() {
+        Log.d("Map", "Start tracking called");
         isBound = true;
         mServiceIntent = new Intent(this, MyTrackingService.class);
         //mServiceIntent.putExtra(MainActivity.SAVED_ACTIVITY, activityType);
@@ -189,9 +203,9 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
     //Unbind the service if the app is paused
     @Override
     protected void onPause() {
-        if (isPlaceMarkerMode) {
-            unregisterReceiver(myLocationReceiver);
-        }
+
+
+        unregisterReceiver(myLocationReceiver);
         if (isBound) {
             //unbind service
             unbindService(mServiceConnection);
@@ -213,11 +227,12 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
         }
     }
 
-    //Function that redraws the UI depending on the mode we are in
     public void redrawUI() {
         //If in Place Marker Mode, zoom to current location for ease of placing a marker near you
-        if (isPlaceMarkerMode) {
-            if (mMap != null) {
+        if (mMap != null) {
+            if (isPlaceMarkerMode) {
+
+
                 Log.d("MapActivity", "Lat: " + String.valueOf(curLat) + " Long: " + String.valueOf(curLong));
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(new LatLng(curLat, curLong))
@@ -227,41 +242,59 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                         .build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
-        }
-        //Else we are in one of the view entry modes therefore set markers for locations on the maps
-        else {
-            int count = 0;
+            //Else we are in one of the view entry modes therefore set markers for locations on the maps
+            else {
+                if (savedLocations.size() == 0 || savedLocations == null) {
+                    Log.d("MAP", "no saved locations");
+                    Toast.makeText(getApplicationContext(), "No Saved Locations", Toast.LENGTH_SHORT);
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(new LatLng(curLat, curLong))
+                            .zoom(17)
+                            .bearing(0)
+                            .tilt(45)
+                            .build();
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-            for (LatLng l : savedLocations) {
-                mMap.addMarker(new MarkerOptions().position(l).title(booksAtLocation.get(count))
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_book)));
-                count++;
+                } else {
+
+                    int count = 0;
+                    if (savedLocations.size() > 0) {
+                        if(booksAtLocation.size() > 0) {
+
+                            Log.d("map", "saved locations.size: " + String.valueOf(savedLocations.size()));
+                            for (LatLng l : savedLocations) {
+                                mMap.addMarker(new MarkerOptions().position(l).title(booksAtLocation.get(count))
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_book)));
+                                count++;
+                            }
+                            CameraPosition cameraPosition = new CameraPosition.Builder()
+                                    .target(new LatLng(savedLocations.get(savedLocations.size() - 1).latitude, savedLocations.get(savedLocations.size() - 1).longitude))
+                                    .zoom(15)
+                                    .bearing(0)
+                                    .tilt(45)
+                                    .build();
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                        }
+
+                    }
+                }
             }
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(savedLocations.get(savedLocations.size() - 1).latitude, savedLocations.get(savedLocations.size() - 1).longitude))
-                    .zoom(13)
-                    .bearing(0)
-                    .tilt(45)
-                    .build();
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            // mMap.moveCamera(CameraUpdateFactory.newLatLng(savedLocations.get(savedLocations.size()-1)));
-            //mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
         }
     }
 
     //When the application returns if we are in Place Marker Mode, register the receiver
     protected void onResume() {
         super.onResume();
-        doRedraw = true;
         setUpMapIfNeeded();
 
 
         // register the receiver for receiving the location update broadcast
-        if (isPlaceMarkerMode) {
-            IntentFilter intentFilter = new IntentFilter(LocationUpdateReceiver.class.getName());
-            registerReceiver(myLocationReceiver, intentFilter);
-        }
+        //if (isPlaceMarkerMode) {
+        IntentFilter intentFilter = new IntentFilter(LocationUpdateReceiver.class.getName());
+        registerReceiver(myLocationReceiver, intentFilter);
     }
+
 
     public void drawDialogBox() {
         alert = new AlertDialog.Builder(PSMapActivity.this)
@@ -270,10 +303,9 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent data = new Intent();
-                        Bundle extras = new Bundle();
-                        extras.putDouble(LAT_KEY, curLat);
-                        extras.putDouble(LNG_KEY, curLong);
-                        data.putExtras(extras);
+                        data.putExtra("lat", curLat);
+                        data.putExtra("long", curLong);
+                        data.setClass(getApplicationContext(), MainActivity.class);
                         setResult(RESULT_OK, data);
                         finish();
                     }

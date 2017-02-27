@@ -5,6 +5,7 @@ package kled.pagesaver;
  */
 
 import android.*;
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -142,33 +143,40 @@ public class MyTrackingService extends Service implements LocationListener {
         myLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
 
-        if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+            Log.d("TrackingService", "request location updates");
+            myLocationManager.requestLocationUpdates(myLocationManager.getBestProvider(criteria, true), 0, 15, MyTrackingService.this);
+            doUpdate(myLocationManager.getLastKnownLocation(myLocationManager.getBestProvider(criteria, true)));
+        }
+        else{
             Log.d("TrackingService", "Permission not granted");
 
-            return;
-        } else {
-            Log.d("TrackingService", "request location updates");
-            myLocationManager.requestLocationUpdates(myLocationManager.getBestProvider(criteria, true), 0, 0, MyTrackingService.this);
         }
     }
     private void doUpdate(Location loc) {
         Intent intent = new Intent(PSMapActivity.LocationUpdateReceiver.class.getName());
-        intent.putExtra("update", true);
-        intent.putExtra("lat",loc.getLatitude());
-        intent.putExtra("long", loc.getLongitude());
-        Log.d("TrackingService","Lat: " + String.valueOf(loc.getLatitude()) + " Long: " + String.valueOf(loc.getLongitude()));
-        this.sendBroadcast(intent);
+        if(loc != null) {
+            intent.putExtra("update", true);
+            intent.putExtra("lat", loc.getLatitude());
+            intent.putExtra("long", loc.getLongitude());
+            Log.d("TrackingService", "Lat: " + String.valueOf(loc.getLatitude()) + " Long: " + String.valueOf(loc.getLongitude()));
+            this.sendBroadcast(intent);
+        }
 
     }
     private void cancelLocationUpdates() {
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
-                (this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            return;
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+            myLocationManager.removeUpdates(this);
         }
-        myLocationManager.removeUpdates(this);
+
     }
 
 

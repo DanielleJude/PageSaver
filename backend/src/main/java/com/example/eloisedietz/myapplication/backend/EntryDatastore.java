@@ -46,7 +46,7 @@ public class EntryDatastore {
 
     private Entry convertEntity2Entry(Entity entity) {
         Entry entry = new Entry();
-
+        entry.setPhoneId(entity.getProperty(Entry.PHONE_ID).toString());
         entry.setId(entity.getProperty(Entry.ID).toString());
         entry.setTitle(entity.getProperty(Entry.TITLE).toString());
         entry.setAuthor(entity.getProperty(Entry.AUTHOR).toString());
@@ -68,7 +68,9 @@ public class EntryDatastore {
         else{
             //This makes the datastore autogenerate ids
             //Entity entity = new Entity(Entry.ID);
+
             Entity entity = new Entity(Entry.ENTITY_NAME, entry.getId(), getParentKey());
+            entity.setProperty(Entry.PHONE_ID, entry.getPhoneId());
             entity.setProperty(Entry.ID, entry.getId());
             entity.setProperty(Entry.TITLE, entry.getTitle());
             entity.setProperty(Entry.AUTHOR, entry.getAuthor());
