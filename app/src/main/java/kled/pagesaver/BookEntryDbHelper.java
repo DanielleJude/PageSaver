@@ -43,7 +43,7 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
     public static final String KEY_START_END_PAGES = "start_end_pages";
     public static final String KEY_TOTAL_PAGES = "_total_pages";
 
-    private static final String CREATE_TABLE_ENTRIES = "CREATE TABLE IF NOT EXISTS"
+    private static final String CREATE_TABLE_ENTRIES = "CREATE TABLE IF NOT EXISTS "
             + TABLE_NAME_ENTRIES
             + " ("
             + KEY_ROW_ID
@@ -72,7 +72,7 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
             + " BLOB "
             + KEY_TOTAL_PAGES
             + " INTEGER NOT NULL "
-            + "):";
+            + ");";
 
     public static final String[] columns = new String[]{KEY_ROW_ID,
             KEY_PHONE_ID, KEY_TITLE, KEY_AUTHOR, KEY_GENRE, KEY_RATING,
