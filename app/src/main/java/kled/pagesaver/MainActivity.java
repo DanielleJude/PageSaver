@@ -15,7 +15,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -122,6 +129,37 @@ public class MainActivity extends AppCompatActivity
         switch(id) {
             case R.id.nav_map:
                 //TODO send locations and names to mapview
+                ArrayList<BookEntry> allEntries = new BookEntryDbHelper(this).fetchEntries();
+                Map<LatLng, Set<String>> locsWithBooks = getSetOfLocationsWithBookTitles(allEntries);
+
+                List<LatLng> locations = new ArrayList<>();
+                ArrayList<String> titleStrings = new ArrayList<>();
+
+                for(LatLng latLng : locsWithBooks.keySet()) {
+                    locations.add(latLng);
+                    Set<String>  titles = locsWithBooks.get(latLng);
+                    String titleList = "";
+
+                    int count = 0;
+                    for(String title : titles) {
+                        titleList += title;
+                        if(count < titles.size() - 1) {
+                            titleList += ", ";
+                        }
+                        count++;
+                    }
+
+                    titleStrings.add(titleList);
+                }
+
+                //Now send to mapView
+                intent = new Intent(this, PSMapActivity.class);
+                Bundle extras = new Bundle();
+                extras.putStringArrayList(PSMapActivity.BOOKS_LIST, titleStrings);
+                byte[] bytes = BookEntry.getLocationByteArray(locations);
+                extras.putByteArray(PSMapActivity.LOCATIONS_LIST, bytes);
+                intent.putExtras(extras);
+                startActivity(intent);
                 break;
             case R.id.nav_analytics:
                 intent = new Intent(this, AnalyticsActivity.class);
@@ -138,5 +176,25 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private Map<LatLng, Set<String>> getSetOfLocationsWithBookTitles(List<BookEntry> entries) {
+        Map<LatLng, Set<String>> map = new HashMap<>();
+
+        for(BookEntry entry : entries) {
+            for(LatLng latLng : entry.getLocationList()) {
+                if(map.containsKey(latLng)) {
+                    Set<String> oldSet = map.get(latLng);
+                    oldSet.add(entry.getTitle());
+                    map.put(latLng, oldSet);
+                } else {
+                    Set<String> newSet = new HashSet<>();
+                    newSet.add(entry.getTitle());
+                    map.put(latLng, newSet);
+                }
+            }
+        }
+
+        return map;
     }
 }

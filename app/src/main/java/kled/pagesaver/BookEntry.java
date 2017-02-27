@@ -9,6 +9,7 @@ import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -170,6 +171,23 @@ public class BookEntry {
         for (int i = 0; i < mLocationList.size(); i++) {
             intArray[i * 2] = (int) (mLocationList.get(i).latitude * 1E6);
             intArray[(i * 2) + 1] = (int) (mLocationList.get(i).longitude * 1E6);
+        }
+
+        ByteBuffer byteBuffer = ByteBuffer.allocate(intArray.length
+                * Integer.SIZE);
+        IntBuffer intBuffer = byteBuffer.asIntBuffer();
+        intBuffer.put(intArray);
+
+        return byteBuffer.array();
+    }
+
+    // Convert Location ArrayList to byte array to store in SQLite database
+    public static byte[] getLocationByteArray(List<LatLng> list) {
+        int[] intArray = new int[list.size() * 2];
+
+        for (int i = 0; i < list.size(); i++) {
+            intArray[i * 2] = (int) (list.get(i).latitude * 1E6);
+            intArray[(i * 2) + 1] = (int) (list.get(i).longitude * 1E6);
         }
 
         ByteBuffer byteBuffer = ByteBuffer.allocate(intArray.length
