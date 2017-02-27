@@ -270,7 +270,6 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                         Intent data = new Intent();
                         data.putExtra("lat", curLat);
                         data.putExtra("long", curLong);
-                        data.setClass(getApplicationContext(), MainActivity.class);
                         setResult(RESULT_OK, data);
                         finish();
                     }
