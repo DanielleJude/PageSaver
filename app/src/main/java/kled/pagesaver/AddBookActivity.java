@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -26,6 +28,8 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
     private LatLng chosenLatLng = null;
     private final static int MAP_REQUEST_CODE = 5789;
 
+    private EntryDatastoreHelper datastoreHelper;
+    private BookEntryDbHelper database;
     private EditText mTitleView;
     private EditText mAuthorView;
     private EditText mGenreView;
@@ -35,6 +39,8 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
     private TimePicker mTimePicker;
     private EditText mDurationHour;
     private EditText mDurationMinute;
+
+    long id;
 
 
     //bundle keys
@@ -173,17 +179,49 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
         BookEntry entry = retrieveUIInfo();
 
         //Add to database!
-        BookEntryDbHelper dbHelper = new BookEntryDbHelper(this);
-        long id = dbHelper.insertEntry(entry);
+        database = new BookEntryDbHelper(this);
+        addToDatabase addLocal = new addToDatabase();
+        addLocal.execute(entry);
 
         //SET ID
         entry.setRowId(id);
 
         //Add to datastore
-        EntryDatastoreHelper datastoreHelper = new EntryDatastoreHelper(this);
-        datastoreHelper.addEntry(entry);
+        datastoreHelper = new EntryDatastoreHelper(this);
+        toAdd add= new toAdd();
+        add.execute(entry);
 
     }
+
+    /*
+AsyncTask to add an exercise entry to the database
+*/
+    private class toAdd extends AsyncTask<BookEntry, Void, Void> {
+
+        @Override
+        protected Void doInBackground(BookEntry... params) {
+            datastoreHelper.addEntry(params[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void params){
+            Toast.makeText(getApplicationContext(), "Entry saved", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class addToDatabase extends AsyncTask<BookEntry, Void, Void> {
+        @Override
+        protected Void doInBackground(BookEntry... params) {
+            id = database.insertEntry(params[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void params){
+        }
+    }
+
 
 
 
