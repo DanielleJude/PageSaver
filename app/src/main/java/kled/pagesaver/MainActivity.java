@@ -1,10 +1,15 @@
 package kled.pagesaver;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -37,7 +42,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        checkPermissions();
         //register with the server
         new GcmRegistrationAsyncTask(this).execute();
 
@@ -101,6 +106,57 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
+    /*
+Code rewritten from onReuestPermissionsResult in IAmHere
+*/
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1]
+                == PackageManager.PERMISSION_GRANTED
+                || grantResults[2] == PackageManager.PERMISSION_GRANTED) {
+
+        }else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (shouldShowRequestPermissionRationale(android.Manifest.permission.CAMERA)
+                        || shouldShowRequestPermissionRationale
+                        (android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        || shouldShowRequestPermissionRationale
+                        (android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                requestPermissions(new String[]
+                                        {android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                android.Manifest.permission.CAMERA,
+                                                android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+                            }
+
+                        }
+                    });
+                    requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            android.Manifest.permission.CAMERA, android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+                }else{
+                }
+            }
+        }
+    }
+
+    private void checkPermissions() {
+        if(Build.VERSION.SDK_INT < 23)
+            return;
+
+        if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(getApplicationContext(),
+                android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.CAMERA, android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        }
+
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

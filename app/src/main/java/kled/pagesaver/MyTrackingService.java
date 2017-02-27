@@ -5,6 +5,7 @@ package kled.pagesaver;
  */
 
 import android.*;
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -142,13 +143,17 @@ public class MyTrackingService extends Service implements LocationListener {
         myLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
 
-        if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("TrackingService", "Permission not granted");
 
-            return;
-        } else {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
             Log.d("TrackingService", "request location updates");
             myLocationManager.requestLocationUpdates(myLocationManager.getBestProvider(criteria, true), 0, 15, MyTrackingService.this);
+            doUpdate(myLocationManager.getLastKnownLocation(myLocationManager.getBestProvider(criteria, true)));
+        }
+        else{
+            Log.d("TrackingService", "Permission not granted");
 
         }
     }
@@ -163,13 +168,13 @@ public class MyTrackingService extends Service implements LocationListener {
     }
     private void cancelLocationUpdates() {
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
-                (this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            return;
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+            myLocationManager.removeUpdates(this);
         }
-        myLocationManager.removeUpdates(this);
+
     }
 
 
