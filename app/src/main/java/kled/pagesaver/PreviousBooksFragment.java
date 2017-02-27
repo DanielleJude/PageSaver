@@ -46,6 +46,18 @@ public class PreviousBooksFragment extends Fragment implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getActivity(), ViewPastBookActivity.class);
+        Bundle extras = new Bundle();
+        extras.putLong(ViewPastBookActivity.ID_BUNDLE_KEY, id);
+        intent.putExtras(extras);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(task != null)
+            task.cancel(true);
 
     }
 }
