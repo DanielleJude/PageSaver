@@ -185,8 +185,7 @@ Code rewritten from onReuestPermissionsResult in IAmHere
         switch(id) {
             case R.id.nav_map:
                 intent = new Intent(this, PSMapActivity.class);
-                intent.putExtra(PSMapActivity.MAP_MODE,PSMapActivity.VIEW_ALL_ENTRIES);
-                startActivity(intent);
+                intent.putExtra(PSMapActivity.MAP_MODE, PSMapActivity.VIEW_ALL_ENTRIES);
                 //TODO send locations and names to mapview
                 ArrayList<BookEntry> allEntries = new BookEntryDbHelper(this).fetchEntries();
                 Map<LatLng, Set<String>> locsWithBooks = getSetOfLocationsWithBookTitles(allEntries);
@@ -211,8 +210,6 @@ Code rewritten from onReuestPermissionsResult in IAmHere
                     titleStrings.add(titleList);
                 }
 
-                //Now send to mapView
-                intent = new Intent(this, PSMapActivity.class);
                 Bundle extras = new Bundle();
                 extras.putStringArrayList(PSMapActivity.BOOKS_LIST, titleStrings);
                 byte[] bytes = BookEntry.getLocationByteArray(locations);
