@@ -9,10 +9,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 public class ViewPastBookActivity extends AppCompatActivity {
     public final static String ID_BUNDLE_KEY = "_idbundle key";
     private long mEntryId;
+    private BookEntry entry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,13 +28,35 @@ public class ViewPastBookActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         mEntryId = bundle.getLong(ID_BUNDLE_KEY);
 
+        entry = new BookEntryDbHelper(this).fetchEntryByIndex(mEntryId);
+
+        setUpUI();
+
+    }
+
+    public void setUpUI() {
+        ((TextView)findViewById(R.id.past_book_view_title)).setText(entry.getTitle());
+        ((TextView)findViewById(R.id.past_book_view_author)).setText(entry.getAuthor());
+        ((TextView)findViewById(R.id.past_book_view_genre)).setText(entry.getGenre());
+        ((RatingBar)findViewById(R.id.past_book_view_rating_bar)).setRating(entry.getRating());
+        ((TextView)findViewById(R.id.past_book_view_comments)).setText(entry.getComment());
+
+        if(entry.getLocationList().size() == 0) {
+            ((Button)findViewById(R.id.show_map_view_button)).setVisibility(View.GONE);
+        }
+
     }
 
     //TODO ADD PROGRESS GRAPH
 
-    //TODO BUTTON CALL
     public void onShowMapViewClick(View view) {
-        //GO TO MAP VIEW
+        //TODO CHECK
+        Intent intent = new Intent(this, PSMapActivity.class);
+        Bundle extras = new Bundle();
+        extras.putString(PSMapActivity.MAP_MODE, PSMapActivity.VIEW_SINGLE_ENTRY);
+        extras.putByteArray(PSMapActivity.LOCATIONS_LIST, entry.getLocationByteArray());
+        intent.putExtras(extras);
+        startActivity(intent);
     }
 
     @Override
@@ -49,8 +75,13 @@ public class ViewPastBookActivity extends AppCompatActivity {
 
         switch(id) {
             case R.id.delete_menu_item:
+                //Delete from datastore
                 EntryDatastoreHelper datastoreHelper = new EntryDatastoreHelper(this);
                 datastoreHelper.deleteEntry(""+mEntryId);
+
+                //Delete from local db
+                new BookEntryDbHelper(this).removeEntry(mEntryId);
+                finish();
                 break;
         }
 

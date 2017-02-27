@@ -117,23 +117,21 @@ public class DBEntryAdapter extends BaseAdapter {
         String headerString = entry.getTitle() + ": " + entry.getAuthor();
         headerTV.setText(headerString);
 
-        ratingBar.setNumStars(entry.getRating());
-        ratingBar.setMax(5);
+        ratingBar.setRating(entry.getRating());
         ratingBar.setClickable(false);
+
 
         return rowView;
     }
 
     private View setupCurrentView(BookEntry entry, View rowView) {
         TextView textView = (TextView)rowView.findViewById(R.id.first_tv_current);
-        ProgressBar progressBar = (ProgressBar)rowView.findViewById(R.id.progress_bar_lv);
+        TextView progressView = (TextView) rowView.findViewById(R.id.progress_view_row);
 
         String headerString = entry.getTitle() + ": " + entry.getAuthor();
         textView.setText(headerString);
 
-        progressBar.setClickable(false);
-        progressBar.setProgress((int)(entry.getFurthestPageRead()/entry.getTotalPages()));
-        progressBar.setMax(entry.getTotalPages());
+        progressView.setText(entry.getProgressString());
 
         return rowView;
     }

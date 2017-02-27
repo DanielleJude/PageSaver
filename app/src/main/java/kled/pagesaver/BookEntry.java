@@ -7,6 +7,7 @@ import com.google.api.client.util.Base64;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -181,7 +182,8 @@ public class BookEntry {
 
     // Convert byte array to Location ArrayList
     public void setLocationListFromByteArray(byte[] bytePointArray) {
-
+        if(bytePointArray.length == 0)
+            return;
         ByteBuffer byteBuffer = ByteBuffer.wrap(bytePointArray);
         IntBuffer intBuffer = byteBuffer.asIntBuffer();
 
@@ -224,7 +226,8 @@ public class BookEntry {
 
     // Convert byte array to time ArrayList
     public void setTimeListFromByteArray(byte[] bytePointArray) {
-
+        if(bytePointArray.length == 0)
+            return;
         ByteBuffer byteBuffer = ByteBuffer.wrap(bytePointArray);
         LongBuffer longBuffer = byteBuffer.asLongBuffer();
 
@@ -266,7 +269,8 @@ public class BookEntry {
 
     // Convert byte array to ArrayList for pages
     public void setPageListFromByteArray(byte[] bytePointArray) {
-
+        if(bytePointArray.length == 0)
+            return;
         ByteBuffer byteBuffer = ByteBuffer.wrap(bytePointArray);
         IntBuffer intBuffer = byteBuffer.asIntBuffer();
 
@@ -329,5 +333,9 @@ public class BookEntry {
         map.put(PAGES, ""+mTotalPages);
     }
 
+    public String getProgressString() {
+        DecimalFormat df = new DecimalFormat("#0.00");
+        return df.format((double)getFurthestPageRead()/mTotalPages * 100) + "% completed";
+    }
 
 }

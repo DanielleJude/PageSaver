@@ -40,12 +40,24 @@ public class PreviousBooksFragment extends Fragment implements AdapterView.OnIte
         //Reset the adapter to reflect any changes made to the database;
         adapter.clearAdapter();
 
-        task = new ReadInEntriesAsyncTask(ReadInEntriesAsyncTask.PAST_MODE, adapter);
+        task = new ReadInEntriesAsyncTask(getActivity(), ReadInEntriesAsyncTask.PAST_MODE, adapter);
         task.execute();
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getActivity(), ViewPastBookActivity.class);
+        Bundle extras = new Bundle();
+        extras.putLong(ViewPastBookActivity.ID_BUNDLE_KEY, id);
+        intent.putExtras(extras);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(task != null)
+            task.cancel(true);
 
     }
 }

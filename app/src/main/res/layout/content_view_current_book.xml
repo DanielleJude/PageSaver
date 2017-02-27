@@ -21,47 +21,65 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_label"/>
+            android:text="@string/title_label"
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/current_book_view_title"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:textSize="12sp"
+            android:textStyle="italic"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/author_label"/>
+            android:text="@string/author_label"
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/current_book_view_author"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:textSize="12sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/genre_label"/>
+            android:text="@string/genre_label"
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/current_book_view_genre"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:textSize="12sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/progress_label"
-            android:layout_marginBottom="50dp"/>
+            android:textSize="14sp"
+            />
 
-        <ProgressBar
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/progress_view_current"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/current_book_view_progress_bar"
-            android:layout_marginBottom="50dp"/>
+            android:layout_marginBottom="50dp"
+            android:textSize="12sp"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View Locations"
+            android:layout_gravity="center_horizontal"
+            android:onClick="onViewLocationClick"
+            android:id="@+id/view_locations_button"/>
 
     </LinearLayout>
 
