@@ -28,9 +28,9 @@ dependencies {
     compile project(path: ':backend', configuration: 'android-endpoints')
     compile 'com.android.support:support-v13:25.2.0'
     compile 'com.android.support:design:25.2.0'
-    compile 'com.google.android.gms:play-services:9.6.0'
+    compile 'com.google.android.gms:play-services:10.0.1'
+    compile 'com.google.android.gms:play-services-gcm:10.0.1'
     compile 'com.google.code.findbugs:jsr305:2.0.1'
-    //compile 'com.google.android.gms:play-services-gcm:10.2.0'
     compile 'com.github.sundeepk:compact-calendar-view:2.0.0'
     compile 'com.android.support:support-v4:25.2.0'
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'

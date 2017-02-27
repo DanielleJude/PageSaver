@@ -27,10 +27,10 @@ class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
     private static Registration regService = null;
     private GoogleCloudMessaging gcm;
     private Context context;
-    public final static String SERVER_ADDR = "https://promising-cairn-157921.appspot.com";
+    public final static String SERVER_ADDR = "https://steel-ace-159717.appspot.com/";
     //public static String SERVER_ADDR = "http://127.0.0.1:8080";
     // Google Developers Console project number
-    private static final String SENDER_ID = "571085842510";
+    private static final String SENDER_ID = "21949463987";
 
     public final static String GCM_PREF_KEY = "gcm_pref_key";
     public final static String REG_ID_PREF_KEY = "registration_id";
