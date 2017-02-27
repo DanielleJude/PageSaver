@@ -83,7 +83,8 @@
 
         <activity
             android:name=".PSMapActivity"
-            android:label="@string/title_activity_psmap"></activity>
+            android:label="@string/title_activity_psmap" />
+
         <service
             android:name=".MyTrackingService"
             android:enabled="true"

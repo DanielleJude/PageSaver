@@ -10,6 +10,7 @@ public class GoalEntry {
     private String description;
     private int pagesToComplete;
     private int dailyPages;
+    private int readPages;
     private Long endTime;
 
     public GoalEntry() {
@@ -17,14 +18,16 @@ public class GoalEntry {
         description = "";
         pagesToComplete = 0;
         dailyPages = 0;
+        readPages = 0;
     }
 
-    public GoalEntry(String _bookTitle, String _description, int _totalPages, int _dailyPages) {
+    public GoalEntry(String _bookTitle, String _description, int _totalPages, int _dailyPages,
+                     int _readPages) {
         bookTitle = _bookTitle;
         description = _description;
         pagesToComplete = _totalPages;
         dailyPages = _dailyPages;
-
+        readPages = _readPages;
     }
 
     public String getBookTitle() {
@@ -73,5 +76,13 @@ public class GoalEntry {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getReadPages() {
+        return readPages;
+    }
+
+    public void setReadPages(int readPages) {
+        this.readPages = readPages;
     }
 }
