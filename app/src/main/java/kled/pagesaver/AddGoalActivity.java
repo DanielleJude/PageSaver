@@ -19,11 +19,10 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
-public class AddGoalActivity extends AppCompatActivity implements DatePicker.OnDateChangedListener {
+public class AddGoalActivity extends AppCompatActivity {
 
     private GoalsDbHelper entrySource;
     private GoalEntry entry;
-    private int newYear, newMonth, newDay = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +72,34 @@ public class AddGoalActivity extends AppCompatActivity implements DatePicker.OnD
         } catch (Exception e) {
             entry.setReadPages(0);
         }
+
+        // Only accept date if set after current date
+        DatePicker datePicker = (DatePicker) findViewById(R.id.add_goals_date_picker);
+
+        int day = datePicker.getDayOfMonth();
+        int month = datePicker.getMonth();
+        int year =  datePicker.getYear();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+
+        Calendar current = Calendar.getInstance();
+
+        if(calendar.getTimeInMillis() > current.getTimeInMillis())
+            entry.setEndTime(calendar.getTimeInMillis());
+        else
+            entry.setEndTime(new Long(-1));
+
+        // Get goal pages if an end date and total pages are specified
+        if (entry.getDailyPages() == 0 && entry.getEndTime() != -1
+                && entry.getPagesToComplete() != 0) {
+            Long timeDifference = calendar.getTimeInMillis() - current.getTimeInMillis();
+            int numberOfDays = (int) (timeDifference / 1000 / 60 / 60 / 24);
+            int dailyPages = (int) Math.ceil(
+                            ((entry.getPagesToComplete() - entry.getReadPages()) / numberOfDays));
+
+            entry.setDailyPages(dailyPages);
+        }
     }
 
     // Make sure delete option is in toolbar
@@ -99,13 +126,6 @@ public class AddGoalActivity extends AppCompatActivity implements DatePicker.OnD
             default:
                 return false;
         }
-    }
-
-    @Override
-    public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        newYear = year;
-        newMonth = monthOfYear;
-        newDay = dayOfMonth;
     }
 
     /**

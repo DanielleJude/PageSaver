@@ -1,5 +1,7 @@
 package kled.pagesaver;
 
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,12 +20,15 @@ import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
-public class AnalyticsActivity extends AppCompatActivity {
+public class AnalyticsActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<ArrayList<BookEntry>> {
 
     private ArrayList<Integer> hoursArray;
     private ArrayList<Integer> monthsArray;
     private ArrayList<Integer> pagesArray;
     private ArrayList<Integer> durationArray;
+
+    LoaderManager loaderManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,20 +42,16 @@ public class AnalyticsActivity extends AppCompatActivity {
         pagesArray = new ArrayList<>();
         durationArray = new ArrayList<>();
 
-        getPoints();
-        buildTimesGraph();
-        buildMonthsGraph();
-        buildDurationGraph();
-        buildPagesGraph();
+        loaderManager = this.getLoaderManager();
+        loaderManager.initLoader(1, null, this);
     }
 
     /**
      * Get durations, start times, and pages read per reading session
      */
-    public void getPoints() {
+    public void getPoints(ArrayList<BookEntry> entries) {
 
-        BookEntryDbHelper entryDatabase = new BookEntryDbHelper(this);
-        ArrayList<BookEntry> entries = entryDatabase.fetchEntries();
+        if(entries==null) return;
 
         for (int i = 0; i < entries.size(); i++) {
 
@@ -342,5 +343,25 @@ public class AnalyticsActivity extends AppCompatActivity {
 
         // Set data
         pagesChart.setColumnChartData(pagesData);
+    }
+
+    @Override
+    public Loader<ArrayList<BookEntry>> onCreateLoader(int id, Bundle args) {
+        LoadBookEntries loadBookEntries = new LoadBookEntries(this);
+        return loadBookEntries;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<ArrayList<BookEntry>> loader, ArrayList<BookEntry> data) {
+        getPoints(data);
+        buildTimesGraph();
+        buildMonthsGraph();
+        buildDurationGraph();
+        buildPagesGraph();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<ArrayList<BookEntry>> loader) {
+
     }
 }

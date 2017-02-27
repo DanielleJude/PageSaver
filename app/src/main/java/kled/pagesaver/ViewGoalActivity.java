@@ -51,6 +51,7 @@ public class ViewGoalActivity extends AppCompatActivity {
         progressText.setText(intent.getStringExtra(GoalsDbHelper.KEY_PROGRESS));
         totalText.setText(intent.getStringExtra(GoalsDbHelper.KEY_GOALS_PAGES));
 
+
         Long endTimeMillis = intent.getLongExtra(GoalsDbHelper.KEY_END_TIME, -1);
 
         if(endTimeMillis == -1) {
