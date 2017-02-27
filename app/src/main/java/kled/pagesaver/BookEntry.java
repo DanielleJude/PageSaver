@@ -338,4 +338,11 @@ public class BookEntry {
         return df.format((double)getFurthestPageRead()/mTotalPages * 100) + "% completed";
     }
 
+    public boolean isComplete() {
+        if(mStatus == STATUS_PAST)
+            return true;
+
+        return false;
+    }
+
 }
