@@ -145,8 +145,8 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
         saveInstanceState.putString(GENRE_KEY, mGenreView.getText().toString());
         saveInstanceState.putString(PROGRESS_SO_FAR_KEY,
                 mProgressSoFarView.getText().toString());
-        saveInstanceState.putInt(TOTAL_PAGES_KEY,
-                Integer.parseInt(mTotalPagesView.getText().toString()));
+        saveInstanceState.putString(TOTAL_PAGES_KEY,
+                mTotalPagesView.getText().toString());
 
         saveInstanceState.putLong(TIME_KEY, getChosenTime());
         saveInstanceState.putString(DHOUR_KEY,

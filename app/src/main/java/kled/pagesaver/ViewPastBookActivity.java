@@ -10,45 +10,33 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class ViewCurrentBookActivity extends AppCompatActivity {
+public class ViewPastBookActivity extends AppCompatActivity {
     public final static String ID_BUNDLE_KEY = "_idbundle key";
     private long mEntryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_current_book);
+        setContentView(R.layout.activity_past_book_view);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_edit);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO go to edit activity
-            }
-        });
-
-        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab_mark_complete);
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO go to mark as complete activity
-            }
-        });
 
         Bundle bundle = getIntent().getExtras();
         mEntryId = bundle.getLong(ID_BUNDLE_KEY);
 
-        //TODO QUERY FOR ENTRY
     }
 
-    //TODO ORIENTATION CHANGES
+    //TODO ADD PROGRESS GRAPH
+
+    //TODO BUTTON CALL
+    public void onShowMapViewClick(View view) {
+        //GO TO MAP VIEW
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.current_book_view_menu, menu);
+        getMenuInflater().inflate(R.menu.past_book_view_menu, menu);
         return true;
     }
 
@@ -60,10 +48,6 @@ public class ViewCurrentBookActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch(id) {
-            case R.id.share_menu_item:
-                //TODO SHARE FUNCTIONALITY
-                break;
-
             case R.id.delete_menu_item:
                 EntryDatastoreHelper datastoreHelper = new EntryDatastoreHelper(this);
                 datastoreHelper.deleteEntry(""+mEntryId);
@@ -72,5 +56,7 @@ public class ViewCurrentBookActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
 }

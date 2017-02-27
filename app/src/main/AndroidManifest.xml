@@ -38,7 +38,7 @@
             android:label="@string/title_activity_view_current_book"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PastBookViewActivity"
+            android:name=".ViewPastBookActivity"
             android:label="@string/title_activity_past_book_view"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

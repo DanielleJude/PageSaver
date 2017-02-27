@@ -118,6 +118,7 @@ public class DBEntryAdapter extends BaseAdapter {
         headerTV.setText(headerString);
 
         ratingBar.setNumStars(entry.getRating());
+        ratingBar.setMax(5);
         ratingBar.setClickable(false);
 
         return rowView;
@@ -132,6 +133,7 @@ public class DBEntryAdapter extends BaseAdapter {
 
         progressBar.setClickable(false);
         progressBar.setProgress((int)(entry.getFurthestPageRead()/entry.getTotalPages()));
+        progressBar.setMax(entry.getTotalPages());
 
         return rowView;
     }

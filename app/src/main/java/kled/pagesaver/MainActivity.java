@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity
 
         switch(id) {
             case R.id.nav_map:
+                //TODO send locations and names to mapview
                 break;
             case R.id.nav_analytics:
                 fragmentManager.beginTransaction().replace(R.id.content_main,
