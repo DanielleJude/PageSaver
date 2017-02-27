@@ -18,13 +18,14 @@
         android:textSize="7pt"
         />
 
-    <ProgressBar
-        android:id="@+id/progress_bar_lv"
+    <TextView
+        android:id="@+id/progress_view_row"
         android:layout_gravity="left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_row="1"
-
+        android:textColor="#ff666666"
+        android:textSize="5pt"
         />
 
 </GridLayout>

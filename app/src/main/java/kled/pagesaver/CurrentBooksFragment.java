@@ -44,15 +44,24 @@ public class CurrentBooksFragment extends Fragment implements AdapterView.OnItem
         //Reset the adapter to reflect any changes made to the database;
         adapter.clearAdapter();
 
-        task = new ReadInEntriesAsyncTask(ReadInEntriesAsyncTask.CURRENT_MODE, adapter);
+        task = new ReadInEntriesAsyncTask(getActivity(), ReadInEntriesAsyncTask.CURRENT_MODE, adapter);
         task.execute();
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        Intent intent = new Intent(getActivity(), ViewCurrentBookActivity.class);
+        Bundle extras = new Bundle();
+        extras.putLong(ViewCurrentBookActivity.ID_BUNDLE_KEY, id);
+        intent.putExtras(extras);
+        startActivity(intent);
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(task != null)
+            task.cancel(true);
 
-
+    }
 }

@@ -145,10 +145,12 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
             errorString = errorString + "Minutes Spent Reading\n";
         }
 
-        if(chosenLatLng == null) {
-            errorString = errorString + "Choose a Location\n";
-            canAddFlag = false;
-        }
+        //TODO UNCOMMENT THIS WHEN WESLEY FIXES
+
+//        if(chosenLatLng == null) {
+//            errorString = errorString + "Choose a Location\n";
+//            canAddFlag = false;
+//        }
 
         if(canAddFlag) {
             return "";

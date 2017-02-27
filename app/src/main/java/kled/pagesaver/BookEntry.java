@@ -7,6 +7,7 @@ import com.google.api.client.util.Base64;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -329,5 +330,9 @@ public class BookEntry {
         map.put(PAGES, ""+mTotalPages);
     }
 
+    public String getProgressString() {
+        DecimalFormat df = new DecimalFormat("#0.00");
+        return df.format((double)getFurthestPageRead()/mTotalPages * 100) + "% completed";
+    }
 
 }
