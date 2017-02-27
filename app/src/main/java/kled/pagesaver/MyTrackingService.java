@@ -159,11 +159,13 @@ public class MyTrackingService extends Service implements LocationListener {
     }
     private void doUpdate(Location loc) {
         Intent intent = new Intent(PSMapActivity.LocationUpdateReceiver.class.getName());
-        intent.putExtra("update", true);
-        intent.putExtra("lat",loc.getLatitude());
-        intent.putExtra("long", loc.getLongitude());
-        Log.d("TrackingService","Lat: " + String.valueOf(loc.getLatitude()) + " Long: " + String.valueOf(loc.getLongitude()));
-        this.sendBroadcast(intent);
+        if(loc != null) {
+            intent.putExtra("update", true);
+            intent.putExtra("lat", loc.getLatitude());
+            intent.putExtra("long", loc.getLongitude());
+            Log.d("TrackingService", "Lat: " + String.valueOf(loc.getLatitude()) + " Long: " + String.valueOf(loc.getLongitude()));
+            this.sendBroadcast(intent);
+        }
 
     }
     private void cancelLocationUpdates() {

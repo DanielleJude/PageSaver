@@ -62,6 +62,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
         public void onServiceConnected(ComponentName name, IBinder service) {
             MyTrackingService.TrackingServiceBinder binder = (MyTrackingService.TrackingServiceBinder) service;
             myTrackingService = binder.getService();
+
         }
 
 
@@ -144,7 +145,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                 byte[] byteArray = extras.getByteArray(LOCATIONS_LIST);
                 if(byteArray!= null)
                 setLocationListFromByteArray(extras.getByteArray(LOCATIONS_LIST), savedLocations);
-               // booksAtLocation = extras.getStringArrayList(BOOKS_LIST);
+                booksAtLocation = extras.getStringArrayList(BOOKS_LIST);
             }
         }
         Log.d("MAP", "Map Mode: " + extras.get(MAP_MODE));
@@ -258,10 +259,11 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
 
                     int count = 0;
                     if (savedLocations.size() > 0) {
+                        if(booksAtLocation.size() > 0) {
 
                             Log.d("map", "saved locations.size: " + String.valueOf(savedLocations.size()));
                             for (LatLng l : savedLocations) {
-                                mMap.addMarker(new MarkerOptions().position(l).title("Book Title/Stats")
+                                mMap.addMarker(new MarkerOptions().position(l).title(booksAtLocation.get(count))
                                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_book)));
                                 count++;
                             }
@@ -272,8 +274,8 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                                     .tilt(45)
                                     .build();
                             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                            // mMap.moveCamera(CameraUpdateFactory.newLatLng(savedLocations.get(savedLocations.size()-1)));
-                            //mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+
+                        }
 
                     }
                 }

@@ -14,6 +14,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class ViewCurrentBookActivity extends AppCompatActivity implements View.OnClickListener{
     public final static String ID_BUNDLE_KEY = "_idbundle key";
     private long mEntryId;
@@ -149,6 +154,12 @@ AsyncTask to add an exercise entry to the database
         //TODO CHECK
         Intent intent = new Intent(this, PSMapActivity.class);
         Bundle extras = new Bundle();
+        ArrayList<BookEntry.StartEndPages> pages =  entry.getPageList();
+        ArrayList<String> titles = new ArrayList<String>();
+        for(BookEntry.StartEndPages pg: pages){
+            titles.add(String.valueOf(((double)pg.endPage/(double)entry.getTotalPages())*100) + "% Complete");
+        }
+        extras.putStringArrayList(PSMapActivity.BOOKS_LIST,titles);
         extras.putString(PSMapActivity.MAP_MODE, PSMapActivity.VIEW_SINGLE_ENTRY);
         extras.putByteArray(PSMapActivity.LOCATIONS_LIST, entry.getLocationByteArray());
         intent.putExtras(extras);
