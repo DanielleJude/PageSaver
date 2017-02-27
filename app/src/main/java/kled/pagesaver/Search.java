@@ -1,6 +1,11 @@
 package kled.pagesaver;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by eloisedietz on 2/24/17.
@@ -9,11 +14,49 @@ import java.util.ArrayList;
 public class Search {
     int mSearchBy;
     String keyWord;
+    String[] words;
+    List<BookEntry> entries;
     BookEntryDbHelper database;
 
     public Search(int searchBy, String search) {
         mSearchBy = searchBy;
         keyWord = search.trim().toLowerCase();
+    }
+
+    public Search(String search, List<BookEntry> entries) {
+        keyWord = search;
+        this.entries = entries;
+        words = keyWord.split(" ");
+    }
+
+    public Set<BookEntry> narrowEntries() {
+        Set<BookEntry> set = new HashSet<>();
+
+        narrowList(set);
+
+        return set;
+
+    }
+
+    public void narrowList(Set<BookEntry> set) {
+        for(BookEntry entry : entries) {
+            Map<String, String> entryMap = new HashMap<>();
+            entry.entryToMap(entryMap);
+
+            boolean foundFlag = false;
+            for(String field : entryMap.values()) {
+                for(String word : words) {
+                    if(field != null && field.toLowerCase().contains(word.toLowerCase())) {
+                        set.add(entry);
+                        foundFlag = true;
+                        break;
+                    }
+                }
+
+                if(foundFlag)
+                    break;
+            }
+        }
     }
 
     public ArrayList<BookEntry> findAllEntries(){
@@ -43,6 +86,9 @@ public class Search {
         }
         return result;
     }
+
+
+
 
     public ArrayList<BookEntry> findAuthor(){
         ArrayList<BookEntry> result = new ArrayList<>();

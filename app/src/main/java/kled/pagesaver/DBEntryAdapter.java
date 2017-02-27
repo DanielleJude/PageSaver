@@ -9,7 +9,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Danielle on 2/24/17.
@@ -51,6 +53,27 @@ public class DBEntryAdapter extends BaseAdapter {
     /* Clear adapter for when you want to reload fragment*/
     public void clearAdapter() {
         mList.clear();
+        notifyDataSetChanged();
+    }
+
+    public List<BookEntry> getList() {
+        List<BookEntry> ret = new ArrayList<>();
+        for(BookEntry entry : mList) {
+            ret.add(entry);
+        }
+        return ret;
+    }
+
+    public void setList(List<BookEntry> entries) {
+        mList = entries;
+        notifyDataSetChanged();
+    }
+
+    public void setList(Set<BookEntry> entries) {
+        mList.clear();
+        for(BookEntry entry : entries) {
+            mList.add(entry);
+        }
         notifyDataSetChanged();
     }
 

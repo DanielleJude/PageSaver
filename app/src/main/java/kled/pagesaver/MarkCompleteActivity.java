@@ -96,6 +96,8 @@ public class MarkCompleteActivity extends AppCompatActivity {
         if(errorString.equals("")) {
             //Mark as complete and add the final page range
             entry.setStatus(BookEntry.STATUS_PAST);
+            Log.d("MARKCOMPLETE", "page start " + entry.getFurthestPageRead() +
+            " page end " + entry.getTotalPages());
             entry.addPageRange(entry.getFurthestPageRead(), entry.getTotalPages());
 
             //get the other updated info
@@ -160,7 +162,7 @@ public class MarkCompleteActivity extends AppCompatActivity {
         long hours = Long.parseLong(mDurationHour.getText().toString());
         long endTime = startTime + 3600000 * hours + 60000 * minutes;
 
-        entry.setRating(mRatingBar.getNumStars());
+        entry.setRating((int)mRatingBar.getRating());
         entry.setComment(mCommentsView.getText().toString());
 
         if(endTime > startTime)
