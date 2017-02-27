@@ -148,7 +148,8 @@ public class MyTrackingService extends Service implements LocationListener {
             return;
         } else {
             Log.d("TrackingService", "request location updates");
-            myLocationManager.requestLocationUpdates(myLocationManager.getBestProvider(criteria, true), 0, 0, MyTrackingService.this);
+            myLocationManager.requestLocationUpdates(myLocationManager.getBestProvider(criteria, true), 0, 15, MyTrackingService.this);
+
         }
     }
     private void doUpdate(Location loc) {

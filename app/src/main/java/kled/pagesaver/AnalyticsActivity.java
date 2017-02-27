@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import lecho.lib.hellocharts.model.Axis;
@@ -19,12 +20,10 @@ import lecho.lib.hellocharts.view.ColumnChartView;
 
 public class AnalyticsActivity extends AppCompatActivity {
 
-    private ColumnChartView monthsChart;
-    private ColumnChartData monthsData;
-    private ColumnChartView hoursChart;
-    private ColumnChartData hoursData;
     private ArrayList<Integer> hoursArray;
     private ArrayList<Integer> monthsArray;
+    private ArrayList<Integer> pagesArray;
+    private ArrayList<Integer> durationArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,32 +32,52 @@ public class AnalyticsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        hoursArray = new ArrayList<>();
+        monthsArray = new ArrayList<>();
+        pagesArray = new ArrayList<>();
+        durationArray = new ArrayList<>();
+
         getPoints();
         buildTimesGraph();
         buildMonthsGraph();
+        buildDurationGraph();
+        buildPagesGraph();
     }
 
     /**
-     * Dummy Points - will eventually take in list of longs from database entries
+     * Get durations, start times, and pages read per reading session
      */
     public void getPoints() {
 
-        /* Later - for getting hours and months from list of Longs
-        http://stackoverflow.com/questions/907170/java-getminutes-and-gethours
-        Date date = new Date();   // given date
-        Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-        calendar.setTime(date);   // assigns calendar to given date
-        calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
-        calendar.get(Calendar.HOUR);        // gets hour in 12h format
-        calendar.get(Calendar.MONTH);       // gets month number, NOTE this is zero based!
-         */
+        BookEntryDbHelper entryDatabase = new BookEntryDbHelper(this);
+        ArrayList<BookEntry> entries = entryDatabase.fetchEntries();
 
-        hoursArray = new ArrayList<Integer>();
-        monthsArray = new ArrayList<Integer>();
+        for (int i = 0; i < entries.size(); i++) {
 
-        for (int i = 0; i < 50; i++) {
-            hoursArray.add((int)(Math.random() * 24));
-            monthsArray.add((int)(Math.random() * 12));
+            ArrayList<BookEntry.StartEndTimes> individualTime = entries.get(i).getTimeList();
+            ArrayList<BookEntry.StartEndPages> individualPage = entries.get(i).getPageList();
+
+            // Get times and durations
+            for (int j = 0; j < individualTime.size(); j++ ) {
+                Long startTime = individualTime.get(j).startTime;
+                Long endTime = individualTime.get(j).endTime;
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(startTime);
+                hoursArray.add(cal.get(Calendar.HOUR_OF_DAY));
+                monthsArray.add(cal.get(Calendar.MONTH));
+
+                // Difference in milliseconds - converted to hours
+                Long timeDiff = endTime - startTime;
+                int minutesRead = (int) (timeDiff / 1000 / 60 / 60);
+
+                durationArray.add(minutesRead);
+            }
+
+            // Get pages
+            for (int j = 0; j < individualPage.size(); j++ ) {
+                int diff = individualPage.get(j).endPage - individualPage.get(j).startPage;
+                pagesArray.add(diff);
+            }
         }
     }
 
@@ -66,6 +85,9 @@ public class AnalyticsActivity extends AppCompatActivity {
      * Draw chart of time of day
      */
     public void buildTimesGraph() {
+
+        ColumnChartView hoursChart;
+        ColumnChartData hoursData;
 
         hoursChart = (ColumnChartView)findViewById(R.id.time_chart);
 
@@ -114,7 +136,7 @@ public class AnalyticsActivity extends AppCompatActivity {
         axisX.setName("Hour of Day You Start Reading");
 
         Axis axisY = new Axis().setHasLines(true);
-        axisY.setName("Number of Days");
+        axisY.setName("Number of Times");
 
         hoursData.setAxisXBottom(axisX);
         hoursData.setAxisYLeft(axisY);
@@ -127,6 +149,9 @@ public class AnalyticsActivity extends AppCompatActivity {
      * Draw chart of months of reading
      */
     public void buildMonthsGraph() {
+
+        ColumnChartView monthsChart;
+        ColumnChartData monthsData;
 
         monthsChart = (ColumnChartView) findViewById(R.id.month_chart);
 
@@ -187,5 +212,135 @@ public class AnalyticsActivity extends AppCompatActivity {
 
         // Set data
         monthsChart.setColumnChartData(monthsData);
+    }
+
+    /**
+     * Draw chart of durations
+     */
+    public void buildDurationGraph() {
+
+        ColumnChartView durationChart;
+        ColumnChartData durationData;
+
+        durationChart = (ColumnChartView) findViewById(R.id.duration_chart);
+
+        // Create columns from entries
+        int[] hoursRead = new int[6];
+
+        for (int i = 0; i < durationArray.size(); i++) {
+            int hours = durationArray.get(i);
+            if (hours > 5 ) hours = 5;
+            hoursRead[hours]++;
+        }
+
+        List<Column> columns = new ArrayList<Column>();
+
+        for (int i = 0; i < hoursRead.length; ++i) {
+
+            List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
+            SubcolumnValue value = new SubcolumnValue(hoursRead[i]);
+            values.add(value);
+
+            Column column = new Column(values);
+            columns.add(column);
+
+        }
+
+        durationData = new ColumnChartData(columns);
+
+        // Format axes
+        List<AxisValue> durationLabels = new ArrayList<AxisValue>();
+
+        for (int i = 0; i < hoursRead.length; i++) {
+
+            AxisValue value = new AxisValue(i);
+
+            if (i == 0) value.setLabel("< 1 hr");
+            else if (i == 1) value.setLabel("1-2 hrs");
+            else if (i == 2) value.setLabel("2-3 hrs");
+            else if (i == 3) value.setLabel("3-4 hrs");
+            else if (i == 4) value.setLabel("4-5 hrs");
+            else if (i == 5) value.setLabel("5+ hrs");
+
+            durationLabels.add(value);
+        }
+
+        Axis axisX = new Axis(durationLabels);
+        axisX.setName("Hours Read");
+
+        Axis axisY = new Axis().setHasLines(true);
+        axisY.setName("Number of Times");
+
+        durationData.setAxisXBottom(axisX);
+        durationData.setAxisYLeft(axisY);
+
+        // Set data
+        durationChart.setColumnChartData(durationData);
+    }
+
+    /**
+     * Draw chart of pages read per session
+     */
+    public void buildPagesGraph() {
+
+        ColumnChartView pagesChart;
+        ColumnChartData pagesData;
+
+        pagesChart = (ColumnChartView) findViewById(R.id.pages_chart);
+
+        // Create columns from entries
+        int[] pagesRead = new int[5];
+
+        for (int i = 0; i < pagesArray.size(); i++) {
+            int pages = pagesArray.get(i);
+
+            // Group in chunks of 10 pages read
+            int pagesGroup = pages / 25;
+            if (pagesGroup > 4 ) pagesGroup = 4;
+            pagesRead[pagesGroup]++;
+        }
+
+        List<Column> columns = new ArrayList<Column>();
+
+        for (int i = 0; i < pagesRead.length; ++i) {
+
+            List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
+            SubcolumnValue value = new SubcolumnValue(pagesRead[i]);
+            values.add(value);
+
+            Column column = new Column(values);
+            columns.add(column);
+
+        }
+
+        pagesData = new ColumnChartData(columns);
+
+        // Format axes
+        List<AxisValue> pagesLabels = new ArrayList<AxisValue>();
+
+        for (int i = 0; i < pagesRead.length; i++) {
+
+            AxisValue value = new AxisValue(i);
+
+            if (i == 0) value.setLabel("< 25 pg");
+            else if (i == 1) value.setLabel("25-50 pgs");
+            else if (i == 2) value.setLabel("50-75 pgs");
+            else if (i == 3) value.setLabel("75-100 pgs");
+            else if (i == 4) value.setLabel("100+ pgs");
+
+            pagesLabels.add(value);
+        }
+
+        Axis axisX = new Axis(pagesLabels);
+        axisX.setName("Pages Read");
+
+        Axis axisY = new Axis().setHasLines(true);
+        axisY.setName("Number of Times");
+
+        pagesData.setAxisXBottom(axisX);
+        pagesData.setAxisYLeft(axisY);
+
+        // Set data
+        pagesChart.setColumnChartData(pagesData);
     }
 }

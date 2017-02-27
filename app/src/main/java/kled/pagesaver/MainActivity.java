@@ -128,6 +128,9 @@ public class MainActivity extends AppCompatActivity
 
         switch(id) {
             case R.id.nav_map:
+                intent = new Intent(this, PSMapActivity.class);
+                intent.putExtra(PSMapActivity.MAP_MODE,PSMapActivity.VIEW_ALL_ENTRIES);
+                startActivity(intent);
                 //TODO send locations and names to mapview
                 ArrayList<BookEntry> allEntries = new BookEntryDbHelper(this).fetchEntries();
                 Map<LatLng, Set<String>> locsWithBooks = getSetOfLocationsWithBookTitles(allEntries);

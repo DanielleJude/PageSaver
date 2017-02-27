@@ -42,6 +42,36 @@
             android:gravity="center"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:text="@string/analytics_duration_title" >
+        </TextView>
+
+        <lecho.lib.hellocharts.view.ColumnChartView
+            android:id="@+id/duration_chart"
+            android:layout_width="match_parent"
+            android:layout_height="170dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="@string/analytics_pages_title" >
+        </TextView>
+
+        <lecho.lib.hellocharts.view.ColumnChartView
+            android:id="@+id/pages_chart"
+            android:layout_width="match_parent"
+            android:layout_height="170dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:textStyle="bold"
             android:text="@string/analytics_time_title" >
         </TextView>
 
