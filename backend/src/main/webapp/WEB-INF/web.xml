@@ -52,5 +52,13 @@
         <servlet-name>delete</servlet-name>
         <url-pattern>/delete.do</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>clear</servlet-name>
+        <servlet-class>com.example.eloisedietz.myapplication.backend.ClearServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>clear</servlet-name>
+        <url-pattern>/clear.do</url-pattern>
+    </servlet-mapping>
 
 </web-app>
