@@ -47,8 +47,9 @@
     <string name="title_activity_analytics">Analytics</string>
     <string name="analytics_title">Reading Analytics</string>
     <string name="analytics_time_title">Time of Day When You Read</string>
-    <string name="analytics_month_title">How Much You Read Per Month</string>
+    <string name="analytics_month_title">How Many Days You Read Per Month</string>
+    <string name="analytics_duration_title">How Long You Read Per Session</string>
+    <string name="analytics_pages_title">How Many Pages Read Per Session</string>
     <string name="title_activity_psmap">Map</string>
-    <string name="title_activity_view_goal_entry">ViewGoalEntryActivity</string>
 
 </resources>
