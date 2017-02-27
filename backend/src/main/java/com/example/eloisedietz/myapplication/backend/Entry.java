@@ -18,19 +18,28 @@ public class Entry {
     public static final String RATING = "rating";
     public static final String COMMENT = "comment";
     public static final String STATUS = "status";
+    public static final String PHONE_ID = "phone_id";
     public static final String QUOTE = "quote";
 
 
-    private String mId;
+    private String mId = "";
+    private String mPhone = "";
 
-    private String mTitle;
-    private String mAuthor;
-    private String mGenre;
-    private String mRating;
-    private String mComment;
-    private String mStatus;
-    private String mQuote;
+    private String mTitle = "";
+    private String mAuthor= "";
+    private String mGenre= "";
+    private String mRating= "";
+    private String mComment= "";
+    private String mStatus= "";
+    private String mQuote= "";
 
+    public void setPhoneId(String id){
+        mPhone = id;
+    }
+
+    public String getPhoneId() {
+        return mPhone;
+    }
 
     public void setId(String id){
         mId = id;

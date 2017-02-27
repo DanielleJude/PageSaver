@@ -46,6 +46,7 @@ public class QueryServlet extends HttpServlet {
         out.write("Exercise Entries\n\n");
         out.write("<table border=\"1\" style=\"width:80%\">\n" +
                 "<tr> <TH> ID </TH>" +
+                "<TH> Phone ID </TH>"+
                 "<TH> Title </TH>" +
                 "<TH> Author </TH> " +
                 "<TH> Genre </TH>" +
@@ -59,6 +60,7 @@ public class QueryServlet extends HttpServlet {
         if (result != null) {
             for (Entry entry : result) {
                 out.write("<TR> <TH> " + entry.getId() + " </TH>" +
+                        "<TH> " + entry.getPhoneId() + "</TH> " +
                         "<TH> " + entry.getTitle() + "</TH> " +
                         "<TH>" + entry.getAuthor() +" </TH> " +
                         "<TH>" + entry.getGenre() + "</TH>" +
@@ -66,7 +68,7 @@ public class QueryServlet extends HttpServlet {
                         "<TH> "+entry.getComment()+" </TH>" +
                         "<TH>" + entry.getStatus()+"</TH>" +
                         "<TH>" + entry.getQuote()+"</TH>" +
-                        "<TH><input type=\"button\" onclick=\"location.href='/delete.do?id=" + entry.getId() + "'\" value=\"Delete\"> </TH> </tr>"
+                        "</tr>"
                 );
             }
         }
