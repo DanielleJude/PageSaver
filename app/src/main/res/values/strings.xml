@@ -25,14 +25,24 @@
     <string name="title_activity_edit_book">EditBookActivity</string>
 
     <!-- Goals -->
+    <string name="title_activity_goals">Goals</string>
     <string name="goals_title">Current Goals</string>
     <string name="button_add_goals">Add Goal</string>
+    <string name="goals_book_title">Book Title</string>
+    <string name="goals_description">Description</string>
+    <string name="goals_end_time">Completion Goal</string>
+
+    <string name="goals_menu_complete">Complete Goal</string>
+    <string name="goals_menu_finish_daily_goal">Complete Daily Progress</string>
+    <string name="goals_menu_custom_progress">Complete Custom Progress</string>
+
+    <string name="title_activity_view_goal">View Goal</string>
+    <string name="title_activity_add_goal">Add Goal</string>
 
     <!-- Analytics -->
     <string name="analytics_title">Reading Analytics</string>
     <string name="analytics_time_title">Time of Day When You Read</string>
     <string name="analytics_month_title">How Much You Read Per Month</string>
-    <string name="title_activity_view_goal">ViewGoalActivity</string>
-    <string name="title_activity_add_goal">AddGoalActivity</string>
+    <string name="title_activity_analytics">Analytics</string>
 
 </resources>

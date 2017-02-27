@@ -3,13 +3,9 @@ package kled.pagesaver;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.view.MenuInflater;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -120,19 +116,19 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        Intent intent;
         int id = item.getItemId();
 
         switch(id) {
             case R.id.nav_map:
                 break;
             case R.id.nav_analytics:
-                fragmentManager.beginTransaction().replace(R.id.content_main,
-                        AnalyticsFragment.newInstance() ).commit();
+                intent = new Intent(this, AnalyticsActivity.class);
+                startActivity(intent);
                 break;
             case R.id.nav_goal_tracker:
-                fragmentManager.beginTransaction().replace(R.id.content_main,
-                        GoalsFragment.newInstance() ).commit();
+                intent = new Intent(this, GoalsActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;

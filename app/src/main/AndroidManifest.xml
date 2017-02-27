@@ -30,6 +30,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".AnalyticsActivity"
+            android:label="@string/title_activity_analytics"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".GoalsActivity"
+            android:label="@string/title_activity_goals"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".AddBookActivity"
             android:label="@string/title_activity_add_book"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -53,7 +61,7 @@
         <activity
             android:name=".AddGoalActivity"
             android:label="@string/title_activity_add_goal"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

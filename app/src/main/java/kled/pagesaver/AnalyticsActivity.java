@@ -1,11 +1,11 @@
 package kled.pagesaver;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +17,7 @@ import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
-
-/**
- * Created by kelley
- */
-public class AnalyticsFragment extends Fragment {
+public class AnalyticsActivity extends AppCompatActivity {
 
     private ColumnChartView monthsChart;
     private ColumnChartData monthsData;
@@ -30,37 +26,16 @@ public class AnalyticsFragment extends Fragment {
     private ArrayList<Integer> hoursArray;
     private ArrayList<Integer> monthsArray;
 
-    public AnalyticsFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     * @return A new instance of fragment AnalyticsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AnalyticsFragment newInstance() {
-        AnalyticsFragment fragment = new AnalyticsFragment();
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_analytics, container, false);
+        setContentView(R.layout.activity_analytics);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         getPoints();
-        buildTimesGraph(view);
-        buildMonthsGraph(view);
-
-        return view;
+        buildTimesGraph();
+        buildMonthsGraph();
     }
 
     /**
@@ -90,9 +65,9 @@ public class AnalyticsFragment extends Fragment {
     /**
      * Draw chart of time of day
      */
-    public void buildTimesGraph(View v) {
+    public void buildTimesGraph() {
 
-        hoursChart = (ColumnChartView)v.findViewById(R.id.time_chart);
+        hoursChart = (ColumnChartView)findViewById(R.id.time_chart);
 
         // Create columns from entries
         int[] hours = new int[24];
@@ -151,9 +126,9 @@ public class AnalyticsFragment extends Fragment {
     /**
      * Draw chart of months of reading
      */
-    public void buildMonthsGraph(View v) {
+    public void buildMonthsGraph() {
 
-        monthsChart = (ColumnChartView)v.findViewById(R.id.month_chart);
+        monthsChart = (ColumnChartView) findViewById(R.id.month_chart);
 
         // Create columns from entries
         int[] months = new int[12];
