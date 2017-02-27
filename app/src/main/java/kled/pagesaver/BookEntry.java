@@ -32,7 +32,6 @@ public class BookEntry {
     private int mTotalPages;   // number of total pages
 
     public static final String ID = "id";
-    public static final String REG_ID = "reg_id";
     public static final String PHONE_ID = "phone_id";
     public static final String TITLE = "title";
     public static final String AUTHOR = "author";
@@ -88,14 +87,6 @@ public class BookEntry {
 
     public Long getRowId() {
         return mRowId;
-    }
-
-    public void setRegId(String regId){
-        mRegId = regId;
-    }
-
-    public String getRegId() {
-        return mRegId;
     }
 
     public void setPhoneId(String phoneId){

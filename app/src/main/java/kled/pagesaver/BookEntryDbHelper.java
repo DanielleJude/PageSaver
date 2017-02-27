@@ -30,7 +30,6 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
 
     public static final String KEY_ROW_ID = "_row_id";
-    public static final String KEY_REG_ID = "_reg_id";
     public static final String KEY_PHONE_ID = "_phone_id";
     public static final String KEY_TITLE= "_title";
     public static final String KEY_AUTHOR = "_author";
@@ -49,8 +48,6 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
             + " ("
             + KEY_ROW_ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + KEY_REG_ID
-            + " INTEGER "
             + KEY_PHONE_ID
             + " INTEGER "
             + KEY_TITLE
@@ -77,7 +74,7 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
             + " INTEGER NOT NULL "
             + "):";
 
-    public static final String[] columns = new String[]{KEY_ROW_ID, KEY_REG_ID,
+    public static final String[] columns = new String[]{KEY_ROW_ID,
             KEY_PHONE_ID, KEY_TITLE, KEY_AUTHOR, KEY_GENRE, KEY_RATING,
             KEY_COMMENT, KEY_STATUS, KEY_QUOTE, KEY_LOCATIONS,
             KEY_START_END_TIMES, KEY_START_END_PAGES, KEY_TOTAL_PAGES};
@@ -99,7 +96,6 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
 
     public long insertEntry(BookEntry entry){
         ContentValues value = new ContentValues();
-        value.put(KEY_REG_ID, entry.getRegId());
         value.put(KEY_PHONE_ID, entry.getPhoneId());
         value.put(KEY_TITLE, entry.getTitle());
         value.put(KEY_AUTHOR, entry.getAuthor());
@@ -174,7 +170,6 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
     private BookEntry cursorToEntry(Cursor cursor) {
         BookEntry entry = new BookEntry();
         entry.setRowId(cursor.getLong(cursor.getColumnIndex(KEY_ROW_ID)));
-        entry.setRegId(cursor.getString(cursor.getColumnIndex(KEY_REG_ID)));
         entry.setPhoneId(cursor.getString(cursor.getColumnIndex(KEY_PHONE_ID)));
         entry.setTitle(cursor.getString(cursor.getColumnIndex(KEY_TITLE)));
         entry.setAuthor(cursor.getString(cursor.getColumnIndex(KEY_AUTHOR)));
