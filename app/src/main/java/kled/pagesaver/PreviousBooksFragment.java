@@ -40,7 +40,7 @@ public class PreviousBooksFragment extends Fragment implements AdapterView.OnIte
         //Reset the adapter to reflect any changes made to the database;
         adapter.clearAdapter();
 
-        task = new ReadInEntriesAsyncTask(ReadInEntriesAsyncTask.PAST_MODE, adapter);
+        task = new ReadInEntriesAsyncTask(getActivity(), ReadInEntriesAsyncTask.PAST_MODE, adapter);
         task.execute();
     }
 

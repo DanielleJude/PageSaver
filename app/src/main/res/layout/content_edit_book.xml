@@ -38,7 +38,7 @@
         <DatePicker
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/date_picker_add_book">
+            android:id="@+id/date_picker_edit_book">
 
         </DatePicker>
 
@@ -51,7 +51,7 @@
         <TimePicker
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/time_picker_add_book">
+            android:id="@+id/time_picker_edit_book">
         </TimePicker>
 
         <TextView
@@ -73,7 +73,8 @@
                 android:hint="Enter a number"
                 android:inputType="number"
                 android:layout_column="0"
-                android:layout_columnWeight="1"/>
+                android:layout_columnWeight="1"
+                android:id="@+id/edit_hours_duration"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -88,7 +89,8 @@
                 android:hint="Enter a number"
                 android:inputType="number"
                 android:layout_column="2"
-                android:layout_columnWeight="1"/>
+                android:layout_columnWeight="1"
+                android:id="@+id/edit_hours_minutes"/>
 
             <TextView
                 android:layout_width="wrap_content"

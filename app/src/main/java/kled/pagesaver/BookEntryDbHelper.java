@@ -63,8 +63,6 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
             +" TEXT, "
             + KEY_STATUS
             + " INTEGER NOT NULL, "
-//            + KEY_QUOTE
-//            + " BLOB, "
             + KEY_LOCATIONS
             + " BLOB, "
             + KEY_START_END_TIMES
@@ -224,18 +222,28 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
 
         byte[] byteTrackLocations = cursor.getBlob(cursor
                 .getColumnIndex(KEY_LOCATIONS));
-        entry.setLocationListFromByteArray(byteTrackLocations);
+        if(byteTrackLocations != null)
+            entry.setLocationListFromByteArray(byteTrackLocations);
 
         byte[] byteTrackTimes = cursor.getBlob(cursor
                 .getColumnIndex(KEY_START_END_TIMES));
-        entry.setTimeListFromByteArray(byteTrackTimes);
+        if(byteTrackTimes != null)
+            entry.setTimeListFromByteArray(byteTrackTimes);
 
         byte[] byteTrackPages = cursor.getBlob(cursor
                 .getColumnIndex(KEY_START_END_PAGES));
-        entry.setPageListFromByteArray(byteTrackPages);
+        if(byteTrackPages != null)
+            entry.setPageListFromByteArray(byteTrackPages);
 
         return entry;
 
+    }
+
+    public void updateEntry(BookEntry entry) {
+        database = getWritableDatabase();
+        ContentValues data= entryToContentValues(entry);
+        database.update(TABLE_NAME_ENTRIES, data, KEY_ROW_ID + "=" + entry.getRowId(), null);
+        database.close();
     }
 
     public void closeDB() {

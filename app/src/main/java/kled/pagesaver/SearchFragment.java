@@ -48,7 +48,7 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemClickL
         //Reset the adapter to reflect any changes made to the database;
         adapter.clearAdapter();
 
-        task = new ReadInEntriesAsyncTask(ReadInEntriesAsyncTask.ALL_MODE, adapter);
+        task = new ReadInEntriesAsyncTask(getActivity(), ReadInEntriesAsyncTask.ALL_MODE, adapter);
         task.execute();
     }
 

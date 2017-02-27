@@ -182,7 +182,8 @@ public class BookEntry {
 
     // Convert byte array to Location ArrayList
     public void setLocationListFromByteArray(byte[] bytePointArray) {
-
+        if(bytePointArray.length == 0)
+            return;
         ByteBuffer byteBuffer = ByteBuffer.wrap(bytePointArray);
         IntBuffer intBuffer = byteBuffer.asIntBuffer();
 
@@ -225,7 +226,8 @@ public class BookEntry {
 
     // Convert byte array to time ArrayList
     public void setTimeListFromByteArray(byte[] bytePointArray) {
-
+        if(bytePointArray.length == 0)
+            return;
         ByteBuffer byteBuffer = ByteBuffer.wrap(bytePointArray);
         LongBuffer longBuffer = byteBuffer.asLongBuffer();
 
@@ -267,7 +269,8 @@ public class BookEntry {
 
     // Convert byte array to ArrayList for pages
     public void setPageListFromByteArray(byte[] bytePointArray) {
-
+        if(bytePointArray.length == 0)
+            return;
         ByteBuffer byteBuffer = ByteBuffer.wrap(bytePointArray);
         IntBuffer intBuffer = byteBuffer.asIntBuffer();
 
