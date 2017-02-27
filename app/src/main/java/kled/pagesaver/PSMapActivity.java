@@ -338,4 +338,11 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
             list.add(latLng);
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        stopTrackingService();
+    }
 }
