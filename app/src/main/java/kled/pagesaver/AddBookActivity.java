@@ -1,13 +1,20 @@
 package kled.pagesaver;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TimePicker;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -17,6 +24,7 @@ import java.util.Date;
 
 public class AddBookActivity extends AppCompatActivity implements View.OnClickListener{
     private LatLng chosenLatLng = null;
+    private final static int MAP_REQUEST_CODE = 5789;
 
     private EditText mTitleView;
     private EditText mAuthorView;
@@ -28,6 +36,7 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
     private EditText mDurationHour;
     private EditText mDurationMinute;
 
+
     //bundle keys
     private final static String TITLE_KEY = "title";
     private final static String AUTHOR_KEY = "author";
@@ -37,6 +46,8 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
     private final static String TIME_KEY = "time";
     private final static String DHOUR_KEY = "dhour";
     private final static String DMINUTE_KEY = "dminute";
+    private final static String LAT_BUNDLE_KEY = "latitude";
+    private final static String LNG_BUNDLE_KEY = "longitude";
 
 
 
@@ -56,27 +67,124 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
 
     //REGION button call backs
     public void onAddLocationClick(View view) {
-        //TODO Get a location from the mapview!
+        Intent intent = new Intent(this, PSMapActivity.class);
+        Bundle extras = new Bundle();
+        extras.putString(PSMapActivity.MAP_MODE, PSMapActivity.PLACE_MARKER_MODE);
+        intent.putExtras(extras);
+        startActivityForResult(intent, MAP_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == MAP_REQUEST_CODE) {
+            if(resultCode == Activity.RESULT_OK){
+                Bundle bundle = data.getExtras();
+                double lat = bundle.getDouble(PSMapActivity.LAT_KEY, -1);
+                double lng = bundle.getDouble(PSMapActivity.LNG_KEY, -1);
+                if(lat != -1 && lng != -1)
+                    chosenLatLng = new LatLng(lat, lng);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Don't do anything
+            }
+        }
     }
 
     public void onClick(View view) {
         int id = view.getId();
 
         if(id == R.id.fab_add_add_book_view) {
-            EntryDatastoreHelper datastoreHelper = new EntryDatastoreHelper(this);
-            BookEntry entry = retrieveUIInfo();
-            datastoreHelper.addEntry(entry);
-
-            finish();
-
-            //TODO if title author and rating, add to datastore
-            //TODO show dialog if entries missing
+            String errorString = isReadyToAdd();
+            if(errorString.equals("")) {
+                addEntry();
+                finish();
+            } else {
+                //SHOW DIALOG with error
+                makeTextDialog(errorString);
+            }
         }
+    }
+
+    private String isReadyToAdd() {
+        String errorString = "Must enter the following fields to add entry:\n";
+        boolean canAddFlag = true;
+
+        if(!fieldNotEmpty(mTitleView)) {
+            canAddFlag = false;
+            errorString = errorString + "Title\n";
+        }
+
+        if(!fieldNotEmpty(mAuthorView)) {
+            canAddFlag = false;
+            errorString = errorString + "Author\n";
+        }
+
+        if(!fieldNotEmpty(mGenreView)) {
+            canAddFlag = false;
+            errorString = errorString + "Genre\n";
+        }
+
+        if(!fieldNotEmpty(mProgressSoFarView)) {
+            canAddFlag = false;
+            errorString = errorString + "Pages Read\n";
+        }
+
+        if(!fieldNotEmpty(mTotalPagesView)) {
+            canAddFlag = false;
+            errorString = errorString + "Total Number of Pages\n";
+        }
+
+        if(!fieldNotEmpty(mDurationHour)) {
+            canAddFlag = false;
+            errorString = errorString + "Hours Spent Reading\n";
+        }
+
+        if(!fieldNotEmpty(mDurationMinute)) {
+            canAddFlag = false;
+            errorString = errorString + "Minutes Spent Reading\n";
+        }
+
+        if(chosenLatLng == null) {
+            errorString = errorString + "Choose a Location\n";
+            canAddFlag = false;
+        }
+
+        if(canAddFlag) {
+            return "";
+        } else {
+            return errorString;
+        }
+
+
+    }
+
+    private boolean fieldNotEmpty(EditText field) {
+        if("".equals(field.getText().toString()))
+            return false;
+
+        return true;
+    }
+
+    private void addEntry() {
+        //turn UI info into an entry
+        BookEntry entry = retrieveUIInfo();
+
+        //Add to database!
+        BookEntryDbHelper dbHelper = new BookEntryDbHelper(this);
+        long id = dbHelper.insertEntry(entry);
+
+        //SET ID
+        entry.setRowId(id);
+
+        //Add to datastore
+        EntryDatastoreHelper datastoreHelper = new EntryDatastoreHelper(this);
+        datastoreHelper.addEntry(entry);
+
     }
 
 
 
-    //TODO: retrieving info and sending to server to add
     private BookEntry retrieveUIInfo() {
         BookEntry entry = new BookEntry();
 
@@ -137,6 +245,19 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    private void makeTextDialog(String message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Error");
+        alertDialog.setMessage(message);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
 
     @Override
     protected void onSaveInstanceState(Bundle saveInstanceState) {
@@ -153,6 +274,11 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
                 mDurationHour.getText().toString());
         saveInstanceState.putString(DMINUTE_KEY,
                 mDurationMinute.getText().toString());
+
+        if(chosenLatLng != null) {
+            saveInstanceState.putDouble(LAT_BUNDLE_KEY, chosenLatLng.latitude);
+            saveInstanceState.putDouble(LNG_BUNDLE_KEY, chosenLatLng.longitude);
+        }
 
     }
 
@@ -173,6 +299,16 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
         mDatePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
         mTimePicker.setHour(cal.get(Calendar.HOUR));
         mTimePicker.setMinute(cal.get(Calendar.MINUTE));
+
+        double lat = savedInstanceState.getDouble(LAT_BUNDLE_KEY, -1);
+        double lng = savedInstanceState.getDouble(LNG_BUNDLE_KEY, -1);
+
+        if(lat != -1 && lng != -1)
+            chosenLatLng = new LatLng(lat, lng);
+        else
+            chosenLatLng = null;
+
+
 
     }
 

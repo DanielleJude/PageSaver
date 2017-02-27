@@ -16,7 +16,6 @@ import java.util.Map;
 
 public class BookEntry {
     private Long mRowId;
-    private String mRegId;   // registration ID
     private String mPhoneId; // unique phone ID
 
     private String mTitle;
@@ -33,6 +32,7 @@ public class BookEntry {
 
     public static final String ID = "id";
     public static final String PHONE_ID = "phone_id";
+    public static final String REG_ID = "reg_id";
     public static final String TITLE = "title";
     public static final String AUTHOR = "author";
     public static final String GENRE = "genre";
@@ -305,8 +305,6 @@ public class BookEntry {
     //Put the current entry into a map to send to server;
     public void entryToMap(Map<String, String> map) {
         map.put(ID, ""+ mRowId);
-        map.put(REG_ID, mRegId);
-        map.put(PHONE_ID, mPhoneId);
         map.put(TITLE, mTitle);
         map.put(AUTHOR, mAuthor);
         map.put(GENRE, mGenre);

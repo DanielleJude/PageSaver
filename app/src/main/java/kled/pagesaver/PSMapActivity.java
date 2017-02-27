@@ -30,12 +30,14 @@ import java.util.ArrayList;
 public class PSMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private static final String PLACE_MARKER_MODE = "marker mode";
-    private static final String MAP_MODE = "map mode";
-    private static final String LOCATIONS_LIST = "locations list";
-    private static final String BOOKS_LIST = "books list";
-    private static final String VIEW_ALL_ENTRIES = "view all entries";
-    private static final String VIEW_SINGLE_ENTRY = "view single entry";
+    public static final String PLACE_MARKER_MODE = "marker mode";
+    public static final String MAP_MODE = "map mode";
+    public static final String LOCATIONS_LIST = "locations list";
+    public static final String BOOKS_LIST = "books list";
+    public static final String VIEW_ALL_ENTRIES = "view all entries";
+    public static final String VIEW_SINGLE_ENTRY = "view single entry";
+    public static final String LAT_KEY = "latitude_bundle_key";
+    public static final String LNG_KEY = "longitude_bundle_key";
 
     MyTrackingService myTrackingService;
     private Intent mServiceIntent;
@@ -268,8 +270,10 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent data = new Intent();
-                        data.putExtra("lat", curLat);
-                        data.putExtra("long", curLong);
+                        Bundle extras = new Bundle();
+                        extras.putDouble(LAT_KEY, curLat);
+                        extras.putDouble(LNG_KEY, curLong);
+                        data.putExtras(extras);
                         setResult(RESULT_OK, data);
                         finish();
                     }

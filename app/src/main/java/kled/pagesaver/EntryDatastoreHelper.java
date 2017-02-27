@@ -48,7 +48,6 @@ public class EntryDatastoreHelper {
 
     public void addEntry(BookEntry entry) {
         Map<String, String> params = new HashMap<>();
-        params.put(BookEntry.ID, ""+-1);
         params.put(BookEntry.REG_ID, getRegID());
         params.put(BookEntry.PHONE_ID, getInstanceId());
 

@@ -103,7 +103,8 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         value.put(KEY_RATING, entry.getRating());
         value.put(KEY_COMMENT, entry.getComment());
         value.put(KEY_STATUS, entry.getStatus());
-        value.put(KEY_QUOTE, entry.getQuote());
+        //TODO quote!
+        //value.put(KEY_QUOTE, entry.getQuote());
         value.put(KEY_TOTAL_PAGES, entry.getTotalPages());
 
         byte[] byteLocations = entry.getLocationByteArray();
@@ -177,7 +178,8 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         entry.setRating(cursor.getInt(cursor.getColumnIndex(KEY_RATING)));
         entry.setComment(cursor.getString(cursor.getColumnIndex(KEY_COMMENT)));
         entry.setStatus(cursor.getInt(cursor.getColumnIndex(KEY_STATUS)));
-        entry.setQuote(cursor.getString(cursor.getColumnIndex(KEY_QUOTE)));
+        //TODO quote
+        //entry.setQuote(cursor.getString(cursor.getColumnIndex(KEY_QUOTE)));
         entry.setTotalPages(cursor.getInt(cursor.getColumnIndex(KEY_TOTAL_PAGES)));
 
         byte[] byteTrackLocations = cursor.getBlob(cursor
