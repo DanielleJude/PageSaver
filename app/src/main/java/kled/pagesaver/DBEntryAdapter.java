@@ -117,9 +117,9 @@ public class DBEntryAdapter extends BaseAdapter {
         String headerString = entry.getTitle() + ": " + entry.getAuthor();
         headerTV.setText(headerString);
 
-        ratingBar.setNumStars(entry.getRating());
-        ratingBar.setMax(5);
+        ratingBar.setRating(entry.getRating());
         ratingBar.setClickable(false);
+
 
         return rowView;
     }

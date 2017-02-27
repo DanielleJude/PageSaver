@@ -57,6 +57,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Enter a number"
                 android:inputType="number"
+                android:id="@+id/complete_dur_hours"
                 android:layout_column="0"
                 android:layout_columnWeight="1"/>
 
@@ -71,6 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Enter a number"
+                android:id="@+id/complete_dur_minutes"
                 android:inputType="number"
                 android:layout_column="2"
                 android:layout_columnWeight="1"/>
@@ -100,11 +102,13 @@
             android:layout_marginBottom="10dp"/>
 
         <RatingBar
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/complete_book_rating_bar"
             android:layout_marginBottom="10dp"
-            android:numStars="5"/>
+            android:numStars="5"
+            android:layout_gravity="center_horizontal"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -116,6 +120,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/complete_book_comments"
+            android:hint="Enter any comments here"
             android:layout_marginBottom="10dp"/>
 
 
