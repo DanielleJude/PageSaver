@@ -35,7 +35,7 @@ public class QueryServlet extends HttpServlet {
                 "border-collapse: collapse;\n"+
                 "}\n"+
                 "</style>\n"+
-                "<title>Exercise Entries</title>\n" +
+                "<title>Book Entries</title>\n" +
                 "</head>\n" +
                 "<body>\n");
         String retStr = (String) req.getAttribute("_retStr");
@@ -43,7 +43,7 @@ public class QueryServlet extends HttpServlet {
             out.write(retStr+"<br>");
 
         }
-        out.write("Exercise Entries\n\n");
+        out.write("Book Entries\n\n");
         out.write("<table border=\"1\" style=\"width:80%\">\n" +
                 "<tr> <TH> ID </TH>" +
                 "<TH> Phone ID </TH>"+

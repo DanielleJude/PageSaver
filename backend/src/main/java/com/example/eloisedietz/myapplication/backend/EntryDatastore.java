@@ -31,6 +31,25 @@ public class EntryDatastore {
                 Entry.PARENT_IDENTIFIER);
     }
 
+    /*
+This method clears all of the entries in the datastore
+ */
+    public  void clear(){
+        Query query = new Query(Entry.ENTITY_NAME);
+        query.setFilter(null);
+        query.setAncestor(getParentKey());
+        PreparedQuery pq = mDatastore.prepare(query);
+        Iterator<Entity> entities = pq.asIterator();
+        if(entities!=null) {
+            while (entities.hasNext()) {
+                Entity entity = entities.next();
+                if (entity != null) {
+                    mDatastore.delete(entity.getKey());
+                }
+            }
+        }
+    }
+
     public Entry getEntryByIdentifier(String id){
         Entity entity = null;
         //Key key = KeyFactory.createKey(getParentKey(), Entry.ID, id);
