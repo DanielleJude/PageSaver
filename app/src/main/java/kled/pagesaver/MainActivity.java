@@ -1,7 +1,9 @@
 package kled.pagesaver;
 
+import android.*;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity
     private ViewPager mViewPager;
     private ArrayList<Fragment> mFragmentList;
     private PSFragmentPagerAdapter mViewPagerAdapter;
+    private Context context; 
 
 
     @Override
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity
         checkPermissions();
         //register with the server
         new GcmRegistrationAsyncTask(this).execute();
+        context = this; 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -124,7 +128,7 @@ Code rewritten from onReuestPermissionsResult in IAmHere
                         (android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         || shouldShowRequestPermissionRationale
                         (android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -148,9 +152,9 @@ Code rewritten from onReuestPermissionsResult in IAmHere
         if(Build.VERSION.SDK_INT < 23)
             return;
 
-        if (ContextCompat.checkSelfPermission(getApplicationContext(),
+        if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(getApplicationContext(),
+                || ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     android.Manifest.permission.CAMERA, android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);

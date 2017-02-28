@@ -180,11 +180,6 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
 
         //Add to database!
         database = new BookEntryDbHelper(this);
-        addToDatabase addLocal = new addToDatabase();
-        addLocal.execute(entry);
-
-        //SET ID
-        entry.setRowId(id);
 
         //Add to datastore
         datastoreHelper = new EntryDatastoreHelper(this);
@@ -200,6 +195,9 @@ AsyncTask to add an exercise entry to the database
 
         @Override
         protected Void doInBackground(BookEntry... params) {
+            //SET ID
+            id = database.insertEntry(params[0]);
+            params[0].setRowId(id);
             datastoreHelper.addEntry(params[0]);
             return null;
         }
@@ -210,17 +208,6 @@ AsyncTask to add an exercise entry to the database
         }
     }
 
-    private class addToDatabase extends AsyncTask<BookEntry, Void, Void> {
-        @Override
-        protected Void doInBackground(BookEntry... params) {
-            id = database.insertEntry(params[0]);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void params){
-        }
-    }
 
 
 
