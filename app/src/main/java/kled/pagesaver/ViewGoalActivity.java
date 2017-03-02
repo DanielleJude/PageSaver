@@ -15,12 +15,23 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class ViewGoalActivity extends AppCompatActivity {
+public class ViewGoalActivity extends AppCompatActivity
+        implements CustomRangeDialogFragment.CustomRangeDialogListener{
 
     private GoalsDbHelper goalsDataBase;
     Long entryId;
     public int increment;
     DialogFragment newFragment;
+
+    @Override
+    /* Update progress after user inputs custom range */
+    public void onFinishEditDialog(int inputRange){
+        increment = inputRange;
+        UpdateParams update_custom = new UpdateParams(entryId, increment);
+        EntryUpdateWorker updateWorkerCustom = new EntryUpdateWorker();
+        updateWorkerCustom.execute(update_custom);
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
