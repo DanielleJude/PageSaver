@@ -37,11 +37,16 @@
     <string name="goals_progress">Progress</string>
 
     <string name="goals_menu_complete">Complete Goal</string>
-    <string name="goals_menu_finish_daily_goal">Read Daily Goal</string>
-    <string name="goals_menu_custom_progress">Read Custom Range</string>
+    <string name="goals_menu_finish_daily_goal">Progress Today: Daily Goal</string>
+    <string name="goals_menu_custom_progress">Progress Today: Custom Range</string>
 
     <string name="title_activity_view_goal">View Goal</string>
     <string name="title_activity_add_goal">Add Goal</string>
+
+    <string name="dialog_custom_range_message">How many pages did you read today?</string>
+    <string name="dialog_custom_range_title">Input Custom Range:</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">CANCEL</string>
 
     <!-- Analytics -->
     <string name="title_activity_analytics">Analytics</string>
