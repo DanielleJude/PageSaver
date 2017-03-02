@@ -1,5 +1,6 @@
 package kled.pagesaver;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 
@@ -17,8 +18,30 @@ import android.widget.TextView;
 
 public class CustomRangeDialogFragment extends DialogFragment {
 
+    public interface CustomRangeDialogListener {
+        public void onFinishEditDialog(int inputRange);
+    }
+
+    CustomRangeDialogListener mListener;
+
+    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            mListener = (CustomRangeDialogListener) activity;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(activity.toString()
+                    + " must implement NoticeDialogListener");
+        }
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         // Get the layout inflater
@@ -33,8 +56,9 @@ public class CustomRangeDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        // Save user input as page increment
-                        // Integer.parseInt(customRangeTv.getText().toString());
+                        // Pass custom page increment back to ViewGoalActivity
+                        mListener.onFinishEditDialog(Integer.parseInt
+                                (customRangeTv.getText().toString()));
                     }
                 })
                 .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
