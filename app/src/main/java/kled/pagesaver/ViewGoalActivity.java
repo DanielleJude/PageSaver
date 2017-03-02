@@ -3,6 +3,7 @@ package kled.pagesaver;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -18,7 +19,8 @@ public class ViewGoalActivity extends AppCompatActivity {
 
     private GoalsDbHelper goalsDataBase;
     Long entryId;
-    int increment;
+    public int increment;
+    DialogFragment newFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,15 +77,14 @@ public class ViewGoalActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.goal_daily_progress:
-                UpdateParams update = new UpdateParams(entryId, increment);
-                EntryUpdateWorker updateWorker = new EntryUpdateWorker();
-                updateWorker.execute(update);
+                UpdateParams update_daily = new UpdateParams(entryId, increment);
+                EntryUpdateWorker updateWorkerDaily = new EntryUpdateWorker();
+                updateWorkerDaily.execute(update_daily);
                 finish();
                 return true;
             case R.id.goal_custom_progress:
-                Toast.makeText(getApplicationContext(),	"To be implemented later",
-                        Toast.LENGTH_SHORT).show();
-                finish();
+                newFragment = new CustomRangeDialogFragment();
+                newFragment.show(getSupportFragmentManager(), "customRange");
                 return true;
             case R.id.goal_complete:
                 EntryDeleteWorker deleteWorker = new EntryDeleteWorker();
