@@ -16,7 +16,6 @@ import java.util.ArrayList;
 
 public class GoalsDbHelper extends SQLiteOpenHelper {
 
-
     public static final String DATABASE_NAME = "GoalsDB";
 
     public static final String TABLE_NAME_ENTRIES = "Goals";
@@ -88,10 +87,15 @@ public class GoalsDbHelper extends SQLiteOpenHelper {
 
     public long updateGoalEntry(long id, int pagesReadToday) {
         GoalEntry entry = fetchEntryByIndex(id);
+
         int newProgress = pagesReadToday + entry.getReadPages();
 
         if (newProgress > 0) {
-            entry.setReadPages(newProgress);
+            if (newProgress >= entry.getPagesToComplete()) {
+                entry.setReadPages(entry.getPagesToComplete());
+            } else {
+                entry.setReadPages(newProgress);
+            }
         }
         else {
             entry.setReadPages(0);
