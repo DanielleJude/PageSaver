@@ -53,7 +53,7 @@ public class QueryServlet extends HttpServlet {
                 "<TH> Rating </TH>" +
                 "<TH> Comment </TH>" +
                 "<TH> Status </TH>" +
-                "<TH> Quote </TH> </tr>"
+                "<TH> Number of Pages </TH> </tr>"
         );
 
 
@@ -67,7 +67,7 @@ public class QueryServlet extends HttpServlet {
                         "<TH>" + entry.getRating() +" </TH>" +
                         "<TH> "+entry.getComment()+" </TH>" +
                         "<TH>" + entry.getStatus()+"</TH>" +
-                        "<TH>" + entry.getQuote()+"</TH>" +
+                        "<TH>" + entry.getTotalPages()+"</TH>" +
                         "</tr>"
                 );
             }

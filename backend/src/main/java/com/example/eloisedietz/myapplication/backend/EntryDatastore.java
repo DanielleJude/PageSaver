@@ -10,6 +10,7 @@ import com.google.appengine.api.datastore.Query;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -50,10 +51,9 @@ This method clears all of the entries in the datastore
         }
     }
 
-    public Entry getEntryByIdentifier(String id){
+    public Entry getEntryByIdentifier(String id, String phoneId){
         Entity entity = null;
-        //Key key = KeyFactory.createKey(getParentKey(), Entry.ID, id);
-        Key key = KeyFactory.createKey(getParentKey(), Entry.ENTITY_NAME, id);
+        Key key = KeyFactory.createKey(getParentKey(), Entry.ENTITY_NAME, id + " " + phoneId);
         try {
             entity = mDatastore.get(key);
         }catch (Exception e){}
@@ -73,7 +73,10 @@ This method clears all of the entries in the datastore
         entry.setRating(entity.getProperty(Entry.RATING).toString());
         entry.setComment(entity.getProperty(Entry.COMMENT).toString());
         entry.setStatus(entity.getProperty(Entry.STATUS).toString());
-//        entry.setQuote(entity.getProperty(Entry.QUOTE).toString());
+        entry.setLocationList(entity.getProperty(Entry.LOCATION_LIST).toString());
+        entry.setTimeList(entity.getProperty(Entry.TIMES_LIST).toString());
+        entry.setPageList(entity.getProperty(Entry.PAGES_LIST).toString());
+        entry.setTotalPages(entity.getProperty(Entry.PAGES).toString());
 
         return entry;
     }
@@ -82,13 +85,11 @@ This method clears all of the entries in the datastore
     Adds a given entry to the datastore
      */
     public boolean addEntry2Datastore(Entry entry){
-        if(getEntryByIdentifier(entry.getId()) != null)
+        if(getEntryByIdentifier(entry.getId(), entry.getPhoneId()) != null)
             return false;
         else{
-            //This makes the datastore autogenerate ids
-            //Entity entity = new Entity(Entry.ID);
 
-            Entity entity = new Entity(Entry.ENTITY_NAME, entry.getId(), getParentKey());
+            Entity entity = new Entity(Entry.ENTITY_NAME, entry.getId() + " " + entry.getPhoneId(), getParentKey());
             entity.setProperty(Entry.PHONE_ID, entry.getPhoneId());
             entity.setProperty(Entry.ID, entry.getId());
             entity.setProperty(Entry.TITLE, entry.getTitle());
@@ -97,7 +98,10 @@ This method clears all of the entries in the datastore
             entity.setProperty(Entry.RATING, entry.getRating());
             entity.setProperty(Entry.COMMENT, entry.getComment());
             entity.setProperty(Entry.STATUS, entry.getStatus());
-            //entity.setProperty(Entry.QUOTE, entry.getQuote());
+            entity.setProperty(Entry.LOCATION_LIST, entry.getLocationList());
+            entity.setProperty(Entry.PAGES_LIST, entry.getPageList());
+            entity.setProperty(Entry.TIMES_LIST, entry.getTimeList());
+            entity.setProperty(Entry.PAGES, entry.getTotalPages());
 
             mDatastore.put(entity);
             return true;
@@ -105,17 +109,26 @@ This method clears all of the entries in the datastore
     }
 
 
-    public boolean delete(String id) {
-        Query.Filter filter = new Query.FilterPredicate(Entry.ID, Query.FilterOperator.EQUAL, id);
-        //Query query = new Query(Entry.ID);
-        Query query = new Query(Entry.ENTITY_NAME);
-        query.setFilter(filter);
-        query.setAncestor(getParentKey());
-        PreparedQuery preparedQuery = mDatastore.prepare(query);
-        Entity entity = preparedQuery.asSingleEntity();
-        if (entity == null)
+    public boolean delete(String id, String phoneId) {
+//        Query.Filter filter = new Query.FilterPredicate(Entry.ID, Query.FilterOperator.EQUAL, id);
+//        Query query = new Query(Entry.ENTITY_NAME);
+//        query.setFilter(filter);
+//        query.setAncestor(getParentKey());
+//        PreparedQuery preparedQuery = mDatastore.prepare(query);
+//        Entity entity = preparedQuery.asSingleEntity();
+        Entity entity = null;
+        Key key = KeyFactory.createKey(getParentKey(), Entry.ENTITY_NAME, id + " " + phoneId);
+        try {
+            entity = mDatastore.get(key);
+        }catch (Exception e){}
+
+//        Key key = KeyFactory.createKey(getParentKey(), Entry.ENTITY_NAME, id + " " + phoneId);
+//        mDatastore.delete(key);
+        if (entity == null) {
+            mLogger.log(Level.INFO, "DELETE UNSUCCESSFUL");
             return false;
-        else {
+        }else {
+            mLogger.log(Level.INFO, "DELETE SUCCESSFUL KEY IS " + entity.getKey());
             mDatastore.delete(entity.getKey());
             return true;
         }
@@ -142,6 +155,24 @@ This method clears all of the entries in the datastore
         }
 
         return result;
+    }
+
+    public void updateEntry(Entry entry) {
+        Entity entity = new Entity(Entry.ENTITY_NAME, entry.getId() + " " + entry.getPhoneId(), getParentKey());
+        entity.setProperty(Entry.PHONE_ID, entry.getPhoneId());
+        entity.setProperty(Entry.ID, entry.getId());
+        entity.setProperty(Entry.TITLE, entry.getTitle());
+        entity.setProperty(Entry.AUTHOR, entry.getAuthor());
+        entity.setProperty(Entry.GENRE, entry.getGenre());
+        entity.setProperty(Entry.RATING, entry.getRating());
+        entity.setProperty(Entry.COMMENT, entry.getComment());
+        entity.setProperty(Entry.STATUS, entry.getStatus());
+        entity.setProperty(Entry.LOCATION_LIST, entry.getLocationList());
+        entity.setProperty(Entry.PAGES_LIST, entry.getPageList());
+        entity.setProperty(Entry.TIMES_LIST, entry.getTimeList());
+        entity.setProperty(Entry.PAGES, entry.getTotalPages());
+
+        mDatastore.put(entity);
     }
 
 

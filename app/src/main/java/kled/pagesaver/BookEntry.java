@@ -18,7 +18,6 @@ import java.util.Map;
 
 public class BookEntry {
     private Long mRowId;
-    private String mPhoneId; // unique phone ID
 
     private String mTitle;
     private String mAuthor;
@@ -26,7 +25,7 @@ public class BookEntry {
     private int mRating;
     private String mComment;
     private int mStatus;
-    private String mQuote;
+    private ArrayList<String> mQuoteList;
     private ArrayList<LatLng> mLocationList;
     private ArrayList<StartEndTimes> mTimeList;
     private ArrayList<StartEndPages> mPageList;
@@ -41,7 +40,6 @@ public class BookEntry {
     public static final String RATING = "rating";
     public static final String COMMENT = "comment";
     public static final String STATUS = "status";
-    public static final String QUOTE = "quote";
     public static final String LOCATION_LIST = "location_list";
     public static final String TIMES_LIST = "times_list";
     public static final String PAGES_LIST = "pages_list";
@@ -56,6 +54,8 @@ public class BookEntry {
         mLocationList = new ArrayList<>();
         mTimeList = new ArrayList<>();
         mPageList = new ArrayList<>();
+        mQuoteList = new ArrayList<>();
+
 
     }
 
@@ -89,14 +89,6 @@ public class BookEntry {
 
     public Long getRowId() {
         return mRowId;
-    }
-
-    public void setPhoneId(String phoneId){
-        mPhoneId = phoneId;
-    }
-
-    public String getPhoneId() {
-        return mPhoneId;
     }
 
     public void setTitle(String title) {
@@ -152,12 +144,12 @@ public class BookEntry {
         return mStatus == STATUS_PAST;
     }
 
-    public void setQuote(String quote) {
-        mQuote = quote;
+    public void addQuote(String quote) {
+        mQuoteList.add(quote);
     }
 
-    public String getQuote() {
-        return mQuote;
+    public List<String> getQuotes() {
+        return mQuoteList;
     }
 
     public ArrayList<LatLng> getLocationList() {
@@ -333,20 +325,12 @@ public class BookEntry {
         map.put(RATING, ""+mRating);
         map.put(COMMENT, mComment);
         map.put(STATUS, ""+mStatus);
-        //TODO add quotes as list
-        //map.put(QUOTE, quotes.toString);
 
-        //Convert the locations to byte array then to string using base64
-        String byteArrayLocation= new String(Base64.encodeBase64(getLocationByteArray()));
-        map.put(LOCATION_LIST, byteArrayLocation);
+        map.put(LOCATION_LIST, locationListToString());
 
-        //Convert the times to byte array then to string using base64
-        String byteArrayTimes= new String(Base64.encodeBase64(getTimeByteArray()));
-        map.put(TIMES_LIST, byteArrayTimes);
+        map.put(TIMES_LIST, timeListToString());
 
-        //Convert the pages to byte array then to string using base64
-        String byteArrayPages= new String(Base64.encodeBase64(getPageByteArray()));
-        map.put(PAGES_LIST, byteArrayPages);
+        map.put(PAGES_LIST, pagesListToString());
 
         map.put(PAGES, ""+mTotalPages);
     }
@@ -361,6 +345,68 @@ public class BookEntry {
             return true;
 
         return false;
+    }
+
+    public String locationListToString() {
+        StringBuilder stringBuilder = new StringBuilder("");
+        for(LatLng latLng : mLocationList) {
+            stringBuilder.append(latLng.latitude + " " + latLng.longitude + " ");
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public void setLocationList(String string) {
+        String [] entries = string.split(" ");
+
+        for(int i = 0; i < entries.length; i += 2) {
+            double lat = Double.parseDouble(entries[i]);
+            double lng = Double.parseDouble(entries[i + 1]);
+
+            mLocationList.add(new LatLng(lat, lng));
+        }
+    }
+
+    public String timeListToString() {
+        StringBuilder stringBuilder = new StringBuilder("");
+        for(StartEndTimes times : mTimeList) {
+            stringBuilder.append(times.startTime + " " + times.endTime + " ");
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public void setTimesList(String string) {
+        String [] entries = string.split(" ");
+
+        for(int i = 0; i < entries.length; i += 2) {
+            long start = Long.parseLong(entries[i]);
+            long end = Long.parseLong(entries[i + 1]);
+
+            mTimeList.add(new StartEndTimes(start, end));
+        }
+    }
+
+
+
+    public String pagesListToString() {
+        StringBuilder stringBuilder = new StringBuilder("");
+        for(StartEndPages pages : mPageList) {
+            stringBuilder.append(pages.startPage + " " + pages.endPage + " ");
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public void setPagesList(String string) {
+        String [] entries = string.split(" ");
+
+        for(int i = 0; i < entries.length; i += 2) {
+            int start = Integer.parseInt(entries[i]);
+            int end = Integer.parseInt(entries[i + 1]);
+
+            mPageList.add(new StartEndPages(start, end));
+        }
     }
 
 }
