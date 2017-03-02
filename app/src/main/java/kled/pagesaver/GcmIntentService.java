@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -22,7 +24,6 @@ import java.util.logging.Logger;
  */
 
 public class GcmIntentService extends IntentService {
-    private BookEntryDbHelper dataSource;
     int id;
     public GcmIntentService() {
 
@@ -32,7 +33,6 @@ public class GcmIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        dataSource = new BookEntryDbHelper(this);
         Bundle extras = intent.getExtras();
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
 
@@ -42,14 +42,21 @@ public class GcmIntentService extends IntentService {
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 Logger.getLogger("GCM_RECEIVED").log(Level.INFO, extras.toString());
 
-                /*
-                The database entry can be deleted using the id
-                 */
-                id = Integer.valueOf(extras.getString("message"));
-                dataSource.removeEntry(id);
+               //SHow message from server
+                String mess = extras.getString("message");
+                showToast(mess);
             }
         }
         GcmReceiver.completeWakefulIntent(intent);
+    }
+
+    protected void showToast(final String message) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 

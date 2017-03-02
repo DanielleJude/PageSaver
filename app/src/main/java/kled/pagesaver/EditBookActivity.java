@@ -104,6 +104,8 @@ public class EditBookActivity extends AppCompatActivity implements View.OnClickL
         if(errorString.equals("")) {
             retrieveUIInfo();
             new BookEntryDbHelper(this).updateEntry(entry);
+            //update datastore
+            new EntryDatastoreHelper(this).updateEntry(entry);
             finish();
         } else {
             //SHOW DIALOG with error

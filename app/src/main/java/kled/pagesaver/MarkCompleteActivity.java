@@ -103,6 +103,9 @@ public class MarkCompleteActivity extends AppCompatActivity {
             //get the other updated info
             retrieveUIInfo();
             new BookEntryDbHelper(this).updateEntry(entry);
+
+            //update entry on the datastore
+            new EntryDatastoreHelper(this).updateEntry(entry);
             finish();
         } else {
             //SHOW DIALOG with error

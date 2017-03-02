@@ -1,11 +1,15 @@
 package com.example.eloisedietz.myapplication.backend;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static com.example.eloisedietz.myapplication.backend.OfyService.ofy;
 
 /**
  * Created by eloisedietz on 2/24/17.
@@ -20,9 +24,28 @@ public class AddServlet extends HttpServlet {
         Entry entry = Entry.requestToEntry(request);
 
         EntryDatastore entryDatastore = new EntryDatastore();
-        entryDatastore.addEntry2Datastore(entry);
+        boolean wasAdded = entryDatastore.addEntry2Datastore(entry);
 
-        getServletContext().getRequestDispatcher("/query.do").forward(request, response);
+
+
+        String regId = request.getParameter(Entry.REG_ID);
+        Logger mLogger = Logger.getLogger(Entry.class.getName());
+        mLogger.log(Level.INFO, "Regid is " + regId);
+        RegistrationRecord regRecord = ofy().load().type(RegistrationRecord.class).filter("regId", regId).first().now();
+
+        if(regRecord != null) {
+            MessagingEndpoint messagingEndpoint = new MessagingEndpoint();
+            if(wasAdded)
+                messagingEndpoint.sendMessage("Add successful", regRecord);
+            else
+                messagingEndpoint.sendMessage("Failed to add", regRecord);
+        } else {
+            mLogger.log(Level.INFO, "REG RECORD NULL");
+        }
+
+
+
+        response.sendRedirect("/query.do");
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)

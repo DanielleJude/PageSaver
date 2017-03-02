@@ -33,7 +33,7 @@ public class EntryDatastoreHelper {
         SharedPreferences sharedPreferences =
                 mContext.getSharedPreferences(GcmRegistrationAsyncTask.GCM_PREF_KEY, MODE_PRIVATE);
 
-        return sharedPreferences.getString(GcmRegistrationAsyncTask.GCM_PREF_KEY, null);
+        return sharedPreferences.getString(GcmRegistrationAsyncTask.REG_ID_PREF_KEY, null);
     }
 
     public void deleteEntry(String id) {

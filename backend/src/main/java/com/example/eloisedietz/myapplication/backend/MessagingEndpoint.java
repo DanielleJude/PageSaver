@@ -49,6 +49,10 @@ public class MessagingEndpoint {
     private static final String API_KEY = System.getProperty("gcm.api.key");
 
     public void sendMessage(@Named("message") String message, RegistrationRecord record) throws IOException {
+        if(record == null) {
+            log.warning("RECORD NULL");
+            return;
+        }
         if (message == null || message.trim().length() == 0) {
             log.warning("Not sending message because it is empty");
             return;

@@ -57,10 +57,16 @@ This method clears all of the entries in the datastore
         try {
             entity = mDatastore.get(key);
         }catch (Exception e){}
-        if(entity != null)
+        if(entity != null) {
+            mLogger.log(Level.INFO, "Entry with id " + id + " " + phoneId + " was found");
             return convertEntity2Entry(entity);
-        else
+        }
+        else {
+            mLogger.log(Level.INFO, "Entry with id " + id + " " + phoneId + " not found");
             return null;
+        }
+
+
     }
 
     private Entry convertEntity2Entry(Entity entity) {
@@ -85,9 +91,10 @@ This method clears all of the entries in the datastore
     Adds a given entry to the datastore
      */
     public boolean addEntry2Datastore(Entry entry){
-        if(getEntryByIdentifier(entry.getId(), entry.getPhoneId()) != null)
+        if(getEntryByIdentifier(entry.getId(), entry.getPhoneId()) != null) {
+            mLogger.log(Level.INFO, "Entry already in datastore ");
             return false;
-        else{
+        } else{
 
             Entity entity = new Entity(Entry.ENTITY_NAME, entry.getId() + " " + entry.getPhoneId(), getParentKey());
             entity.setProperty(Entry.PHONE_ID, entry.getPhoneId());
@@ -104,6 +111,8 @@ This method clears all of the entries in the datastore
             entity.setProperty(Entry.PAGES, entry.getTotalPages());
 
             mDatastore.put(entity);
+
+            mLogger.log(Level.INFO, "Entry added ");
             return true;
         }
     }
@@ -152,6 +161,8 @@ This method clears all of the entries in the datastore
                     result.add(convertEntity2Entry(entity));
                 }
             }
+        } else {
+            mLogger.log(Level.INFO, "No entries found");
         }
 
         return result;

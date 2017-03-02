@@ -7,6 +7,7 @@ package kled.pagesaver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.eloisedietz.myapplication.backend.registration.Registration;
@@ -27,8 +28,8 @@ class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
     private static Registration regService = null;
     private GoogleCloudMessaging gcm;
     private Context context;
-    public final static String SERVER_ADDR = "https://steel-ace-159717.appspot.com/";
-    //public static String SERVER_ADDR = "http://127.0.0.1:8080";
+    //public final static String SERVER_ADDR = "https://steel-ace-159717.appspot.com/";
+    public static String SERVER_ADDR = "http://127.0.0.1:8080";
     // Google Developers Console project number
     private static final String SENDER_ID = "21949463987";
 
@@ -105,6 +106,7 @@ class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(GCM_PREF_KEY, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        Log.d("REGISTRATION ID", regID);
         editor.clear();
         editor.putString(REG_ID_PREF_KEY, regID);
         editor.commit();
