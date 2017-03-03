@@ -56,7 +56,7 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
             + KEY_AUTHOR
             + " TEXT, "
             + KEY_GENRE
-            + " TEXT, "
+            + " INTEGER, "
             + KEY_RATING
             + " INTEGER, "
             + KEY_COMMENT
@@ -212,7 +212,7 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         entry.setRowId(cursor.getLong(cursor.getColumnIndex(KEY_ROW_ID)));
         entry.setTitle(cursor.getString(cursor.getColumnIndex(KEY_TITLE)));
         entry.setAuthor(cursor.getString(cursor.getColumnIndex(KEY_AUTHOR)));
-        entry.setGenre(cursor.getString(cursor.getColumnIndex(KEY_GENRE)));
+        entry.setGenre(cursor.getInt(cursor.getColumnIndex(KEY_GENRE)));
         entry.setRating(cursor.getInt(cursor.getColumnIndex(KEY_RATING)));
         entry.setComment(cursor.getString(cursor.getColumnIndex(KEY_COMMENT)));
         entry.setStatus(cursor.getInt(cursor.getColumnIndex(KEY_STATUS)));

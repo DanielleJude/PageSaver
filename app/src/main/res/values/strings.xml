@@ -57,4 +57,22 @@
     <string name="analytics_pages_title">How Many Pages Read Per Session</string>
     <string name="title_activity_psmap">Map</string>
 
+    <string-array name="genre_array">
+        <item>Fiction</item>
+        <item>Non-Fiction</item>
+        <item>Comedy</item>
+        <item>Action</item>
+        <item>Drama</item>
+        <item>Romance</item>
+        <item>Mystery</item>
+        <item>Horror</item>
+        <item>Self Help</item>
+        <item>Health</item>
+        <item>Travel</item>
+        <item>Children</item>
+        <item>Food</item>
+        <item>Biography</item>
+        <item>Other</item>
+    </string-array>
+
 </resources>

@@ -21,7 +21,7 @@ public class BookEntry {
 
     private String mTitle;
     private String mAuthor;
-    private String mGenre;
+    private int mGenre;
     private int mRating;
     private String mComment;
     private int mStatus;
@@ -107,11 +107,11 @@ public class BookEntry {
         return mAuthor;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(int genre) {
         mGenre = genre;
     }
 
-    public String getGenre() {
+    public int getGenre() {
         return mGenre;
     }
 
@@ -321,7 +321,7 @@ public class BookEntry {
         map.put(ID, ""+ mRowId);
         map.put(TITLE, mTitle);
         map.put(AUTHOR, mAuthor);
-        map.put(GENRE, mGenre);
+        map.put(GENRE, ""+mGenre);
         map.put(RATING, ""+mRating);
         map.put(COMMENT, mComment);
         map.put(STATUS, ""+mStatus);
