@@ -27,6 +27,7 @@ public class AnalyticsActivity extends AppCompatActivity implements
     private ArrayList<Integer> monthsArray;
     private ArrayList<Integer> pagesArray;
     private ArrayList<Integer> durationArray;
+    private int[] pagesPerMonthsArray;
 
     LoaderManager loaderManager;
 
@@ -41,6 +42,10 @@ public class AnalyticsActivity extends AppCompatActivity implements
         monthsArray = new ArrayList<>();
         pagesArray = new ArrayList<>();
         durationArray = new ArrayList<>();
+        pagesPerMonthsArray = new int[12];
+        for (int i = 0; i < pagesPerMonthsArray.length; i++) {
+            pagesPerMonthsArray[i] = 0;
+        }
 
         loaderManager = this.getLoaderManager();
         loaderManager.initLoader(1, null, this);
@@ -78,6 +83,23 @@ public class AnalyticsActivity extends AppCompatActivity implements
             for (int j = 0; j < individualPage.size(); j++ ) {
                 int diff = individualPage.get(j).endPage - individualPage.get(j).startPage;
                 pagesArray.add(diff);
+            }
+
+            // Make sure the pages match up with the times
+            if (individualPage.size() == individualTime.size()) {
+                for (int j = 0; j < individualPage.size(); j++ ) {
+                    Long startTime = individualTime.get(j).startTime;
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(startTime);
+                    int month = cal.get(Calendar.MONTH);
+
+                    int diff = individualPage.get(j).endPage - individualPage.get(j).startPage;
+
+                    int currentPages = pagesPerMonthsArray[month];
+
+                    // Update how many pages per month read
+                    pagesPerMonthsArray[month] = currentPages + diff;
+                }
             }
         }
     }
@@ -345,6 +367,67 @@ public class AnalyticsActivity extends AppCompatActivity implements
         pagesChart.setColumnChartData(pagesData);
     }
 
+    /**
+     * Draw chart for number of pages read per month
+     */
+    public void buildMonthlyPagesGraph() {
+        ColumnChartView monthlyPagesChart;
+        ColumnChartData monthlyPagesData;
+
+        monthlyPagesChart = (ColumnChartView) findViewById(R.id.monthly_pages_chart);
+
+        // Construct column values
+        List<Column> columns = new ArrayList<Column>();
+
+        for (int i = 0; i < pagesPerMonthsArray.length; ++i) {
+
+            List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
+            SubcolumnValue value = new SubcolumnValue(pagesPerMonthsArray[i]);
+            values.add(value);
+
+            Column column = new Column(values);
+            columns.add(column);
+
+        }
+
+        monthlyPagesData = new ColumnChartData(columns);
+
+        // Format axes
+        List<AxisValue> monthLabels = new ArrayList<AxisValue>();
+
+        for (int i = 0; i < pagesPerMonthsArray.length; i++) {
+
+            AxisValue value = new AxisValue(i);
+
+            if (i == 0) value.setLabel("Jan");
+            else if (i == 1) value.setLabel("Feb");
+            else if (i == 2) value.setLabel("Mar");
+            else if (i == 3) value.setLabel("Apr");
+            else if (i == 4) value.setLabel("May");
+            else if (i == 5) value.setLabel("Jun");
+            else if (i == 6) value.setLabel("Jul");
+            else if (i == 7) value.setLabel("Aug");
+            else if (i == 8) value.setLabel("Sep");
+            else if (i == 9) value.setLabel("Oct");
+            else if (i == 10) value.setLabel("Nov");
+            else if (i == 11) value.setLabel("Dec");
+
+            monthLabels.add(value);
+        }
+
+        Axis axisX = new Axis(monthLabels);
+        axisX.setName("Month");
+
+        Axis axisY = new Axis().setHasLines(true);
+        axisY.setName("Number of Pages");
+
+        monthlyPagesData.setAxisXBottom(axisX);
+        monthlyPagesData.setAxisYLeft(axisY);
+
+        // Set data
+        monthlyPagesChart.setColumnChartData(monthlyPagesData);
+    }
+
     @Override
     public Loader<ArrayList<BookEntry>> onCreateLoader(int id, Bundle args) {
         LoadBookEntries loadBookEntries = new LoadBookEntries(this);
@@ -358,6 +441,7 @@ public class AnalyticsActivity extends AppCompatActivity implements
         buildMonthsGraph();
         buildDurationGraph();
         buildPagesGraph();
+        buildMonthlyPagesGraph();
     }
 
     @Override

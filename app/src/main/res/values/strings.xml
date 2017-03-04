@@ -55,6 +55,7 @@
     <string name="analytics_month_title">How Many Days You Read Per Month</string>
     <string name="analytics_duration_title">How Long You Read Per Session</string>
     <string name="analytics_pages_title">How Many Pages Read Per Session</string>
+    <string name="analytics_pages_month_title">How Many Pages Read Per Month</string>
     <string name="title_activity_psmap">Map</string>
 
     <string-array name="genre_array">
