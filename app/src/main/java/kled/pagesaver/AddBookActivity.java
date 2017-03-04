@@ -312,7 +312,6 @@ AsyncTask to add an exercise entry to the database
             saveInstanceState.putDouble(LAT_BUNDLE_KEY, chosenLatLng.latitude);
             saveInstanceState.putDouble(LNG_BUNDLE_KEY, chosenLatLng.longitude);
         }
-
     }
 
     @Override
