@@ -57,6 +57,7 @@
     <string name="analytics_pages_title">How Many Pages Read Per Session</string>
     <string name="analytics_pages_month_title">How Many Pages Read Per Month</string>
     <string name="title_activity_psmap">Map</string>
+    <string name="analytics_compare">Compare to Others</string>
 
     <string-array name="genre_array">
         <item>Fiction</item>
@@ -75,5 +76,7 @@
         <item>Biography</item>
         <item>Other</item>
     </string-array>
+
+    <string name="title_activity_compare_analytics">Compare With Others</string>
 
 </resources>
