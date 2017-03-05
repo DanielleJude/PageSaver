@@ -37,7 +37,7 @@ public class ViewPastBookActivity extends AppCompatActivity {
     public void setUpUI() {
         ((TextView)findViewById(R.id.past_book_view_title)).setText(entry.getTitle());
         ((TextView)findViewById(R.id.past_book_view_author)).setText(entry.getAuthor());
-        ((TextView)findViewById(R.id.past_book_view_genre)).setText(entry.getGenre());
+        ((TextView)findViewById(R.id.past_book_view_genre)).setText(Search.getAllGenres().get(entry.getGenre()));
         ((RatingBar)findViewById(R.id.past_book_view_rating_bar)).setRating(entry.getRating());
         ((TextView)findViewById(R.id.past_book_view_comments)).setText(entry.getComment());
 

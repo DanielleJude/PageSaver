@@ -49,13 +49,10 @@
             android:layout_height="wrap_content"
             android:text="@string/genre_label"/>
 
-        <EditText
+        <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/add_book_genre"
-            android:hint="@string/genre_hint"
-            android:inputType="text"
-            android:layout_marginBottom="10dp"/>
+            android:id="@+id/add_book_genre" />
 
         <TextView
             android:layout_width="wrap_content"

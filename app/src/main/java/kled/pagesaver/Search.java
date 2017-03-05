@@ -17,10 +17,12 @@ public class Search {
     String[] words;
     List<BookEntry> entries;
     BookEntryDbHelper database;
+    ArrayList<String> genres;
 
     public Search(int searchBy, String search) {
         mSearchBy = searchBy;
         keyWord = search.trim().toLowerCase();
+        genres = getAllGenres();
     }
 
     public Search(String search, List<BookEntry> entries) {
@@ -103,7 +105,7 @@ public class Search {
     public ArrayList<BookEntry> findGenre(){
         ArrayList<BookEntry> result = new ArrayList<>();
         for(BookEntry entry : database.fetchEntries()) {
-            if(entry.getGenre().equals(keyWord)){
+            if(genres.get(entry.getGenre()).equals(keyWord)){
                 result.add(entry);
             }
         }
@@ -138,6 +140,24 @@ public class Search {
                 result.add(entry);
             }
         }
+        return result;
+    }
+
+    public static ArrayList<String> getAllGenres(){
+        ArrayList<String> result = new ArrayList<String>();
+        result.add("Fiction");
+        result.add("Comedy");
+        result.add("Action");
+        result.add("Drama");
+        result.add("Romance");
+        result.add("Mystery");
+        result.add("Horror");
+        result.add("Self Help");
+        result.add("Health");
+        result.add("Travel");
+        result.add("Chidren");
+        result.add("Biography");
+        result.add("Other");
         return result;
     }
 

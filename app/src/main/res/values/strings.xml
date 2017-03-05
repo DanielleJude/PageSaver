@@ -57,20 +57,28 @@
     <string name="analytics_month_title">How Many Days You Read Per Month</string>
     <string name="analytics_duration_title">How Long You Read Per Session</string>
     <string name="analytics_pages_title">How Many Pages Read Per Session</string>
+    <string name="analytics_pages_month_title">How Many Pages Read Per Month</string>
     <string name="title_activity_psmap">Map</string>
-    <string name="title_activity_login">Sign in</string>
+    <string name="analytics_compare">Compare to Others</string>
 
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string-array name="genre_array">
+        <item>Fiction</item>
+        <item>Non-Fiction</item>
+        <item>Comedy</item>
+        <item>Action</item>
+        <item>Drama</item>
+        <item>Romance</item>
+        <item>Mystery</item>
+        <item>Horror</item>
+        <item>Self Help</item>
+        <item>Health</item>
+        <item>Travel</item>
+        <item>Children</item>
+        <item>Food</item>
+        <item>Biography</item>
+        <item>Other</item>
+    </string-array>
+
+    <string name="title_activity_compare_analytics">Compare With Others</string>
 
 </resources>

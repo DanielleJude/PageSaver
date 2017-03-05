@@ -13,9 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -32,13 +34,13 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
     private BookEntryDbHelper database;
     private EditText mTitleView;
     private EditText mAuthorView;
-    private EditText mGenreView;
     private EditText mProgressSoFarView;
     private EditText mTotalPagesView;
     private DatePicker mDatePicker;
     private TimePicker mTimePicker;
     private EditText mDurationHour;
     private EditText mDurationMinute;
+    Spinner genreSpinner;
 
     long id;
 
@@ -126,10 +128,6 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
             errorString = errorString + "Author\n";
         }
 
-        if(!fieldNotEmpty(mGenreView)) {
-            canAddFlag = false;
-            errorString = errorString + "Genre\n";
-        }
 
         if(!fieldNotEmpty(mProgressSoFarView)) {
             canAddFlag = false;
@@ -219,7 +217,7 @@ AsyncTask to add an exercise entry to the database
 
         entry.setTitle(mTitleView.getText().toString());
         entry.setAuthor(mAuthorView.getText().toString());
-        entry.setGenre(mGenreView.getText().toString());
+        entry.setGenre(genreSpinner.getSelectedItemPosition());
 
         //Deal with progress entries
         int progressSoFar = Integer.parseInt(mProgressSoFarView.getText().toString());
@@ -262,7 +260,15 @@ AsyncTask to add an exercise entry to the database
     private void setUpUIConnections() {
         mTitleView = (EditText)findViewById(R.id.add_book_title);
         mAuthorView = (EditText)findViewById(R.id.add_book_author);
-        mGenreView = (EditText)findViewById(R.id.add_book_genre);
+        genreSpinner = (Spinner) findViewById(R.id.add_book_genre);
+
+        ArrayAdapter<CharSequence> adapterGenre = ArrayAdapter
+                .createFromResource(this,
+                        R.array.genre_array, android.R.layout.simple_spinner_item);
+
+        adapterGenre.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        genreSpinner.setAdapter(adapterGenre);
         mProgressSoFarView = (EditText)findViewById(R.id.add_book_progress_so_far);
         mTotalPagesView = (EditText)findViewById(R.id.add_book_total_pages);
         mDatePicker = (DatePicker)findViewById(R.id.date_picker_add_book);
@@ -290,7 +296,7 @@ AsyncTask to add an exercise entry to the database
     protected void onSaveInstanceState(Bundle saveInstanceState) {
         saveInstanceState.putString(TITLE_KEY, mTitleView.getText().toString());
         saveInstanceState.putString(AUTHOR_KEY, mAuthorView.getText().toString());
-        saveInstanceState.putString(GENRE_KEY, mGenreView.getText().toString());
+        saveInstanceState.putInt(GENRE_KEY, genreSpinner.getSelectedItemPosition());
         saveInstanceState.putString(PROGRESS_SO_FAR_KEY,
                 mProgressSoFarView.getText().toString());
         saveInstanceState.putString(TOTAL_PAGES_KEY,
@@ -306,14 +312,13 @@ AsyncTask to add an exercise entry to the database
             saveInstanceState.putDouble(LAT_BUNDLE_KEY, chosenLatLng.latitude);
             saveInstanceState.putDouble(LNG_BUNDLE_KEY, chosenLatLng.longitude);
         }
-
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         mTitleView.setText(savedInstanceState.getString(TITLE_KEY, ""));
         mAuthorView.setText(savedInstanceState.getString(AUTHOR_KEY, ""));
-        mGenreView.setText(savedInstanceState.getString(GENRE_KEY, ""));
+        genreSpinner.setSelection(savedInstanceState.getInt(GENRE_KEY, 0));
         mProgressSoFarView.setText(savedInstanceState.getString(PROGRESS_SO_FAR_KEY, ""));
         mTotalPagesView.setText(savedInstanceState.getString(TOTAL_PAGES_KEY, ""));
         mDurationHour.setText(savedInstanceState.getString(DHOUR_KEY, ""));

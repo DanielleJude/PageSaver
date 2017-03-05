@@ -51,13 +51,12 @@ public class ViewCurrentBookActivity extends AppCompatActivity implements View.O
     public void setUpUI() {
         ((TextView)findViewById(R.id.current_book_view_title)).setText(entry.getTitle());
         ((TextView)findViewById(R.id.current_book_view_author)).setText(entry.getAuthor());
-        ((TextView)findViewById(R.id.current_book_view_genre)).setText(entry.getGenre());
+        ((TextView)findViewById(R.id.current_book_view_genre)).setText(Search.getAllGenres().get(entry.getGenre()));
         ((TextView)findViewById(R.id.progress_view_current)).setText(entry.getProgressString());
 
         if(entry.getLocationList().size() == 0) {
             ((Button)findViewById(R.id.view_locations_button)).setVisibility(View.GONE);
         }
-
     }
 
     @Override
