@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -42,8 +43,11 @@ public class GcmIntentService extends IntentService {
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 Logger.getLogger("GCM_RECEIVED").log(Level.INFO, extras.toString());
 
+
+
                //SHow message from server
                 String mess = extras.getString("message");
+                Log.d("RECEIVED MESSAGE ", mess);
                 showToast(mess);
             }
         }

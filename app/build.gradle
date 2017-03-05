@@ -35,5 +35,6 @@ dependencies {
     compile 'com.android.support:support-v4:25.2.0'
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
     compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     testCompile 'junit:junit:4.12'
 }

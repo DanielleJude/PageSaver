@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,8 +20,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -38,17 +42,22 @@ public class MainActivity extends AppCompatActivity
     private ViewPager mViewPager;
     private ArrayList<Fragment> mFragmentList;
     private PSFragmentPagerAdapter mViewPagerAdapter;
-    private Context context; 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(shouldPromptFbLogin()) {
+
+            //show login page and handle results
+            handleLogin();
+        }
+
         checkPermissions();
         //register with the server
         new GcmRegistrationAsyncTask(this).execute();
-        context = this; 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -257,4 +266,28 @@ Code rewritten from onReuestPermissionsResult in IAmHere
 
         return map;
     }
+
+    //helper function that decides if we should show the login in page
+    private boolean shouldPromptFbLogin() {
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(LoginActivity.LOGIN_PREF_KEY, MODE_PRIVATE);
+
+        String id_string = sharedPreferences.getString(LoginActivity.FB_USER_ID_PREF_KEY, null);
+
+        if(id_string == null || id_string.equals(LoginActivity.LOGIN_SKIPPED))
+            return true;
+
+        //only login if you don't have the user id
+        return false;
+    }
+
+    private void handleLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+
+    }
+
+
+
+
 }
