@@ -25,10 +25,10 @@
 
 
     <permission
-        android:name="com.example.gcm.permission.C2D_MESSAGE"
+        android:name="kled.pagesaver.gcm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
+    <uses-permission android:name="kled.pagesaver.gcm.permission.C2D_MESSAGE" />
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -107,6 +107,16 @@
             android:enabled="true"
             android:exported="true" />
 
+        <receiver
+            android:name="kled.pagesaver.GcmReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="kled.pagesaver" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".GcmIntentService" />
     </application>
 
 </manifest>
