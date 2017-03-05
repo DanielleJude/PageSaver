@@ -1,6 +1,7 @@
 package kled.pagesaver;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,6 +13,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 
 public class ViewPastBookActivity extends AppCompatActivity {
     public final static String ID_BUNDLE_KEY = "_idbundle key";
@@ -47,7 +53,6 @@ public class ViewPastBookActivity extends AppCompatActivity {
 
     }
 
-    //TODO ADD PROGRESS GRAPH
 
     public void onShowMapViewClick(View view) {
         //TODO CHECK
@@ -83,9 +88,33 @@ public class ViewPastBookActivity extends AppCompatActivity {
                 new BookEntryDbHelper(this).removeEntry(mEntryId);
                 finish();
                 break;
+
+            case R.id.share_menu_item:
+                //TODO SHARE FUNCTIONALITY
+                CallbackManager callbackManager = CallbackManager.Factory.create();
+                ShareDialog shareDialog = new ShareDialog(this);
+
+                if (ShareDialog.canShow(ShareLinkContent.class)) {
+                    ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                            .setContentTitle("PageSaved")
+                            .setContentDescription(
+                                    getDescription())
+                            .setContentUrl(Uri.parse(GcmRegistrationAsyncTask.SERVER_ADDR + "/query.do"))
+                            .build();
+
+                    shareDialog.show(linkContent);
+                }
+
+                finish();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private String getDescription() {
+        return "Hello Facebook Friends!\nI recommend you read " + entry.getTitle() +
+                " by " + entry.getAuthor() + ". I gave it " + entry.getRating() + " stars out of 5.";
     }
 
 

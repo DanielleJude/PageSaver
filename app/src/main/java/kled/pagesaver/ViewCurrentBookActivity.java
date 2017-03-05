@@ -74,10 +74,6 @@ public class ViewCurrentBookActivity extends AppCompatActivity implements View.O
         int id = item.getItemId();
 
         switch(id) {
-            case R.id.share_menu_item:
-                //TODO SHARE FUNCTIONALITY
-                finish();
-                break;
 
             case R.id.delete_menu_item:
                 //Delete from datastore

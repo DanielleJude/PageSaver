@@ -37,6 +37,10 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <provider android:authorities="com.facebook.app.FacebookContentProvider520311618139530"
+        android:name="com.facebook.FacebookContentProvider"
+        android:exported="true"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -63,19 +67,19 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddBookActivity"
-            android:label="@string/title_activity_add_book"
+            android:label="Add"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ViewCurrentBookActivity"
-            android:label="@string/title_activity_view_current_book"
+            android:label="View"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ViewPastBookActivity"
-            android:label="@string/title_activity_past_book_view"
+            android:label="View"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".EditBookActivity"
-            android:label="@string/title_activity_edit_book"
+            android:label="Edit"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MarkCompleteActivity" />
         <activity
@@ -98,9 +102,17 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+
         <activity
             android:name=".PSMapActivity"
             android:label="@string/title_activity_psmap" />
+
+        <activity
+            android:name=".LoginActivity"
+            android:label="Sign In" />
 
         <service
             android:name=".MyTrackingService"

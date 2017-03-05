@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
 
         loginButton = (LoginButton)findViewById(R.id.login_button);
-        loginButton.setReadPermissions("publish_actions");
+        loginButton.setPublishPermissions("publish_actions");
 
 
         // Callback registration
