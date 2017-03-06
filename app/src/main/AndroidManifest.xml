@@ -22,8 +22,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-
-
     <permission
         android:name="kled.pagesaver.gcm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
@@ -90,6 +88,9 @@
             android:name=".AddGoalActivity"
             android:label="@string/title_activity_add_goal"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".GoalsReminderActivity"
+            android:label="Goals Reminder" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
