@@ -142,8 +142,8 @@ public class GoalsActivity extends AppCompatActivity implements
     }
 
     private void setupNotification() {
-        // Setup the intent to fire for the PendingIntent
-        Intent i = new Intent(this, GoalsActivity.class);
+        // Setup the intent to fire GoalsReminderActivity for the PendingIntent
+        Intent i = new Intent(this, GoalsReminderActivity.class);
 
         // Set flags to avoid re-invent activity.
         i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
