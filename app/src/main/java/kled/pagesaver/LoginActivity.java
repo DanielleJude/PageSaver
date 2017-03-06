@@ -33,6 +33,11 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if(!shouldPromptFbLogin()) {
+            //If already logged in, then just send to MainActivity
+            startMainActivity();
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -58,6 +63,8 @@ public class LoginActivity extends AppCompatActivity {
                 editor.commit();
 
                 Log.d("FACEBOOK", "SUCCESSFUL LOG WITH USER ID " + id);
+
+                startMainActivity();
             }
 
             @Override
@@ -95,6 +102,27 @@ public class LoginActivity extends AppCompatActivity {
 
         Log.d("FACEBOOK", "USER SKIPPED LOGIN ");
 
+        finish();
+    }
+
+    //helper function that decides if we should show the login in page
+    private boolean shouldPromptFbLogin() {
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(LoginActivity.LOGIN_PREF_KEY, MODE_PRIVATE);
+
+        String id_string = sharedPreferences.getString(LoginActivity.FB_USER_ID_PREF_KEY, null);
+
+        if(id_string == null || id_string.equals(LoginActivity.LOGIN_SKIPPED))
+            return true;
+
+        //only login if you don't have the user id
+        return false;
+    }
+
+    private void startMainActivity() {
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 }
