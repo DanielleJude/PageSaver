@@ -22,8 +22,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-
-
     <permission
         android:name="kled.pagesaver.gcm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
@@ -46,16 +44,13 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".AnalyticsActivity"
@@ -94,6 +89,9 @@
             android:name=".AddGoalActivity"
             android:label="@string/title_activity_add_goal"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".GoalsReminderActivity"
+            android:label="Goals Reminder" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -116,7 +114,13 @@
 
         <activity
             android:name=".LoginActivity"
-            android:label="Sign In" />
+            android:label="Sign In">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".MyTrackingService"

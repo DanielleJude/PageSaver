@@ -49,12 +49,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(shouldPromptFbLogin()) {
-
-            //show login page and handle results
-            handleLogin();
-        }
-
         checkPermissions();
         //register with the server
         new GcmRegistrationAsyncTask(this).execute();
@@ -265,26 +259,6 @@ Code rewritten from onReuestPermissionsResult in IAmHere
         }
 
         return map;
-    }
-
-    //helper function that decides if we should show the login in page
-    private boolean shouldPromptFbLogin() {
-        SharedPreferences sharedPreferences =
-                getSharedPreferences(LoginActivity.LOGIN_PREF_KEY, MODE_PRIVATE);
-
-        String id_string = sharedPreferences.getString(LoginActivity.FB_USER_ID_PREF_KEY, null);
-
-        if(id_string == null || id_string.equals(LoginActivity.LOGIN_SKIPPED))
-            return true;
-
-        //only login if you don't have the user id
-        return false;
-    }
-
-    private void handleLogin() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-
     }
 
 

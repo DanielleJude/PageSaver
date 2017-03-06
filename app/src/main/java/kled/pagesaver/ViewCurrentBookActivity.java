@@ -151,9 +151,20 @@ AsyncTask to add an exercise entry to the database
         Bundle extras = new Bundle();
         ArrayList<BookEntry.StartEndPages> pages =  entry.getPageList();
         ArrayList<String> titles = new ArrayList<String>();
+        ArrayList<String> mapText = new ArrayList<String>();
+        ArrayList<String> values = new ArrayList<String>();
         for(BookEntry.StartEndPages pg: pages){
             titles.add(String.valueOf(((double)pg.endPage/(double)entry.getTotalPages())*100) + "% Complete");
+           // values.add(((double)pg.endPage/(double)entry.getTotalPages())*100);
+            values.add(String.valueOf(((double)pg.endPage/(double)entry.getTotalPages())*100));
         }
+        mapText.add(entry.getTitle());
+        mapText.add(entry.getAuthor());
+        mapText.add(String.valueOf(entry.getGenre()));
+        mapText.add(entry.getProgressString());
+
+        extras.putStringArrayList("mapText",mapText);
+        extras.putStringArrayList("values", values);
         extras.putStringArrayList(PSMapActivity.BOOKS_LIST,titles);
         extras.putString(PSMapActivity.MAP_MODE, PSMapActivity.VIEW_SINGLE_ENTRY);
         extras.putByteArray(PSMapActivity.LOCATIONS_LIST, entry.getLocationByteArray());

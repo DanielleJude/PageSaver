@@ -1,6 +1,9 @@
 package kled.pagesaver;
 
 import android.app.LoaderManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +32,8 @@ public class GoalsActivity extends AppCompatActivity implements
     private GoalsDbHelper goalsDatabase;
 
     LoaderManager loaderManager;
+
+    private NotificationManager mNotificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,11 @@ public class GoalsActivity extends AppCompatActivity implements
                 startActivity(intent);
             }
         });
+
+        // Initialize notification if goals list is not empty
+        if (entries != null) {
+            setupNotification();
+        }
     }
 
     // Toolbar to add
@@ -129,5 +139,27 @@ public class GoalsActivity extends AppCompatActivity implements
         // Clear all data
         entries.clear();
         goalsAdapter.notifyDataSetChanged();
+    }
+
+    private void setupNotification() {
+        // Setup the intent to fire GoalsReminderActivity for the PendingIntent
+        Intent i = new Intent(this, GoalsReminderActivity.class);
+
+        // Set flags to avoid re-invent activity.
+        i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        // Using pending intent to bring back the GoalReminderActivity from notification center
+        PendingIntent pi = PendingIntent.getActivity(this, 0, i, 0);
+
+        // Build notification
+        Notification notification = new Notification.Builder(this)
+                .setContentTitle(
+                        getString(R.string.goal_reminder_notification_title))
+                .setContentText(
+                        getString(R.string.goal_reminder_notification_content))
+                .setSmallIcon(R.drawable.icon_book).setContentIntent(pi).build();
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
+        mNotificationManager.notify(0, notification);
     }
 }
