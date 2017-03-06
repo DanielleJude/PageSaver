@@ -69,6 +69,16 @@ public class EntryDatastoreHelper {
         new GCMThread(endpoint, params).start();
     }
 
+    public void retrieveDatastore() {
+        Map<String, String> params = new HashMap<>();
+        params.put(BookEntry.REG_ID, getRegID());
+        params.put(BookEntry.PHONE_ID, getInstanceId());
+
+        String endpoint = GcmRegistrationAsyncTask.SERVER_ADDR + "/retrieve.do";
+
+        new GCMThread(endpoint, params).start();
+    }
+
     private class GCMThread extends Thread {
         private String endPoint;
         private Map<String, String> params;

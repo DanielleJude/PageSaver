@@ -29,7 +29,7 @@ class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
     private GoogleCloudMessaging gcm;
     private Context context;
     //public final static String SERVER_ADDR = "https://steel-ace-159717.appspot.com/";
-    public static String SERVER_ADDR = "http://127.0.0.1:8080";
+    public static String SERVER_ADDR = "http://10.31.186.147:8080";
     // Google Developers Console project number
     private static final String SENDER_ID = "21949463987";
 
@@ -42,7 +42,7 @@ class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... params) {
-        if (regService == null) {
+        /*if (regService == null) {
 
             Registration.Builder builder = new Registration
                     .Builder(AndroidHttp.newCompatibleTransport(),
@@ -56,24 +56,25 @@ class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
                             abstractGoogleClientRequest.setDisableGZipContent(true);
                         }
                     });
+        */
 
-
-//        if (regService == null) {
-//            Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(),
-//                    new AndroidJsonFactory(), null)
-//                    // Need setRootUrl and setGoogleClientRequestInitializer only for local testing,
-//                    // otherwise they can be skipped
-//                    .setRootUrl("http://127.0.0.1:8080/_ah/api/")
-//                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-//                        @Override
-//                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-//                            abstractGoogleClientRequest.setDisableGZipContent(true);
-//                        }
-//                    });
-//            Registration.Builder builder = new Registration
-//            .Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
-//                        .setRootUrl(SERVER_ADDR+"/_ah/api/");
+        if (regService == null) {
+            Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(),
+                    new AndroidJsonFactory(), null)
+                    // Need setRootUrl and setGoogleClientRequestInitializer only for local testing,
+                    // otherwise they can be skipped
+                    .setRootUrl(SERVER_ADDR + "/_ah/api/")
+                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+                        @Override
+                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                            abstractGoogleClientRequest.setDisableGZipContent(true);
+                        }
+                    });
+            /*Registration.Builder builder = new Registration
+            .Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                        .setRootUrl(SERVER_ADDR+"/_ah/api/");*/
             // end of optional local run code
+
             regService = builder.build();
         }
 

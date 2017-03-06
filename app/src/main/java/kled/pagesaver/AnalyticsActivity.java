@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,16 +23,17 @@ import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.SubcolumnValue;
+import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
 public class AnalyticsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<ArrayList<BookEntry>> {
 
-    public ArrayList<Integer> hoursArray;
-    public ArrayList<Integer> monthsArray;
-    public ArrayList<Integer> pagesArray;
-    public ArrayList<Integer> durationArray;
-    public int[] pagesPerMonthsArray;
+    private ArrayList<Integer> hoursArray;
+    private ArrayList<Integer> monthsArray;
+    private ArrayList<Integer> pagesArray;
+    private ArrayList<Integer> durationArray;
+    private int[] pagesPerMonthsArray;
 
     LoaderManager loaderManager;
 
@@ -41,15 +43,6 @@ public class AnalyticsActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_analytics);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        hoursArray = new ArrayList<>();
-        monthsArray = new ArrayList<>();
-        pagesArray = new ArrayList<>();
-        durationArray = new ArrayList<>();
-        pagesPerMonthsArray = new int[12];
-        for (int i = 0; i < pagesPerMonthsArray.length; i++) {
-            pagesPerMonthsArray[i] = 0;
-        }
 
         loaderManager = this.getLoaderManager();
         loaderManager.initLoader(1, null, this);
@@ -78,8 +71,17 @@ public class AnalyticsActivity extends AppCompatActivity implements
      * Get durations, start times, and pages read per reading session
      */
     public void getPoints(ArrayList<BookEntry> entries) {
-
+        Log.d("hello", "getPoints called");
         if(entries==null) return;
+
+        hoursArray = new ArrayList<>();
+        monthsArray = new ArrayList<>();
+        pagesArray = new ArrayList<>();
+        durationArray = new ArrayList<>();
+        pagesPerMonthsArray = new int[12];
+        for (int i = 0; i < pagesPerMonthsArray.length; i++) {
+            pagesPerMonthsArray[i] = 0;
+        }
 
         for (int i = 0; i < entries.size(); i++) {
 
@@ -150,7 +152,7 @@ public class AnalyticsActivity extends AppCompatActivity implements
         for (int i = 0; i < hours.length; ++i) {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
-            SubcolumnValue value = new SubcolumnValue(hours[i]);
+            SubcolumnValue value = new SubcolumnValue(hours[i], ChartUtils.COLOR_RED);
             values.add(value);
 
             Column column = new Column(values);
@@ -214,7 +216,7 @@ public class AnalyticsActivity extends AppCompatActivity implements
         for (int i = 0; i < months.length; ++i) {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
-            SubcolumnValue value = new SubcolumnValue(months[i]);
+            SubcolumnValue value = new SubcolumnValue(months[i], ChartUtils.COLOR_RED);
             values.add(value);
 
             Column column = new Column(values);
@@ -284,7 +286,7 @@ public class AnalyticsActivity extends AppCompatActivity implements
         for (int i = 0; i < hoursRead.length; ++i) {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
-            SubcolumnValue value = new SubcolumnValue(hoursRead[i]);
+            SubcolumnValue value = new SubcolumnValue(hoursRead[i], ChartUtils.COLOR_RED);
             values.add(value);
 
             Column column = new Column(values);
@@ -351,7 +353,7 @@ public class AnalyticsActivity extends AppCompatActivity implements
         for (int i = 0; i < pagesRead.length; ++i) {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
-            SubcolumnValue value = new SubcolumnValue(pagesRead[i]);
+            SubcolumnValue value = new SubcolumnValue(pagesRead[i], ChartUtils.COLOR_RED);
             values.add(value);
 
             Column column = new Column(values);
@@ -405,7 +407,7 @@ public class AnalyticsActivity extends AppCompatActivity implements
         for (int i = 0; i < pagesPerMonthsArray.length; ++i) {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
-            SubcolumnValue value = new SubcolumnValue(pagesPerMonthsArray[i]);
+            SubcolumnValue value = new SubcolumnValue(pagesPerMonthsArray[i], ChartUtils.COLOR_RED);
             values.add(value);
 
             Column column = new Column(values);
@@ -454,6 +456,7 @@ public class AnalyticsActivity extends AppCompatActivity implements
     @Override
     public Loader<ArrayList<BookEntry>> onCreateLoader(int id, Bundle args) {
         LoadBookEntries loadBookEntries = new LoadBookEntries(this);
+        Log.d("hello", "getLoader called");
         return loadBookEntries;
     }
 

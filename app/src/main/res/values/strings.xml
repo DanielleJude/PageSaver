@@ -59,7 +59,7 @@
     <string name="analytics_pages_title">How Many Pages Read Per Session</string>
     <string name="analytics_pages_month_title">How Many Pages Read Per Month</string>
     <string name="title_activity_psmap">Map</string>
-    <string name="analytics_compare">Compare to Others</string>
+    <string name="analytics_compare">View Aggregate Analytics</string>
 
     <string-array name="genre_array">
         <item>Fiction</item>
@@ -79,6 +79,13 @@
         <item>Other</item>
     </string-array>
 
-    <string name="title_activity_compare_analytics">Compare With Others</string>
+    <!-- Universe Analytics-->
+    <string name="title_activity_compare_analytics">Total User Analytics</string>
+    <string name="analytics_title_universe">Aggregate User Trends</string>
+    <string name="analytics_time_title_universe">Time of Day Users Read</string>
+    <string name="analytics_month_title_universe">How Many Days Users Read Per Month</string>
+    <string name="analytics_duration_title_universe">How Long Users Read Per Session</string>
+    <string name="analytics_pages_title_universe">How Many Pages Users Read Per Session</string>
+    <string name="analytics_pages_month_title_universe">How Many Pages Users Read Per Month</string>
 
 </resources>

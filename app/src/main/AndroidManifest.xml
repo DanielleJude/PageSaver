@@ -62,6 +62,10 @@
             android:label="@string/title_activity_analytics"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".CompareAnalyticsActivity"
+            android:label="@string/title_activity_compare_analytics"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".GoalsActivity"
             android:label="@string/title_activity_goals"
             android:theme="@style/AppTheme.NoActionBar" />
