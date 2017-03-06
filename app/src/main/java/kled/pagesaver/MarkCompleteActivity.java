@@ -2,8 +2,10 @@ package kled.pagesaver;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,10 +14,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class MarkCompleteActivity extends AppCompatActivity {
     public final static String ID_BUNDLE_KEY = "_idbundle key";
@@ -24,6 +29,7 @@ public class MarkCompleteActivity extends AppCompatActivity {
 
     private LatLng chosenLatLng = null;
     private final static int MAP_REQUEST_CODE = 5789;
+    private final int REQ_CODE_SPEECH_INPUT = 100;
 
     private DatePicker mDatePicker;
     private TimePicker mTimePicker;
@@ -87,6 +93,21 @@ public class MarkCompleteActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Don't do anything
             }
+        } else if(requestCode == REQ_CODE_SPEECH_INPUT) {
+            if(resultCode == RESULT_OK) {
+                ArrayList<String> result = data
+                        .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                StringBuilder string = new StringBuilder();
+                for(String str : result){
+                    string.append(str);
+                }
+                mCommentsView.setText(string.toString());
+
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "Did not understand",
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -110,6 +131,22 @@ public class MarkCompleteActivity extends AppCompatActivity {
         } else {
             //SHOW DIALOG with error
             makeTextDialog(errorString);
+        }
+    }
+
+    public void onSpeechClick(View view) {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                "Record your comment");
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(),
+                    "Speech Not Supported",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 

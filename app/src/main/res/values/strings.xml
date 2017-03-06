@@ -9,6 +9,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_add_book">AddBookActivity</string>
 
+    <string name="speech">Or record your comment here</string>
     <string name="title_label">Title:</string>
     <string name="title_hint">Enter book title here</string>
     <string name="author_label">Author:</string>

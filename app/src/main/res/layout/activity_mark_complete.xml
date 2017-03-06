@@ -123,6 +123,31 @@
             android:hint="Enter any comments here"
             android:layout_marginBottom="10dp"/>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            android:gravity="center"
+            android:orientation="vertical" >
+            <ImageButton
+                android:id="@+id/btn_mic"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@null"
+                android:scaleType="centerCrop"
+                android:src="@drawable/microphone"
+                android:onClick="onSpeechClick" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/speech"
+                android:textSize="15dp"
+                android:textStyle="normal" />
+        </LinearLayout>
+
 
         <Button
             android:layout_width="wrap_content"
