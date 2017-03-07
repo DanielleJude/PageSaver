@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void startMainActivity() {
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, SplashScreen.class);
         startActivity(intent);
         finish();
     }

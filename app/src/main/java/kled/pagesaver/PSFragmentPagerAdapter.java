@@ -32,9 +32,9 @@ public class PSFragmentPagerAdapter extends FragmentPagerAdapter{
     @Override
     public CharSequence getPageTitle(int position){
         if(position == 0)
-            return "Previous Books";
-        else if(position == 1)
             return "Current Books";
+        else if(position == 1)
+            return "Previous Books";
         else if(position == 2)
             return "Search";
         else

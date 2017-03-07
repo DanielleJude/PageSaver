@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity
         mViewPager = (ViewPager)findViewById(R.id.view_pager);
 
         mFragmentList = new ArrayList<Fragment>(3);
-        mFragmentList.add(new PreviousBooksFragment());
         mFragmentList.add(new CurrentBooksFragment());
+        mFragmentList.add(new PreviousBooksFragment());
         mFragmentList.add(new SearchFragment());
         //Add the start, history, and settings fragments
 
