@@ -97,6 +97,10 @@ public class GoalsDbHelper extends SQLiteOpenHelper {
     public long updateGoalEntry(long id, int pagesReadToday) {
         GoalEntry entry = fetchEntryByIndex(id);
 
+        /* if book has not been completed, set current progress to be
+         * the sum of the previous progress and the pages completed today
+         * if book has been completed, set current progress to be total page
+         */
         int newProgress = pagesReadToday + entry.getReadPages();
 
         if (newProgress > 0) {
@@ -108,6 +112,15 @@ public class GoalsDbHelper extends SQLiteOpenHelper {
         }
         else {
             entry.setReadPages(0);
+        }
+
+        /* If goal starting page changes, update goal ending page accordingly */
+        int newGoalEndPage = entry.getGoalStartPage() + entry.getDailyPages() - 1;
+
+        if (newGoalEndPage >= entry.getPagesToComplete()) {
+            entry.setGoalEndPage(entry.getPagesToComplete());
+        } else {
+            entry.setGoalEndPage(newGoalEndPage);
         }
 
         ContentValues value = new ContentValues();
