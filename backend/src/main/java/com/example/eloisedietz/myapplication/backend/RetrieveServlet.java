@@ -21,6 +21,8 @@ import static com.example.eloisedietz.myapplication.backend.OfyService.ofy;
 public class RetrieveServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    Logger logger = Logger.getLogger(Entry.class.getName());
+
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
@@ -44,6 +46,8 @@ public class RetrieveServlet extends HttpServlet {
             List<Entry.StartEndPages> pages = entry.getPageRanges();
             List<Entry.StartEndTimes> times = entry.getTimeRanges();
 
+            logger.info("got info");
+
             // Format of message is:
             // timePages info1 info2 info3... - delimited by space
             // Format for each info is:
@@ -51,6 +55,9 @@ public class RetrieveServlet extends HttpServlet {
 
             // Only send info if they all match up
             if (pages.size() == times.size()) {
+
+                logger.info("sizes were equal");
+
                 for (int i = 0; i < times.size(); i++) {
                     Long startTime = times.get(i).startTime;
                     Long endTime = times.get(i).endTime;
