@@ -468,7 +468,13 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
         //If in Place Marker Mode, zoom to current location for ease of placing a marker near you
         if (mMap != null) {
             if (isPlaceMarkerMode) {
-
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(curLat, curLong))
+                        .zoom(17)
+                        .bearing(0)
+                        .tilt(45)
+                        .build();
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 Log.d("MapActivity", "Lat: " + String.valueOf(curLat) + " Long: " + String.valueOf(curLong));
             }
