@@ -27,6 +27,8 @@ public class GoalsDbHelper extends SQLiteOpenHelper {
     public static final String KEY_GOALS_PAGES = "_total_pages";
     public static final String KEY_PAGES_INCREMENT = "_daily_pages";
     public static final String KEY_PROGRESS = "_progress";
+    public static final String KEY_GOAL_START = "_goal_start_today";
+    public static final String KEY_GOAL_END = "_goal_end_today";
     public static final String KEY_END_TIME = "_end_time";
 
     private static final String CREATE_TABLE_ENTRIES = "CREATE TABLE IF NOT EXISTS "
@@ -44,12 +46,17 @@ public class GoalsDbHelper extends SQLiteOpenHelper {
             + " INTEGER NOT NULL, "
             + KEY_PROGRESS
             + " INTEGER NOT NULL, "
+            + KEY_GOAL_START
+            + " INTEGER NOT NULL, "
+            + KEY_GOAL_END
+            + " INTEGER NOT NULL, "
             + KEY_END_TIME
             + " LONG "
             + "); ";
 
-    public static final String[] columns = new String[]{KEY_ID, KEY_TITLE, KEY_DESCRIPTION,
-    KEY_GOALS_PAGES, KEY_PAGES_INCREMENT, KEY_PAGES_INCREMENT, KEY_PROGRESS, KEY_END_TIME };
+    public static final String[] columns = new String[]{KEY_ID, KEY_TITLE,
+            KEY_DESCRIPTION, KEY_GOALS_PAGES, KEY_PAGES_INCREMENT, KEY_PAGES_INCREMENT,
+            KEY_PROGRESS, KEY_GOAL_START, KEY_GOAL_END, KEY_END_TIME };
 
 
     public GoalsDbHelper(Context context){
@@ -77,6 +84,8 @@ public class GoalsDbHelper extends SQLiteOpenHelper {
         value.put(KEY_GOALS_PAGES, entry.getPagesToComplete());
         value.put(KEY_PAGES_INCREMENT, entry.getDailyPages());
         value.put(KEY_PROGRESS, entry.getReadPages());
+        value.put(KEY_GOAL_START, entry.getGoalStartPage());
+        value.put(KEY_GOAL_END, entry.getGoalEndPage());
         value.put(KEY_END_TIME, entry.getEndTime());
 
         SQLiteDatabase database = getWritableDatabase();
@@ -109,6 +118,8 @@ public class GoalsDbHelper extends SQLiteOpenHelper {
         value.put(KEY_GOALS_PAGES, entry.getPagesToComplete());
         value.put(KEY_PAGES_INCREMENT, entry.getDailyPages());
         value.put(KEY_PROGRESS, entry.getReadPages());
+        value.put(KEY_GOAL_START, entry.getGoalStartPage());
+        value.put(KEY_GOAL_END, entry.getGoalEndPage());
         value.put(KEY_END_TIME, entry.getEndTime());
 
         SQLiteDatabase database = getWritableDatabase();
@@ -166,6 +177,8 @@ public class GoalsDbHelper extends SQLiteOpenHelper {
         entry.setPagesToComplete(cursor.getInt(cursor.getColumnIndex(KEY_GOALS_PAGES)));
         entry.setDailyPages(cursor.getInt(cursor.getColumnIndex(KEY_PAGES_INCREMENT)));
         entry.setReadPages(cursor.getInt(cursor.getColumnIndex(KEY_PROGRESS)));
+        entry.setGoalStartPage(cursor.getInt(cursor.getColumnIndex(KEY_GOAL_START)));
+        entry.setGoalEndPage(cursor.getInt(cursor.getColumnIndex(KEY_GOAL_END)));
         entry.setEndTime(cursor.getLong(cursor.getColumnIndex(KEY_END_TIME)));
 
         return entry;
