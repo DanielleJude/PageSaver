@@ -1,7 +1,7 @@
 package kled.pagesaver;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.api.client.util.Base64;
+
 
 
 import java.nio.ByteBuffer;
@@ -30,6 +30,7 @@ public class BookEntry {
     private ArrayList<StartEndTimes> mTimeList;
     private ArrayList<StartEndPages> mPageList;
     private int mTotalPages;   // number of total pages
+    private String mISBN;
 
     public static final String ID = "id";
     public static final String PHONE_ID = "phone_id";
@@ -44,6 +45,7 @@ public class BookEntry {
     public static final String TIMES_LIST = "times_list";
     public static final String PAGES_LIST = "pages_list";
     public static final String PAGES = "total_pages";
+    public static final String ISBN = "isbn";
 
     public static final int STATUS_PAST = 1;
     public static final int STATUS_CURRENT = 0;
@@ -82,7 +84,12 @@ public class BookEntry {
         }
     }
 
-
+    public void setISBN(String i){
+        mISBN = i;
+    }
+    public String getISBN(){
+        return mISBN;
+    }
     public void setRowId(Long rowId){
         mRowId = rowId;
     }
@@ -325,6 +332,7 @@ public class BookEntry {
         map.put(RATING, ""+mRating);
         map.put(COMMENT, mComment);
         map.put(STATUS, ""+mStatus);
+        map.put(ISBN, mISBN);
 
         map.put(LOCATION_LIST, locationListToString());
 

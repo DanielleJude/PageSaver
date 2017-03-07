@@ -158,6 +158,17 @@ public class EditBookActivity extends AppCompatActivity implements View.OnClickL
             errorString = errorString + "Minutes Spent Reading\n";
         }
 
+        if (fieldNotEmpty(mDurationHour) && fieldNotEmpty(mDurationMinute)) {
+            int durationHours = Integer.parseInt(mDurationHour.getText().toString());
+            int durationMinutes = Integer.parseInt(mDurationMinute.getText().toString());
+
+            if (durationHours == 0 && durationMinutes == 0) {
+                canAddFlag = false;
+                errorString = errorString + "Non-Zero Duration\n";
+            }
+        }
+
+
         //TODO UNCOMMENT THIS WHEN WESLEY FIXES
 
 //        if(chosenLatLng == null) {
@@ -196,7 +207,7 @@ public class EditBookActivity extends AppCompatActivity implements View.OnClickL
         long hours = Long.parseLong(mDurationHour.getText().toString());
         long endTime = startTime + 3600000 * hours + 60000 * minutes;
 
-        if(endTime >= startTime)
+        if(endTime > startTime)
             entry.addStartEndTime(startTime, endTime);
 
 

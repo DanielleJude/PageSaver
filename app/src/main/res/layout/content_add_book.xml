@@ -172,6 +172,20 @@
 
         </GridLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ISBN:"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/add_book_isbn"
+            android:hint="Enter ISBN here"
+            android:layout_marginBottom="10dp"
+            android:inputType="number"/>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

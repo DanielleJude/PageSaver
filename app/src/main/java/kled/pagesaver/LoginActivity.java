@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        startMainActivity();
         if(!shouldPromptFbLogin()) {
             //If already logged in, then just send to MainActivity
             startMainActivity();

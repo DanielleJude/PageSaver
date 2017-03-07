@@ -40,6 +40,7 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
     private TimePicker mTimePicker;
     private EditText mDurationHour;
     private EditText mDurationMinute;
+    private EditText mISBNView;
     Spinner genreSpinner;
 
     long id;
@@ -56,7 +57,7 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
     private final static String DMINUTE_KEY = "dminute";
     private final static String LAT_BUNDLE_KEY = "latitude";
     private final static String LNG_BUNDLE_KEY = "longitude";
-
+    private final static String ISBN_KEY = "isbn";
 
 
     @Override
@@ -128,15 +129,26 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
             errorString = errorString + "Author\n";
         }
 
-
         if(!fieldNotEmpty(mProgressSoFarView)) {
             canAddFlag = false;
             errorString = errorString + "Pages Read\n";
+        } else {
+            int progressSoFar = Integer.parseInt(mProgressSoFarView.getText().toString());
+            if (progressSoFar <= 0) {
+                canAddFlag = false;
+                errorString = errorString + "Non-Zero Pages Read\n";
+            }
         }
 
         if(!fieldNotEmpty(mTotalPagesView)) {
             canAddFlag = false;
             errorString = errorString + "Total Number of Pages\n";
+        } else {
+            int totalPages = Integer.parseInt(mTotalPagesView.getText().toString());
+            if (totalPages <= 0) {
+                canAddFlag = false;
+                errorString = errorString + "Non-Zero Total Number of Pages\n";
+            }
         }
 
         if(!fieldNotEmpty(mDurationHour)) {
@@ -147,6 +159,16 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
         if(!fieldNotEmpty(mDurationMinute)) {
             canAddFlag = false;
             errorString = errorString + "Minutes Spent Reading\n";
+        }
+
+        if (fieldNotEmpty(mDurationHour) && fieldNotEmpty(mDurationMinute)) {
+            int durationHours = Integer.parseInt(mDurationHour.getText().toString());
+            int durationMinutes = Integer.parseInt(mDurationMinute.getText().toString());
+
+            if (durationHours == 0 && durationMinutes == 0) {
+                canAddFlag = false;
+                errorString = errorString + "Non-Zero Duration\n";
+            }
         }
 
         //TODO UNCOMMENT THIS WHEN WESLEY FIXES
@@ -218,13 +240,17 @@ AsyncTask to add an exercise entry to the database
         entry.setTitle(mTitleView.getText().toString());
         entry.setAuthor(mAuthorView.getText().toString());
         entry.setGenre(genreSpinner.getSelectedItemPosition());
+        entry.setISBN(mISBNView.getText().toString());
+
 
         //Deal with progress entries
         int progressSoFar = Integer.parseInt(mProgressSoFarView.getText().toString());
-        if(progressSoFar >= 0)
+        if(progressSoFar > 0)
             entry.addPageRange(0, progressSoFar);
 
-        entry.setTotalPages(Integer.parseInt(mTotalPagesView.getText().toString()));
+        int totalPages = Integer.parseInt(mTotalPagesView.getText().toString());
+        if (totalPages >= 0)
+            entry.setTotalPages(totalPages);
 
 
         long startTime = getChosenTime();
@@ -275,6 +301,7 @@ AsyncTask to add an exercise entry to the database
         mTimePicker = (TimePicker)findViewById(R.id.time_picker_add_book);
         mDurationHour = (EditText)findViewById(R.id.add_book_duration_hour);
         mDurationMinute = (EditText)findViewById(R.id.add_book_duration_minute);
+        mISBNView = (EditText) findViewById(R.id.add_book_isbn);
 
     }
 
@@ -301,6 +328,7 @@ AsyncTask to add an exercise entry to the database
                 mProgressSoFarView.getText().toString());
         saveInstanceState.putString(TOTAL_PAGES_KEY,
                 mTotalPagesView.getText().toString());
+        saveInstanceState.putString(ISBN_KEY,mISBNView.getText().toString());
 
         saveInstanceState.putLong(TIME_KEY, getChosenTime());
         saveInstanceState.putString(DHOUR_KEY,
@@ -323,6 +351,8 @@ AsyncTask to add an exercise entry to the database
         mTotalPagesView.setText(savedInstanceState.getString(TOTAL_PAGES_KEY, ""));
         mDurationHour.setText(savedInstanceState.getString(DHOUR_KEY, ""));
         mDurationMinute.setText(savedInstanceState.getString(DMINUTE_KEY, ""));
+        mISBNView.setText(savedInstanceState.getString(ISBN_KEY,""));
+
 
         long time = savedInstanceState.getLong(TIME_KEY);
         Calendar cal = Calendar.getInstance();
