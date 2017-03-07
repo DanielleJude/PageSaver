@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -97,7 +98,45 @@ public class MarkCompleteActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK) {
                 ArrayList<String> result = data
                         .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                mCommentsView.setText(result.get(0));
+                if(result.size()==1){
+                    mCommentsView.setText(result.get(0));
+                } else if(result.size()>0){
+                    AlertDialog.Builder builderSingle = new AlertDialog.Builder(MarkCompleteActivity.this);
+                    //builderSingle.setIcon(R.drawable.ic_launcher);
+                    builderSingle.setTitle("Select Your Comment");
+
+                    final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MarkCompleteActivity.this, android.R.layout.select_dialog_singlechoice);
+                    for(String str : result){
+                        arrayAdapter.add(str);
+                    }
+
+                    builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String strName = arrayAdapter.getItem(which);
+                            AlertDialog.Builder builderInner = new AlertDialog.Builder(MarkCompleteActivity.this);
+                            builderInner.setMessage(strName);
+                            mCommentsView.setText(strName);
+                            builderInner.setTitle("Your Selected Item is");
+                            builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            builderInner.show();
+                        }
+                    });
+                    builderSingle.show();
+                }
+
 
             } else {
                 Toast.makeText(getApplicationContext(),
