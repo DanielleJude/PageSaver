@@ -221,7 +221,7 @@ AsyncTask to add an exercise entry to the database
 
         //Deal with progress entries
         int progressSoFar = Integer.parseInt(mProgressSoFarView.getText().toString());
-        if(progressSoFar > 0)
+        if(progressSoFar >= 0)
             entry.addPageRange(0, progressSoFar);
 
         entry.setTotalPages(Integer.parseInt(mTotalPagesView.getText().toString()));
