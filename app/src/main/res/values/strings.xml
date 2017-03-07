@@ -45,11 +45,17 @@
 
     <string name="title_activity_view_goal">View Goal</string>
     <string name="title_activity_add_goal">Add Goal</string>
+    <string name="title_activity_goal_reminder">Goal Reminder</string>
 
     <string name="dialog_custom_range_message">How many pages did you read today?</string>
     <string name="dialog_custom_range_title">Input Custom Range:</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">CANCEL</string>
+
+    <string name="goal_summary_title">Summary of Goals Today</string>
+    <string name="goal_reminder_notification_title">Goal Tracker</string>
+    <string name="goal_reminder_notification_content">Click to see a summary of reading goals today</string>
+    <string name="goal_reminder_title">Summary of Reading Goals Today</string>
 
     <!-- Analytics -->
     <string name="title_activity_analytics">Analytics</string>

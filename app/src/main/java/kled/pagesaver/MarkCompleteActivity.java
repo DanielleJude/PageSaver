@@ -97,11 +97,7 @@ public class MarkCompleteActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK) {
                 ArrayList<String> result = data
                         .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                StringBuilder string = new StringBuilder();
-                for(String str : result){
-                    string.append(str);
-                }
-                mCommentsView.setText(string.toString());
+                mCommentsView.setText(result.get(0));
 
             } else {
                 Toast.makeText(getApplicationContext(),
