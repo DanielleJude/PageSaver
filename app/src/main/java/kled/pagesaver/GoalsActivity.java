@@ -70,6 +70,10 @@ public class GoalsActivity extends AppCompatActivity implements
                         Integer.toString(viewedEntry.getDailyPages()));
                 intent.putExtra(GoalsDbHelper.KEY_PROGRESS,
                         Integer.toString(viewedEntry.getReadPages()));
+                intent.putExtra(GoalsDbHelper.KEY_GOAL_START,
+                        Integer.toString(viewedEntry.getGoalStartPage()));
+                intent.putExtra(GoalsDbHelper.KEY_GOAL_END,
+                        Integer.toString(viewedEntry.getGoalEndPage()));
 
                 if (viewedEntry.getEndTime() != null) {
                     intent.putExtra(GoalsDbHelper.KEY_END_TIME, viewedEntry.getEndTime());
@@ -80,9 +84,9 @@ public class GoalsActivity extends AppCompatActivity implements
         });
 
         // Initialize notification if goals list is not empty
-        if (entries != null) {
+       if (entries != null) {
             setupNotification();
-        }
+       }
     }
 
     // Toolbar to add
@@ -142,7 +146,7 @@ public class GoalsActivity extends AppCompatActivity implements
     }
 
     private void setupNotification() {
-        // Setup the intent to fire GoalsReminderActivity for the PendingIntent
+        // Setup the intent to fire GoalReminderAcitivty for the PendingIntent
         Intent i = new Intent(this, GoalsReminderActivity.class);
 
         // Set flags to avoid re-invent activity.
