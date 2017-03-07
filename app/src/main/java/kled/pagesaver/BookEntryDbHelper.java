@@ -43,7 +43,7 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
     public static final String KEY_START_END_TIMES = "_start_end_times";
     public static final String KEY_START_END_PAGES = "start_end_pages";
     public static final String KEY_TOTAL_PAGES = "_total_pages";
-
+    public static final String KEY_ISBN = "_isbn";
     private SQLiteDatabase database;
 
     private static final String CREATE_TABLE_ENTRIES = "CREATE TABLE IF NOT EXISTS "
@@ -69,15 +69,19 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
             + " BLOB, "
             + KEY_START_END_PAGES
             + " BLOB, "
+            + KEY_ISBN
+            + " TEXT, "
             + KEY_TOTAL_PAGES
             + " INTEGER NOT NULL "
             + ");";
+    //Add isbn
 
     //TODO ADD QUOTE BACK
     public static final String[] columns = new String[]{KEY_ROW_ID,
             KEY_TITLE, KEY_AUTHOR, KEY_GENRE, KEY_RATING,
             KEY_COMMENT, KEY_STATUS, KEY_LOCATIONS,
-            KEY_START_END_TIMES, KEY_START_END_PAGES, KEY_TOTAL_PAGES};
+            KEY_START_END_TIMES, KEY_START_END_PAGES,KEY_ISBN, KEY_TOTAL_PAGES};
+    //Add isbn
 
     public BookEntryDbHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -107,6 +111,7 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         ContentValues value = new ContentValues();
         value.put(KEY_TITLE, entry.getTitle());
         value.put(KEY_AUTHOR, entry.getAuthor());
+        value.put(KEY_ISBN,entry.getISBN());
         value.put(KEY_GENRE, entry.getGenre());
         value.put(KEY_RATING, entry.getRating());
         value.put(KEY_COMMENT, entry.getComment());
@@ -216,6 +221,7 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         entry.setRating(cursor.getInt(cursor.getColumnIndex(KEY_RATING)));
         entry.setComment(cursor.getString(cursor.getColumnIndex(KEY_COMMENT)));
         entry.setStatus(cursor.getInt(cursor.getColumnIndex(KEY_STATUS)));
+        entry.setISBN(cursor.getString(cursor.getColumnIndex(KEY_ISBN)));
         //TODO quote
         //entry.setQuote(cursor.getString(cursor.getColumnIndex(KEY_QUOTE)));
         entry.setTotalPages(cursor.getInt(cursor.getColumnIndex(KEY_TOTAL_PAGES)));

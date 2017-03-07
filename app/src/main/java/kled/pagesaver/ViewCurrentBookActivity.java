@@ -163,6 +163,7 @@ AsyncTask to add an exercise entry to the database
         mapText.add(String.valueOf(entry.getGenre()));
         mapText.add(entry.getProgressString());
 
+        extras.putString("isbn",entry.getISBN());
         extras.putStringArrayList("mapText",mapText);
         extras.putStringArrayList("values", values);
         extras.putStringArrayList(PSMapActivity.BOOKS_LIST,titles);

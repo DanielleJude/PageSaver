@@ -40,6 +40,7 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
     private TimePicker mTimePicker;
     private EditText mDurationHour;
     private EditText mDurationMinute;
+    private EditText mISBNView;
     Spinner genreSpinner;
 
     long id;
@@ -56,7 +57,7 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
     private final static String DMINUTE_KEY = "dminute";
     private final static String LAT_BUNDLE_KEY = "latitude";
     private final static String LNG_BUNDLE_KEY = "longitude";
-
+    private final static String ISBN_KEY = "isbn";
 
 
     @Override
@@ -239,6 +240,8 @@ AsyncTask to add an exercise entry to the database
         entry.setTitle(mTitleView.getText().toString());
         entry.setAuthor(mAuthorView.getText().toString());
         entry.setGenre(genreSpinner.getSelectedItemPosition());
+        entry.setISBN(mISBNView.getText().toString());
+
 
         //Deal with progress entries
         int progressSoFar = Integer.parseInt(mProgressSoFarView.getText().toString());
@@ -298,6 +301,7 @@ AsyncTask to add an exercise entry to the database
         mTimePicker = (TimePicker)findViewById(R.id.time_picker_add_book);
         mDurationHour = (EditText)findViewById(R.id.add_book_duration_hour);
         mDurationMinute = (EditText)findViewById(R.id.add_book_duration_minute);
+        mISBNView = (EditText) findViewById(R.id.add_book_isbn);
 
     }
 
@@ -324,6 +328,7 @@ AsyncTask to add an exercise entry to the database
                 mProgressSoFarView.getText().toString());
         saveInstanceState.putString(TOTAL_PAGES_KEY,
                 mTotalPagesView.getText().toString());
+        saveInstanceState.putString(ISBN_KEY,mISBNView.getText().toString());
 
         saveInstanceState.putLong(TIME_KEY, getChosenTime());
         saveInstanceState.putString(DHOUR_KEY,
@@ -346,6 +351,8 @@ AsyncTask to add an exercise entry to the database
         mTotalPagesView.setText(savedInstanceState.getString(TOTAL_PAGES_KEY, ""));
         mDurationHour.setText(savedInstanceState.getString(DHOUR_KEY, ""));
         mDurationMinute.setText(savedInstanceState.getString(DMINUTE_KEY, ""));
+        mISBNView.setText(savedInstanceState.getString(ISBN_KEY,""));
+
 
         long time = savedInstanceState.getLong(TIME_KEY);
         Calendar cal = Calendar.getInstance();

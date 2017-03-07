@@ -34,6 +34,8 @@ public class CurrentBooksFragment extends Fragment implements AdapterView.OnItem
         listView.setOnItemClickListener(this);
 
 
+
+
         return view;
     }
 

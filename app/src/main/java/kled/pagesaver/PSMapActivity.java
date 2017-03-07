@@ -8,6 +8,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
@@ -22,11 +26,14 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +53,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.vision.barcode.Barcode;
-import com.google.api.client.http.HttpResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,9 +94,11 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
     private Intent mServiceIntent;
     private boolean isPlaceMarkerMode;
     private boolean viewAllEntries;
+    String bookISBN;
     Marker currMarker;
     AlertDialog alert;
     int animationIndex = 0;
+    ImageView bookImage;
 
     EditText search;
     Button searchButton;
@@ -109,9 +117,6 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
     int numofPoints = 20;
     double curMaxProgress;
     private ArrayList<LatLng> pathTrack;
-
-
-
 
 
     private boolean doRedraw = true;
@@ -135,15 +140,14 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
 
 
                     if (animationIndex < savedLocations.size()) {
-                        Log.d("OnFinish","Animation Index: " + animationIndex);
+                        Log.d("OnFinish", "Animation Index: " + animationIndex);
 
                         LatLng curLatLng = savedLocations.get(animationIndex);
                         LatLng targetLatLng = mMap.getCameraPosition().target;
                         LatLng nextLatLng;
-                        if(animationIndex + 1 > savedLocations.size() - 1) {
+                        if (animationIndex + 1 > savedLocations.size() - 1) {
                             nextLatLng = savedLocations.get(animationIndex);
-                        }
-                        else{
+                        } else {
                             nextLatLng = savedLocations.get(animationIndex + 1);
                         }
                         traceLocations.add(savedLocations.get(animationIndex));
@@ -155,21 +159,20 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                                 new CameraPosition.Builder()
                                         .target(savedLocations.get(animationIndex))
                                         .tilt(animationIndex < savedLocations.size() - 1 ? 90 : 0)
-                                        .bearing(bearingBetweenLatLngs(targetLatLng,curLatLng))
+                                        .bearing(bearingBetweenLatLngs(targetLatLng, curLatLng))
                                         .zoom(mMap.getCameraPosition().zoom)
                                         .build();
 
 
-                        mark = mMap.addMarker(new MarkerOptions().position( savedLocations.get(animationIndex)).title(booksAtLocation.get(animationIndex))
+                        mark = mMap.addMarker(new MarkerOptions().position(savedLocations.get(animationIndex)).title(booksAtLocation.get(animationIndex))
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_book)));
 
 
                         animateBar();
                         animationIndex++;
                         try {
-                            Thread.sleep(50);
-                        }
-                        catch (Exception e){
+                            Thread.sleep(100);
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         mMap.animateCamera(
@@ -181,17 +184,16 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
             };
 
 
-
     @Override
     public void onProgressChange(int current, int max) {
-        if(current == max) {
+        if (current == max) {
             //Toast.makeText(getApplicationContext(), getString(R.string.finish), Toast.LENGTH_SHORT).show();
             //bnp.setProgress(0);
         }
     }
 
 
-    public void animateMap(){
+    public void animateMap() {
         animationIndex = 0;
         traceLocations = new ArrayList<LatLng>();
         traceLocations.add(savedLocations.get(animationIndex));
@@ -209,9 +211,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_book)));
 
 
-
-
-        bnp = (NumberProgressBar)findViewById(R.id.progress_bar);
+        bnp = (NumberProgressBar) findViewById(R.id.progress_bar);
         bnp.setOnProgressBarListener(this);
 
         animateBar();
@@ -225,7 +225,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
 
     }
 
-    public void animateBar(){
+    public void animateBar() {
         curMaxProgress = Double.valueOf(progressValues.get(animationIndex));
 
         Log.d("animateBar", String.valueOf(curMaxProgress));
@@ -237,7 +237,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if ((double)bnp.getProgress() < curMaxProgress) {
+                        if ((double) bnp.getProgress() < curMaxProgress) {
                             bnp.incrementProgressBy(1);
 
                         } else {
@@ -297,7 +297,6 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_psmap);
 
 
-
         //Initialize arrays for storage of locations and the corresponding books
         if (savedLocations == null) {
             savedLocations = new ArrayList<LatLng>();
@@ -321,23 +320,30 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
             //If in Place Marker Mode set the isPlaceMarkerMode boolean as true
             if (extras.get(MAP_MODE).equals(PLACE_MARKER_MODE)) {
                 isPlaceMarkerMode = true;
-                bnp = (NumberProgressBar)findViewById(R.id.progress_bar);
+                bnp = (NumberProgressBar) findViewById(R.id.progress_bar);
                 bnp.setVisibility(View.INVISIBLE);
+                bookImage = (ImageView) findViewById(R.id.imageview_bitmap);
+                bookImage.setVisibility(View.INVISIBLE);
             }
             //If in view all entries mode, get the saved locations and their corresponding books for viewing
             if (extras.get(MAP_MODE).equals(VIEW_ALL_ENTRIES)) {
                 isPlaceMarkerMode = false;
                 viewAllEntries = true;
-                bnp = (NumberProgressBar)findViewById(R.id.progress_bar);
+                bnp = (NumberProgressBar) findViewById(R.id.progress_bar);
                 bnp.setVisibility(View.INVISIBLE);
                 search = (EditText) findViewById(R.id.edittext_search);
                 search.setVisibility(View.INVISIBLE);
                 searchButton = (Button) findViewById(R.id.button_search);
                 searchButton.setVisibility(View.INVISIBLE);
+                bookImage = (ImageView) findViewById(R.id.imageview_bitmap);
+                bookImage.setVisibility(View.INVISIBLE);
                 byte[] byteArray = extras.getByteArray(LOCATIONS_LIST);
+
                 if (byteArray != null)
                     setLocationListFromByteArray(byteArray, savedLocations);
                 booksAtLocation = extras.getStringArrayList(BOOKS_LIST);
+
+                //Log.d("HERE", helper.imageURL);
             }
 
             //If in single entry mode, get the location list of a single book with the corresponding information about the location
@@ -351,12 +357,32 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                 search.setVisibility(View.INVISIBLE);
                 searchButton = (Button) findViewById(R.id.button_search);
                 searchButton.setVisibility(View.INVISIBLE);
+
+
                 byte[] byteArray = extras.getByteArray(LOCATIONS_LIST);
-                if(byteArray!= null)
+                if (byteArray != null)
                     setLocationListFromByteArray(extras.getByteArray(LOCATIONS_LIST), savedLocations);
                 booksAtLocation = extras.getStringArrayList(BOOKS_LIST);
                 progressValues = extras.getStringArrayList("values");
                 mapText = extras.getStringArrayList("mapText");
+                bookISBN = extras.getString("isbn");
+                //bookISBN = "9780465026562";
+                if(bookISBN != null && bookISBN.length() > 0) {
+                    BookAPIHelper bookHelper = new BookAPIHelper(bookISBN);
+                    bookHelper.execute();
+                }else {
+                    bookImage = (ImageView) findViewById(R.id.imageview_bitmap);
+                    bookImage.setImageDrawable(getResources().getDrawable(R.drawable.icon_book));
+
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(180,30,0,0);
+                    params.height = 150;
+                    params. width = 150;
+                    bookImage.setLayoutParams(params);
+
+
+                }
+
             }
         }
         Log.d("MAP", "Map Mode: " + extras.get(MAP_MODE));
@@ -442,7 +468,13 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
         //If in Place Marker Mode, zoom to current location for ease of placing a marker near you
         if (mMap != null) {
             if (isPlaceMarkerMode) {
-
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(curLat, curLong))
+                        .zoom(17)
+                        .bearing(0)
+                        .tilt(45)
+                        .build();
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 Log.d("MapActivity", "Lat: " + String.valueOf(curLat) + " Long: " + String.valueOf(curLong));
             }
@@ -481,9 +513,8 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                             }
                         }
-                    }
-                    else{
-                        drawMapText();
+                    } else {
+                        drawMapStats();
                         animateMap();
 
 
@@ -493,24 +524,23 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
         }
     }
 
-    public void drawMapText(){
+    public void drawMapStats() {
         TextView textTitle = (TextView) findViewById(R.id.textview_title);
         TextView textAuthor = (TextView) findViewById(R.id.textview_author);
         TextView textGenre = (TextView) findViewById(R.id.textview_genre);
-        TextView textCompletion = (TextView) findViewById(R.id.textview_completion);
         Spinner genreSpinner = (Spinner) findViewById(R.id.add_book_genre);
         String[] genres = getResources().getStringArray(R.array.genre_array);
 
 
         String title = "Title: " + mapText.get(0);
         String author = "Author: " + mapText.get(1);
-        String genre = "Genre: "+ genres[Integer.parseInt(mapText.get(2))];
-        String completion = "Amounted Completed: " + mapText.get(3);
+        String genre = "Genre: " + genres[Integer.parseInt(mapText.get(2))];
 
         textTitle.setText(title);
         textAuthor.setText(author);
         textGenre.setText(genre);
-        textCompletion.setText(completion);
+
+
 
     }
 
@@ -554,14 +584,14 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
     }
 
 
-
     private Location convertLatLngToLocation(LatLng latLng) {
         Location location = new Location("someLoc");
         location.setLatitude(latLng.latitude);
         location.setLongitude(latLng.longitude);
         return location;
     }
-    private float bearingBetweenLatLngs(LatLng beginLatLng,LatLng endLatLng) {
+
+    private float bearingBetweenLatLngs(LatLng beginLatLng, LatLng endLatLng) {
         Location beginLocation = convertLatLngToLocation(beginLatLng);
         Location endLocation = convertLatLngToLocation(endLatLng);
         return beginLocation.bearingTo(endLocation);
@@ -614,11 +644,11 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
     }
 
 
-    public void onSearchClick(View v){
+    public void onSearchClick(View v) {
         search = (EditText) findViewById(R.id.edittext_search);
 
 
-        String searchText =  search.getText().toString();
+        String searchText = search.getText().toString();
 
         GeoCoding gc = new GeoCoding(searchText);
         gc.execute();
@@ -630,23 +660,22 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
 
         stopTrackingService();
     }
-
     public class GeoCoding extends AsyncTask<Void, Void, Void> {
         private String address;
-        private  final String TAG = GeoCoding.class.getSimpleName();
+        private final String TAG = GeoCoding.class.getSimpleName();
         JSONObject jsonObj;
         String URL;
-        private String Address1 = "", Address2 = "", City = "", State = "", Country = "", County = "", PIN = "", Area="";
-        private  double latitude, longitude;
+        private String Address1 = "", Address2 = "", City = "", State = "", Country = "", County = "", PIN = "", Area = "";
+        private double latitude, longitude;
         HttpURLConnection connection;
         BufferedReader br;
-        StringBuilder sb ;
+        StringBuilder sb;
 
-        public GeoCoding(String address){
+        public GeoCoding(String address) {
             this.address = address;
         }
 
-        public String getArea(){
+        public String getArea() {
             return Area;
         }
 
@@ -658,7 +687,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
             Country = "";
             County = "";
             PIN = "";
-            Area ="";
+            Area = "";
 
             try {
 
@@ -666,6 +695,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                 if (Status.equalsIgnoreCase("OK")) {
                     JSONArray Results = jsonObj.getJSONArray("results");
                     JSONObject zero = Results.getJSONObject(0);
+
                     JSONArray address_components = zero.getJSONArray("address_components");
 
                     for (int i = 0; i < address_components.length(); i++) {
@@ -674,7 +704,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                         JSONArray mtypes = zero2.getJSONArray("types");
                         String Type = mtypes.getString(0);
 
-                        if (! TextUtils.isEmpty(long_name) || !long_name.equals(null) || long_name.length() > 0 || !long_name.equals("")) {
+                        if (!TextUtils.isEmpty(long_name) || !long_name.equals(null) || long_name.length() > 0 || !long_name.equals("")) {
                             if (Type.equalsIgnoreCase("street_number")) {
                                 Address1 = long_name + " ";
                             } else if (Type.equalsIgnoreCase("route")) {
@@ -691,7 +721,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                                 Country = long_name;
                             } else if (Type.equalsIgnoreCase("postal_code")) {
                                 PIN = long_name;
-                            }else if( Type.equalsIgnoreCase("neighborhood")){
+                            } else if (Type.equalsIgnoreCase("neighborhood")) {
                                 Area = long_name;
                             }
                         }
@@ -705,17 +735,17 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
 
         }
 
-        public void getGeoPoint(){
+        public void getGeoPoint() {
 
-            try{
-                longitude = ((JSONArray)jsonObj.get("results")).getJSONObject(0)
+            try {
+                longitude = ((JSONArray) jsonObj.get("results")).getJSONObject(0)
                         .getJSONObject("geometry").getJSONObject("location")
                         .getDouble("lng");
-                latitude = ((JSONArray)jsonObj.get("results")).getJSONObject(0)
+                latitude = ((JSONArray) jsonObj.get("results")).getJSONObject(0)
                         .getJSONObject("geometry").getJSONObject("location")
                         .getDouble("lat");
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -723,7 +753,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
 
 
         @Override
-        protected Void doInBackground(Void... params)  {
+        protected Void doInBackground(Void... params) {
             try {
                 StringBuilder urlStringBuilder = new StringBuilder("http://maps.google.com/maps/api/geocode/json");
                 urlStringBuilder.append("?address=" + URLEncoder.encode(address, "utf8"));
@@ -743,8 +773,9 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                     sb = sb.append(line + "\n");
                 }
                 Log.d("Map", sb.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            catch (Exception e){e.printStackTrace(); }
             return null;
         }
 
@@ -755,8 +786,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                 try {
                     //Log.d(TAG, "response code: " + connection.getResponseCode());
                     jsonObj = new JSONObject(sb.toString());
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Log.d("Map", "Error onPost 1");
                     e.printStackTrace();
                     jsonObj = new JSONObject(sb.toString());
@@ -769,9 +799,9 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                 Log.d("latitude", "" + latitude);
                 Log.d("longitude", "" + longitude);
             } catch (Exception e) {
-            e.printStackTrace();
+                e.printStackTrace();
                 Log.d("Map", "Error onPost 2");
-        }
+            }
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(latitude, longitude))
                     .zoom(17)
@@ -779,8 +809,173 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                     .tilt(45)
                     .build();
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        executeFinished = true;
-        super.onPostExecute(aVoid);
+            executeFinished = true;
+            super.onPostExecute(aVoid);
+        }
     }
+
+
+
+
+    public class BitmapURLHelper extends AsyncTask<Void, Void, Void> {
+        String imgURL;
+        Bitmap bm;
+
+        public BitmapURLHelper(String url) {
+            imgURL = url;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                URL url = new URL(imgURL);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                bm = BitmapFactory.decodeStream(input);
+                Log.d("bm", bm.toString());
+
+            } catch (IOException e) {
+                // Log exception
+
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            executeFinished = false;
+            try {
+                try {
+
+                } catch (Exception e) {
+                    Log.d("Map", "Error onPost 1");
+                    e.printStackTrace();
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d("Map", "Error onPost 2");
+            }
+            super.onPostExecute(aVoid);
+        }
+    }
+
+
+
+    public class BookAPIHelper extends AsyncTask<Void, Void, Void> {
+
+        private String isbn;
+        private final String TAG = BookAPIHelper.class.getSimpleName();
+        JSONObject jsonObj;
+        String URL;
+        HttpURLConnection connection;
+        BufferedReader br;
+        StringBuilder sb;
+        String imageURL;
+        Bitmap bitmap;
+        BitmapURLHelper bmHelper;
+
+
+        public BookAPIHelper(String i) {
+            isbn = i;
+        }
+        public void getImageURL() {
+
+            try {
+                JSONArray items = jsonObj.getJSONArray("items");
+                for (int i = 0; i < items.length(); i++) {
+                    JSONObject bookRecord = items.getJSONObject(i);
+                    JSONObject bookVolumeInfo = bookRecord.getJSONObject("volumeInfo");
+
+                    JSONObject bookImageLinks = null;
+                    try {
+                        bookImageLinks = bookVolumeInfo.getJSONObject("imageLinks");
+                    } catch (JSONException ignored) {
+                    }
+
+                    String bookSmallThumbnail = "";
+                    if (bookImageLinks == null) {
+                        bookSmallThumbnail = "null";
+                    } else {
+                        bookSmallThumbnail = bookImageLinks.getString("smallThumbnail");
+                    }
+                    imageURL = bookSmallThumbnail;
+                }
+
+
+                    Log.d("Image Url", imageURL);
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Log.d("getIMAGEURL ERROR", "ERROR");
+                }
+
+            }
+
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                StringBuilder urlStringBuilder = new StringBuilder("https://www.googleapis.com/books/v1/volumes?q=isbn:");
+                urlStringBuilder.append(isbn);
+                URL = urlStringBuilder.toString();
+                Log.d(TAG, "URL: " + URL);
+
+                URL url = new URL(URL);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setDoInput(true);
+                connection.connect();
+                br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb = sb.append(line + "\n");
+                }
+                Log.d("Book JSON", sb.toString());
+                jsonObj = new JSONObject(sb.toString());
+                getImageURL();
+                bmHelper = new BitmapURLHelper(imageURL);
+                bmHelper.doInBackground();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            try {
+                try {
+
+                    bookImage = (ImageView) findViewById(R.id.imageview_bitmap);
+                    bookImage.setImageBitmap(bmHelper.bm);
+                    //Log.d(TAG, "response code: " + connection.getResponseCode());
+                   // jsonObj = new JSONObject(sb.toString());
+                    //getImageURL();
+
+                } catch (Exception e) {
+                    Log.d("Map", "Error onPost 1");
+                    e.printStackTrace();
+                    jsonObj = new JSONObject(sb.toString());
+
+                }
+                Log.d(TAG, "JSON obj: " + jsonObj);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d("Map", "Error onPost 2");
+            }
+            super.onPostExecute(aVoid);
+        }
+    }
+
 }
-}
+
+
+

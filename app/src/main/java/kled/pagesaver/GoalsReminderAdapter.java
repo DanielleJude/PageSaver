@@ -62,8 +62,8 @@ public class GoalsReminderAdapter extends ArrayAdapter<GoalEntry> {
         TextView status = (TextView) v.findViewById(R.id.goal_reminder_status);
 
         title.setText("Book title: " + goalsList.get(position).getBookTitle());
-        dailyGoal.setText("Today's goal is "+ goalsList.get(position).getDailyPages()
-                + " pages." );
+        dailyGoal.setText("Today's goal is page "+ goalsList.get(position).getGoalStartPage()
+                + " to page " + goalsList.get(position).getGoalEndPage() + ".");
         status.setText("Not completed yet");
 
         return v;
