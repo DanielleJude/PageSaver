@@ -128,15 +128,26 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
             errorString = errorString + "Author\n";
         }
 
-
         if(!fieldNotEmpty(mProgressSoFarView)) {
             canAddFlag = false;
             errorString = errorString + "Pages Read\n";
+        } else {
+            int progressSoFar = Integer.parseInt(mProgressSoFarView.getText().toString());
+            if (progressSoFar <= 0) {
+                canAddFlag = false;
+                errorString = errorString + "Non-Zero Pages Read\n";
+            }
         }
 
         if(!fieldNotEmpty(mTotalPagesView)) {
             canAddFlag = false;
             errorString = errorString + "Total Number of Pages\n";
+        } else {
+            int totalPages = Integer.parseInt(mTotalPagesView.getText().toString());
+            if (totalPages <= 0) {
+                canAddFlag = false;
+                errorString = errorString + "Non-Zero Total Number of Pages\n";
+            }
         }
 
         if(!fieldNotEmpty(mDurationHour)) {
@@ -147,6 +158,16 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
         if(!fieldNotEmpty(mDurationMinute)) {
             canAddFlag = false;
             errorString = errorString + "Minutes Spent Reading\n";
+        }
+
+        if (fieldNotEmpty(mDurationHour) && fieldNotEmpty(mDurationMinute)) {
+            int durationHours = Integer.parseInt(mDurationHour.getText().toString());
+            int durationMinutes = Integer.parseInt(mDurationMinute.getText().toString());
+
+            if (durationHours == 0 && durationMinutes == 0) {
+                canAddFlag = false;
+                errorString = errorString + "Non-Zero Duration\n";
+            }
         }
 
         //TODO UNCOMMENT THIS WHEN WESLEY FIXES
@@ -221,10 +242,12 @@ AsyncTask to add an exercise entry to the database
 
         //Deal with progress entries
         int progressSoFar = Integer.parseInt(mProgressSoFarView.getText().toString());
-        if(progressSoFar >= 0)
+        if(progressSoFar > 0)
             entry.addPageRange(0, progressSoFar);
 
-        entry.setTotalPages(Integer.parseInt(mTotalPagesView.getText().toString()));
+        int totalPages = Integer.parseInt(mTotalPagesView.getText().toString());
+        if (totalPages >= 0)
+            entry.setTotalPages(totalPages);
 
 
         long startTime = getChosenTime();
