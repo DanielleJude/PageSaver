@@ -69,6 +69,11 @@ public class AddGoalActivity extends AppCompatActivity {
         try {
             int priorProgress = Integer.parseInt(progressText.getText().toString());
             entry.setReadPages(priorProgress);
+            // starting page for tomorrow's goal
+            entry.setGoalStartPage(priorProgress + 1);
+            // ending page for tomorrow's goal
+            entry.setGoalEndPage(priorProgress +
+                    Integer.parseInt(incrementText.getText().toString()));
         } catch (Exception e) {
             entry.setReadPages(0);
         }
