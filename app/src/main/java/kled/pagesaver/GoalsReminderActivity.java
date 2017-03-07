@@ -24,7 +24,7 @@ public class GoalsReminderActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_goals_remider);
+        setContentView(R.layout.activity_goals_reminder);
 
         goalsDatabase = new GoalsDbHelper(this);
         entries = new ArrayList<GoalEntry>();
