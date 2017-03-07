@@ -4,7 +4,7 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    >
 
 
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,48 +16,56 @@
     android:layout_height="match_parent"
     tools:context="kled.pagesaver.PSMapActivity"
     />
+
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id = "@+id/edittext_search" />
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:id="@+id/imageview_bitmap"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="10dp"/>
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/textview_title"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="150dp"
+        android:id="@+id/textview_title"
+        />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="150dp"
         android:id="@+id/textview_author"
-        android:layout_below="@+id/textview_title"/>
+
+        android:layout_below="@+id/textview_title"
+
+        />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="150dp"
         android:id="@+id/textview_genre"
-        android:layout_below="@+id/textview_author"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/textview_completion"
-        android:layout_below="@+id/textview_genre"/>
+        android:layout_below="@+id/textview_author"
+        />
 
 
     <com.daimajia.numberprogressbar.NumberProgressBar
         android:id="@+id/progress_bar"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="150dp"
 
 
 
         custom:progress_unreached_color="#CCCCCC"
         custom:progress_reached_color="#ff0000"
 
-        custom:progress_unreached_bar_height="2dp"
-        custom:progress_reached_bar_height="4dp"
+        custom:progress_unreached_bar_height="3dp"
+        custom:progress_reached_bar_height="6dp"
 
         custom:progress_text_size="10sp"
         custom:progress_text_color="#000000"
@@ -67,7 +75,8 @@
         custom:progress_max="100"
         custom:progress_current="0"
 
-        android:layout_below="@+id/textview_completion"
+        android:layout_below="@+id/textview_genre"
+
          />
     <Button
         android:layout_width="wrap_content"
