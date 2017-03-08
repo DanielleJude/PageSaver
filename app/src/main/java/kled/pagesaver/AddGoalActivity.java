@@ -24,6 +24,8 @@ public class AddGoalActivity extends AppCompatActivity {
     private GoalsDbHelper entrySource;
     private GoalEntry entry;
 
+    private int dailyPages;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,8 +53,8 @@ public class AddGoalActivity extends AppCompatActivity {
 
         EditText incrementText = (EditText) findViewById(R.id.add_goals_increment_text);
         try {
-            int increment = Integer.parseInt(incrementText.getText().toString());
-            entry.setDailyPages(increment);
+            dailyPages = Integer.parseInt(incrementText.getText().toString());
+            entry.setDailyPages(dailyPages);
         } catch (Exception e) {
             entry.setDailyPages(0);
         }
@@ -63,19 +65,6 @@ public class AddGoalActivity extends AppCompatActivity {
             entry.setPagesToComplete(totalPages);
         } catch (Exception e) {
             entry.setPagesToComplete(0);
-        }
-
-        EditText progressText = (EditText) findViewById(R.id.add_goals_progress_text);
-        try {
-            int priorProgress = Integer.parseInt(progressText.getText().toString());
-            entry.setReadPages(priorProgress);
-            // starting page for tomorrow's goal
-            entry.setGoalStartPage(priorProgress + 1);
-            // ending page for tomorrow's goal
-            entry.setGoalEndPage(priorProgress +
-                    Integer.parseInt(incrementText.getText().toString()));
-        } catch (Exception e) {
-            entry.setReadPages(0);
         }
 
         // Only accept date if set after current date
@@ -100,10 +89,23 @@ public class AddGoalActivity extends AppCompatActivity {
                 && entry.getPagesToComplete() != 0) {
             Long timeDifference = calendar.getTimeInMillis() - current.getTimeInMillis();
             int numberOfDays = (int) (timeDifference / 1000 / 60 / 60 / 24);
-            int dailyPages = (int) Math.ceil(
+            dailyPages = (int) Math.ceil(
                             ((entry.getPagesToComplete() - entry.getReadPages()) / numberOfDays));
 
             entry.setDailyPages(dailyPages);
+        }
+
+        // Current progress
+        EditText progressText = (EditText) findViewById(R.id.add_goals_progress_text);
+        try {
+            int priorProgress = Integer.parseInt(progressText.getText().toString());
+            entry.setReadPages(priorProgress);
+            // starting page for tomorrow's goal
+            entry.setGoalStartPage(priorProgress + 1);
+            // ending page for tomorrow's goal
+            entry.setGoalEndPage(priorProgress + dailyPages);
+        } catch (Exception e) {
+            entry.setReadPages(0);
         }
     }
 

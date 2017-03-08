@@ -54,7 +54,46 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:textStyle="bold"
+            android:text= "@string/goals_total_pages">
+        </TextView>
+
+        <EditText
+            android:id="@+id/add_goals_total_goal_text"
+            android:layout_width="50dp"
+            android:inputType="number"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
+        </EditText>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textStyle="bold"
+            android:text=" Pages already read: " >
+        </TextView>
+
+        <EditText
+            android:id="@+id/add_goals_progress_text"
+            android:layout_width="50dp"
+            android:inputType="number"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
+        </EditText>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textStyle="bold"
             android:text="@string/goals_increment_text" >
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/set_goals_instruction" >
         </TextView>
 
         <LinearLayout
@@ -74,44 +113,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text=" pages per day of " >
-            </TextView>
-
-            <EditText
-                android:id="@+id/add_goals_total_goal_text"
-                android:layout_width="50dp"
-                android:inputType="number"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp">
-            </EditText>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text=" total pages" >
-            </TextView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <EditText
-                android:id="@+id/add_goals_progress_text"
-                android:layout_width="50dp"
-                android:inputType="number"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp">
-            </EditText>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text=" pages already read" >
+                android:text=" pages per day " >
             </TextView>
 
         </LinearLayout>
@@ -119,8 +121,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:textStyle="bold"
+            android:layout_margin="10dp"
             android:text="@string/goals_end_time" >
         </TextView>
 

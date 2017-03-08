@@ -34,7 +34,10 @@
     <string name="menu_cancel_goal">Cancel</string>
     <string name="goals_book_title">Book Title</string>
     <string name="goals_description">Description</string>
-    <string name="goals_end_time">End Time</string>
+    <string name="goals_total_pages">Total pages:</string>
+    <string name="goals_end_time">End Time:</string>
+    <string name="set_goals_instruction">Either enter your goal manually
+        or select an end date for automatic calculation of pages per day:</string>
 
     <string name="goals_increment_text">Completion Goal</string>
     <string name="goals_progress">Progress</string>
