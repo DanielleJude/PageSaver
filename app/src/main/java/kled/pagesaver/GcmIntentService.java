@@ -60,7 +60,7 @@ public class GcmIntentService extends IntentService {
                 String[] messageParts = mess.split(" ");
 
                 if(messageParts[0].equals("timePages")) {
-                    showToast("Comparing now");
+                    //showToast("Comparing now");
 
                     messageToSend = mess;
 
