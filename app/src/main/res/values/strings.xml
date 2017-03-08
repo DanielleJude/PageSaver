@@ -20,7 +20,7 @@
     <string name="comments_label">Comments:</string>
     <string name="progress_label">Progress:</string>
     <string name="add_location_label">Add Location</string>
-    <string name="date_started_label">Select Date</string>
+    <string name="date_started_label">Select Date:</string>
     <string name="time_started_label">Select Start Time:</string>
     <string name="duration_label">Duration:</string>
     <string name="title_activity_view_current_book">ViewCurrentBookActivity</string>
