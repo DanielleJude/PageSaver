@@ -26,10 +26,8 @@
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
-        android:layout_marginTop="15dp"
-
+        android:layout_margin="10dp"
         android:layout_centerHorizontal="true"
-
         android:layout_width="380dp"
         android:layout_height="130dp"
         card_view:cardCornerRadius="4dp"
