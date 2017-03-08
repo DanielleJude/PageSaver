@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 /**
  * Created by kelle on 2/26/2017.
+ * A table to store goal entries
  */
 
 public class GoalsDbHelper extends SQLiteOpenHelper {

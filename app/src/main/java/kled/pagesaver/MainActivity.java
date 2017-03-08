@@ -35,6 +35,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/*
+MainActivity starts after user logs in with Facebook
+Shows fragment view and checks permissions
+ */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -58,7 +62,8 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open
+                , R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -76,7 +81,8 @@ public class MainActivity extends AppCompatActivity
         //Add the start, history, and settings fragments
 
         //Bind the tab bar and the view pager for seamless transitions between tabs and fragments
-        mViewPagerAdapter = new PSFragmentPagerAdapter(getFragmentManager(), mFragmentList);
+        mViewPagerAdapter = new PSFragmentPagerAdapter(getFragmentManager()
+                , mFragmentList);
         mViewPager.setAdapter(mViewPagerAdapter);
         mTabBar.setupWithViewPager(mViewPager);
         mTabBar.setTabMode(TabLayout.MODE_FIXED);
@@ -143,8 +149,10 @@ Code rewritten from onReuestPermissionsResult in IAmHere
 
                         }
                     });
-                    requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            android.Manifest.permission.CAMERA, android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+                    requestPermissions(new String[]{android.Manifest.permission
+                            .WRITE_EXTERNAL_STORAGE,
+                            android.Manifest.permission.CAMERA,
+                            android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
                 }else{
                 }
             }
@@ -156,11 +164,13 @@ Code rewritten from onReuestPermissionsResult in IAmHere
             return;
 
         if (ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    android.Manifest.permission.CAMERA, android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+                    android.Manifest.permission.CAMERA, android.Manifest
+                    .permission.ACCESS_FINE_LOCATION}, 0);
         }
 
     }
@@ -195,7 +205,8 @@ Code rewritten from onReuestPermissionsResult in IAmHere
                 intent.putExtra(PSMapActivity.MAP_MODE, PSMapActivity.VIEW_ALL_ENTRIES);
                 //TODO send locations and names to mapview
                 ArrayList<BookEntry> allEntries = new BookEntryDbHelper(this).fetchEntries();
-                Map<LatLng, Set<String>> locsWithBooks = getSetOfLocationsWithBookTitles(allEntries);
+                Map<LatLng, Set<String>> locsWithBooks =
+                        getSetOfLocationsWithBookTitles(allEntries);
 
                 List<LatLng> locations = new ArrayList<>();
                 ArrayList<String> titleStrings = new ArrayList<>();
@@ -241,6 +252,9 @@ Code rewritten from onReuestPermissionsResult in IAmHere
         return true;
     }
 
+    /*
+    Returns a map mapping a LatLng with a string of Book Titles
+     */
     private Map<LatLng, Set<String>> getSetOfLocationsWithBookTitles(List<BookEntry> entries) {
         Map<LatLng, Set<String>> map = new HashMap<>();
 

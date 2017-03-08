@@ -28,6 +28,9 @@ import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
+/*
+This activity shows users data compared with that of the rest of the app's users
+ */
 public class CompareAnalyticsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<ArrayList<BookEntry>> {
 
@@ -144,7 +147,8 @@ public class CompareAnalyticsActivity extends AppCompatActivity implements
                     int diff = individualPage.get(j).endPage - individualPage.get(j).startPage;
                     personalPagesArray.add(diff);
 
-                    personalPagesPerMonthsArray[month] = personalPagesPerMonthsArray[month] + diff;
+                    personalPagesPerMonthsArray[month] =
+                            personalPagesPerMonthsArray[month] + diff;
                 }
             }
         }
@@ -236,7 +240,8 @@ public class CompareAnalyticsActivity extends AppCompatActivity implements
                 universeMonthsArray[month]++;
                 universeDurationArray.add(duration);
                 universePagesArray.add(numPages);
-                universePagesPerMonthsArray[month] = universePagesPerMonthsArray[month] + numPages;
+                universePagesPerMonthsArray[month] =
+                        universePagesPerMonthsArray[month] + numPages;
             }
         }
 

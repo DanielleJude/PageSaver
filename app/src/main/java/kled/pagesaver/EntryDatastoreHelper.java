@@ -12,6 +12,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Danielle on 2/26/17.
+ * A helper class to interact with the datastore
  */
 
 public class EntryDatastoreHelper {
@@ -29,6 +30,9 @@ public class EntryDatastoreHelper {
         return phone_id;
     }
 
+    /*
+    Returns the registration ID
+     */
     public String getRegID() {
         SharedPreferences sharedPreferences =
                 mContext.getSharedPreferences(GcmRegistrationAsyncTask.GCM_PREF_KEY, MODE_PRIVATE);
@@ -36,6 +40,9 @@ public class EntryDatastoreHelper {
         return sharedPreferences.getString(GcmRegistrationAsyncTask.REG_ID_PREF_KEY, null);
     }
 
+    /*
+    Deletes an entry from the datastore
+     */
     public void deleteEntry(String id) {
         Map<String, String> params = new HashMap<>();
         params.put(BookEntry.ID, id);
@@ -46,6 +53,9 @@ public class EntryDatastoreHelper {
 
     }
 
+    /*
+    Adds an entry to the datastore
+     */
     public void addEntry(BookEntry entry) {
         Map<String, String> params = new HashMap<>();
         params.put(BookEntry.REG_ID, getRegID());
@@ -57,6 +67,9 @@ public class EntryDatastoreHelper {
         new GCMThread(endpoint, params).start();
     }
 
+    /*
+    Updates an entry in the datastore
+     */
     public void updateEntry(BookEntry entry) {
         Map<String, String> params = new HashMap<>();
         params.put(BookEntry.REG_ID, getRegID());
@@ -69,6 +82,9 @@ public class EntryDatastoreHelper {
         new GCMThread(endpoint, params).start();
     }
 
+    /*
+        Returns information for analytics
+     */
     public void retrieveDatastore() {
         Map<String, String> params = new HashMap<>();
         params.put(BookEntry.REG_ID, getRegID());
@@ -79,7 +95,10 @@ public class EntryDatastoreHelper {
         new GCMThread(endpoint, params).start();
     }
 
-    public void clearDatastore() {
+    /*
+    clearDatastore (can be helpful for debugging)
+     */
+    private void clearDatastore() {
         Map<String, String> params = new HashMap<>();
         params.put(BookEntry.REG_ID, getRegID());
         params.put(BookEntry.PHONE_ID, getInstanceId());

@@ -2,6 +2,7 @@ package kled.pagesaver;
 
 /**
  * Created by kelle on 2/26/2017.
+ * A class to define information about each new goal
  */
 
 public class GoalEntry {

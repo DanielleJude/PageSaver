@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by eloisedietz on 2/24/17.
+ * Database to store all BookEntries for a specific user
  */
 
 public class BookEntryDbHelper extends SQLiteOpenHelper {
@@ -38,7 +38,6 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
     public static final String KEY_RATING = "_rating";
     public static final String KEY_COMMENT = "_comment";
     public static final String KEY_STATUS = "_status";
-    public static final String KEY_QUOTE = "_quote";
     public static final String KEY_LOCATIONS = "_locations";
     public static final String KEY_START_END_TIMES = "_start_end_times";
     public static final String KEY_START_END_PAGES = "start_end_pages";
@@ -74,14 +73,13 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
             + KEY_TOTAL_PAGES
             + " INTEGER NOT NULL "
             + ");";
-    //Add isbn
 
-    //TODO ADD QUOTE BACK
+
     public static final String[] columns = new String[]{KEY_ROW_ID,
             KEY_TITLE, KEY_AUTHOR, KEY_GENRE, KEY_RATING,
             KEY_COMMENT, KEY_STATUS, KEY_LOCATIONS,
             KEY_START_END_TIMES, KEY_START_END_PAGES,KEY_ISBN, KEY_TOTAL_PAGES};
-    //Add isbn
+
 
     public BookEntryDbHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -98,6 +96,9 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
 
     }
 
+    /*
+    Adds a bookEntry to database
+     */
     public long insertEntry(BookEntry entry){
        ContentValues value = entryToContentValues(entry);
         database = getWritableDatabase();
@@ -107,6 +108,9 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
 
     }
 
+    /*
+    Helper method for insertEntry
+     */
     public ContentValues entryToContentValues(BookEntry entry) {
         ContentValues value = new ContentValues();
         value.put(KEY_TITLE, entry.getTitle());
@@ -116,8 +120,7 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         value.put(KEY_RATING, entry.getRating());
         value.put(KEY_COMMENT, entry.getComment());
         value.put(KEY_STATUS, entry.getStatus());
-        //TODO quote!
-        //value.put(KEY_QUOTE, entry.getQuote());
+
         value.put(KEY_TOTAL_PAGES, entry.getTotalPages());
 
         byte[] byteLocations = entry.getLocationByteArray();
@@ -138,12 +141,18 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         return value;
     }
 
+    /*
+    Removes a bookEntry from the database
+     */
     public void removeEntry(long index){
         database = getWritableDatabase();
         database.delete(TABLE_NAME_ENTRIES, KEY_ROW_ID + "=" + index, null);
         database.close();
     }
 
+    /*
+    Returns a specific BookEntry based on the index
+     */
     public BookEntry fetchEntryByIndex(long id) throws SQLException {
         database = getReadableDatabase();
         BookEntry entry = null;
@@ -194,6 +203,10 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
 
     }
 
+    /*
+    Fetches all book entries from the database,
+    returns an ArrayList
+     */
     public ArrayList<BookEntry> fetchEntries() {
         database = getReadableDatabase();
         ArrayList<BookEntry> entryList = new ArrayList<BookEntry>();
@@ -212,6 +225,9 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         return entryList;
     }
 
+    /*
+    Takes information from a cursor and converts it back to a BookEntry
+     */
     private BookEntry cursorToEntry(Cursor cursor) {
         BookEntry entry = new BookEntry();
         entry.setRowId(cursor.getLong(cursor.getColumnIndex(KEY_ROW_ID)));
@@ -222,8 +238,6 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
         entry.setComment(cursor.getString(cursor.getColumnIndex(KEY_COMMENT)));
         entry.setStatus(cursor.getInt(cursor.getColumnIndex(KEY_STATUS)));
         entry.setISBN(cursor.getString(cursor.getColumnIndex(KEY_ISBN)));
-        //TODO quote
-        //entry.setQuote(cursor.getString(cursor.getColumnIndex(KEY_QUOTE)));
         entry.setTotalPages(cursor.getInt(cursor.getColumnIndex(KEY_TOTAL_PAGES)));
 
         byte[] byteTrackLocations = cursor.getBlob(cursor
@@ -245,6 +259,9 @@ public class BookEntryDbHelper extends SQLiteOpenHelper {
 
     }
 
+    /*
+    This updates old entries about a book with the new information
+     */
     public void updateEntry(BookEntry entry) {
         database = getWritableDatabase();
         ContentValues data= entryToContentValues(entry);

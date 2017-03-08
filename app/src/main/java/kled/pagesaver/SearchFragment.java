@@ -18,9 +18,11 @@ import java.util.Set;
 
 /**
  * Created by Danielle on 2/24/17.
+ * This is the fragment that allows the user to search their past entries by typing in words
  */
 
-public class SearchFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener{
+public class SearchFragment extends Fragment implements AdapterView.OnItemClickListener,
+        SearchView.OnQueryTextListener{
     private View view;
     private ListView listView;
     private SearchView searchView;
@@ -32,7 +34,8 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemClickL
     private boolean oldEntriesAreSaved = false;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
         // Set up the adapter and the listView, but don't add database items.
         //They will be added in onResume.

@@ -26,6 +26,10 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Calendar;
 import java.util.Date;
 
+/*
+AddBookActivity creates a new BookEntry in the data store based on user-inputted information
+ */
+
 public class AddBookActivity extends AppCompatActivity implements View.OnClickListener{
     private LatLng chosenLatLng = null;
     private final static int MAP_REQUEST_CODE = 5789;
@@ -67,7 +71,8 @@ public class AddBookActivity extends AppCompatActivity implements View.OnClickLi
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_add_add_book_view);
+        FloatingActionButton fab = (FloatingActionButton)
+                findViewById(R.id.fab_add_add_book_view);
         fab.setOnClickListener(this);
 
         setUpUIConnections();
@@ -231,7 +236,9 @@ AsyncTask to add an exercise entry to the database
 
 
 
-
+/*
+Returns a BookEntry with user-inputted information from the UI
+ */
     private BookEntry retrieveUIInfo() {
         BookEntry entry = new BookEntry();
 
@@ -272,6 +279,9 @@ AsyncTask to add an exercise entry to the database
 
     }
 
+    /*
+    Retrieves user-chosen time from mDatePickers
+     */
     private long getChosenTime() {
         Calendar cal = Calendar.getInstance();
         int year = mDatePicker.getYear();
@@ -342,6 +352,9 @@ AsyncTask to add an exercise entry to the database
         }
     }
 
+    /*
+    Saves UI information with old information fromsavedInstanceState
+     */
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         mTitleView.setText(savedInstanceState.getString(TITLE_KEY, ""));
@@ -358,7 +371,8 @@ AsyncTask to add an exercise entry to the database
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
 
-        mDatePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        mDatePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH));
         mTimePicker.setHour(cal.get(Calendar.HOUR));
         mTimePicker.setMinute(cal.get(Calendar.MINUTE));
 

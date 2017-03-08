@@ -14,6 +14,8 @@ import android.widget.ListView;
 
 /**
  * Created by Danielle on 2/24/17.
+ * This fragment displays a list of the current books
+ * (entries before the user has completed them)
  */
 
 public class CurrentBooksFragment extends Fragment implements AdapterView.OnItemClickListener {
@@ -34,8 +36,6 @@ public class CurrentBooksFragment extends Fragment implements AdapterView.OnItem
         listView.setOnItemClickListener(this);
 
 
-
-
         return view;
     }
 
@@ -50,6 +50,9 @@ public class CurrentBooksFragment extends Fragment implements AdapterView.OnItem
         task.execute();
     }
 
+    /*
+    Called when user clicks on a current book entry
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), ViewCurrentBookActivity.class);

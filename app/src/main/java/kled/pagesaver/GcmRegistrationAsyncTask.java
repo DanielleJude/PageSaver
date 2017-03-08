@@ -23,7 +23,9 @@ import java.util.logging.Logger;
 
 import static android.content.Context.MODE_PRIVATE;
 
-
+/*
+A class to communicate with Datasstore
+ */
 class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
     private static Registration regService = null;
     private GoogleCloudMessaging gcm;
@@ -42,6 +44,7 @@ class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... params) {
+        //This is used for debugging on a local datastore
         /*if (regService == null) {
 
             Registration.Builder builder = new Registration

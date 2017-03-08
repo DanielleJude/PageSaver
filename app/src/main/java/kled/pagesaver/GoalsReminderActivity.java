@@ -19,6 +19,7 @@ import static kled.pagesaver.GoalsActivity.GOAL_NOTIFICATION_ID;
 
 /**
  * Created by Yu Liu on 3/6/2017.
+ * Reminds user about reading goals to help them stay on track
  */
 
 public class GoalsReminderActivity extends AppCompatActivity implements

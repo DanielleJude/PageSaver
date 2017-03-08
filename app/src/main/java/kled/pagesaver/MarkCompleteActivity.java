@@ -23,6 +23,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+/*
+This activity allows the user to let the app know when they have finished a book.
+They can add information to the entry, including creating a comment using SpeechToText
+ */
 public class MarkCompleteActivity extends AppCompatActivity {
     public final static String ID_BUNDLE_KEY = "_idbundle key";
     private long mEntryId;
@@ -94,18 +98,23 @@ public class MarkCompleteActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Don't do anything
             }
+            //Speech To Text returns in RecognizerIntent
         } else if(requestCode == REQ_CODE_SPEECH_INPUT) {
             if(resultCode == RESULT_OK) {
                 ArrayList<String> result = data
                         .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 if(result.size()==1){
                     mCommentsView.setText(result.get(0));
+                    //If results size is more than 1, android heard multiple things
+                    //This allows the user to decide which is closest to what they said
                 } else if(result.size()>0){
-                    AlertDialog.Builder builderSingle = new AlertDialog.Builder(MarkCompleteActivity.this);
-                    //builderSingle.setIcon(R.drawable.ic_launcher);
+                    AlertDialog.Builder builderSingle =
+                            new AlertDialog.Builder(MarkCompleteActivity.this);
                     builderSingle.setTitle("Select Your Comment");
 
-                    final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MarkCompleteActivity.this, android.R.layout.select_dialog_singlechoice);
+                    final ArrayAdapter<String> arrayAdapter =
+                            new ArrayAdapter<String>(MarkCompleteActivity.this,
+                                    android.R.layout.select_dialog_singlechoice);
                     for(String str : result){
                         arrayAdapter.add(str);
                     }
@@ -121,7 +130,8 @@ public class MarkCompleteActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String strName = arrayAdapter.getItem(which);
-                            AlertDialog.Builder builderInner = new AlertDialog.Builder(MarkCompleteActivity.this);
+                            AlertDialog.Builder builderInner =
+                                    new AlertDialog.Builder(MarkCompleteActivity.this);
                             builderInner.setMessage(strName);
                             mCommentsView.setText(strName);
                             builderInner.setTitle("Your Selected Item is");
@@ -304,7 +314,8 @@ public class MarkCompleteActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
 
-        mDatePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        mDatePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH));
         mTimePicker.setHour(cal.get(Calendar.HOUR));
         mTimePicker.setMinute(cal.get(Calendar.MINUTE));
 

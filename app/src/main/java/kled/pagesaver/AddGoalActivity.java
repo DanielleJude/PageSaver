@@ -19,6 +19,9 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
+/**
+ * AddGoalActivity creates a new GoalEntry in the database
+ */
 public class AddGoalActivity extends AppCompatActivity {
 
     private GoalsDbHelper entrySource;

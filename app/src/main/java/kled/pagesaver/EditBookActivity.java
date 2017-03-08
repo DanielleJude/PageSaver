@@ -18,7 +18,9 @@ import android.widget.TimePicker;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
-
+/*
+This class allows the user to edit past book entries
+ */
 public class EditBookActivity extends AppCompatActivity implements View.OnClickListener{
     public final static String ID_BUNDLE_KEY = "_idbundle key";
     private long mEntryId;
@@ -71,7 +73,6 @@ public class EditBookActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-
     //REGION button call backs
     public void onAddLocationClick(View view) {
         Intent intent = new Intent(this, PSMapActivity.class);
@@ -81,6 +82,9 @@ public class EditBookActivity extends AppCompatActivity implements View.OnClickL
         startActivityForResult(intent, MAP_REQUEST_CODE);
     }
 
+    /*
+    Called after mapview finishes
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -98,6 +102,9 @@ public class EditBookActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    /*
+    Saves updated book entry information into the datastore.
+     */
     public void onSaveButtonClicked(View view) {
 
         String errorString = isReadyToAdd();
@@ -131,7 +138,9 @@ public class EditBookActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-
+    /*
+    Checks to makes sure information was completely filled in
+     */
     private String isReadyToAdd() {
         String errorString = "Must enter the following fields to add entry:\n";
         boolean canAddFlag = true;
@@ -139,12 +148,14 @@ public class EditBookActivity extends AppCompatActivity implements View.OnClickL
         int lastPage = entry.getFurthestPageRead();
         if(!fieldNotEmpty(mProgressSoFarView)) {
             canAddFlag = false;
-            errorString = errorString + "Page number >= " + lastPage + " and < " + entry.getTotalPages() + "\n";
+            errorString = errorString + "Page number >= " + lastPage + " and < "
+                    + entry.getTotalPages() + "\n";
         } else {
             int progress = Integer.parseInt(mProgressSoFarView.getText().toString());
             if(progress >= entry.getTotalPages() || progress < lastPage) {
                 canAddFlag = false;
-                errorString = errorString + "Page number >= " + lastPage + " and < " + entry.getTotalPages() + "\n";
+                errorString = errorString + "Page number >= " + lastPage + " and < "
+                        + entry.getTotalPages() + "\n";
             }
         }
 
@@ -272,7 +283,8 @@ public class EditBookActivity extends AppCompatActivity implements View.OnClickL
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
 
-        mDatePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        mDatePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH));
         mTimePicker.setHour(cal.get(Calendar.HOUR));
         mTimePicker.setMinute(cal.get(Calendar.MINUTE));
 

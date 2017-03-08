@@ -19,6 +19,10 @@ import com.google.android.gms.maps.model.LatLng;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+/*
+This activity is used after a user clicks on a current book. It allows them to edit or
+update their entry
+ */
 public class ViewCurrentBookActivity extends AppCompatActivity implements View.OnClickListener{
     public final static String ID_BUNDLE_KEY = "_idbundle key";
     private long mEntryId;
@@ -51,7 +55,8 @@ public class ViewCurrentBookActivity extends AppCompatActivity implements View.O
     public void setUpUI() {
         ((TextView)findViewById(R.id.current_book_view_title)).setText(entry.getTitle());
         ((TextView)findViewById(R.id.current_book_view_author)).setText(entry.getAuthor());
-        ((TextView)findViewById(R.id.current_book_view_genre)).setText(Search.getAllGenres().get(entry.getGenre()));
+        ((TextView)findViewById(R.id.current_book_view_genre)).setText(Search.getAllGenres()
+                .get(entry.getGenre()));
         ((TextView)findViewById(R.id.progress_view_current)).setText(entry.getProgressString());
 
         if(entry.getLocationList().size() == 0) {
@@ -154,7 +159,8 @@ AsyncTask to add an exercise entry to the database
         ArrayList<String> mapText = new ArrayList<String>();
         ArrayList<String> values = new ArrayList<String>();
         for(BookEntry.StartEndPages pg: pages){
-            titles.add(String.valueOf(((double)pg.endPage/(double)entry.getTotalPages())*100) + "% Complete");
+            titles.add(String.valueOf(((double)pg.endPage/(double)entry.getTotalPages())*100)
+                    + "% Complete");
            // values.add(((double)pg.endPage/(double)entry.getTotalPages())*100);
             values.add(String.valueOf(((double)pg.endPage/(double)entry.getTotalPages())*100));
         }

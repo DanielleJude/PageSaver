@@ -6,6 +6,7 @@ import android.content.Intent;
 
 /**
  * Created by Yu Liu on 3/7/2017.
+ * A receiver to create a goal's alarm to help user keep up with reading goals
  */
 
 public class GoalAlarmReceiver extends BroadcastReceiver{
