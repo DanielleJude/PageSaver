@@ -1,8 +1,10 @@
 package kled.pagesaver;
 
+import android.app.LoaderManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,9 +28,13 @@ import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
-public class CompareAnalyticsActivity extends AppCompatActivity {
+public class CompareAnalyticsActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<ArrayList<BookEntry>> {
 
     private EntryDatastoreHelper datastoreHelper;
+
+    // If using scaled analytics
+    private boolean scaled;
 
     public String message;
 
@@ -40,10 +46,17 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
     private ArrayList<Integer> universeDurationArray;
     private int[] universePagesPerMonthsArray;
 
+    private int[] personalHoursArray;
+    private int[] personalMonthsArray;
+    private ArrayList<Integer> personalPagesArray;
+    private ArrayList<Integer> personalDurationArray;
+    private int[] personalPagesPerMonthsArray;
+
     boolean isBound = false;
 
     GcmIntentService messageService;
     public UpdateMessageHandler updateHandler;
+    LoaderManager loaderManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,18 +72,127 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
         Intent messageIntent = new Intent(this, GcmIntentService.class);
         bindService(messageIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-        // Send message to get information
+        scaled = true;
+
+        // Get personal points
+        loaderManager = this.getLoaderManager();
+        loaderManager.initLoader(1, null, this);
+
+        // Send message to get universe information
         UpdateUniverseWorker updateUniverseWorker = new UpdateUniverseWorker();
         updateUniverseWorker.execute();
     }
 
     public void updateView() {
         getUniversePoints();
+        getPersonalPoints();
         buildTimesGraph();
         buildMonthsGraph();
         buildDurationGraph();
         buildPagesGraph();
         buildMonthlyPagesGraph();
+    }
+
+    /**
+     * Get personal data
+     */
+    public void getPersonalPoints() {
+        if (entries == null) return;
+
+        // Initialize data structures
+
+        personalHoursArray = new int[24];
+        for (int i = 0; i < personalHoursArray.length; i++) {
+            personalHoursArray[i] = 0;
+        }
+        personalMonthsArray = new int[12];
+        for (int i = 0; i < personalMonthsArray.length; i++) {
+            personalMonthsArray[i] = 0;
+        }
+        personalPagesArray = new ArrayList<>();
+        personalDurationArray = new ArrayList<>();
+        personalPagesPerMonthsArray = new int[12];
+        for (int i = 0; i < personalPagesPerMonthsArray.length; i++) {
+            personalPagesPerMonthsArray[i] = 0;
+        }
+
+        for (int i = 0; i < entries.size(); i++) {
+
+            ArrayList<BookEntry.StartEndTimes> individualTime = entries.get(i).getTimeList();
+            ArrayList<BookEntry.StartEndPages> individualPage = entries.get(i).getPageList();
+
+            // Get times and durations
+            if (individualTime.size() == individualPage.size()) {
+                for (int j = 0; j < individualTime.size(); j++) {
+
+                    Long startTime = individualTime.get(j).startTime;
+                    Long endTime = individualTime.get(j).endTime;
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(startTime);
+                    int hour = cal.get(Calendar.HOUR_OF_DAY);
+                    int month = cal.get(Calendar.MONTH);
+
+                    personalHoursArray[hour]++;
+                    personalMonthsArray[month]++;
+
+                    // Difference in milliseconds - converted to hours
+                    Long timeDiff = endTime - startTime;
+                    int minutesRead = (int) (timeDiff / 1000 / 60 / 60);
+
+                    personalDurationArray.add(minutesRead);
+
+                    int diff = individualPage.get(j).endPage - individualPage.get(j).startPage;
+                    personalPagesArray.add(diff);
+
+                    personalPagesPerMonthsArray[month] = personalPagesPerMonthsArray[month] + diff;
+                }
+            }
+        }
+
+        if (scaled) scalePersonalValues();
+    }
+
+    /**
+     * Scale personal values
+     */
+    public void scalePersonalValues() {
+        // get totals and divide
+        double personalHoursTotal = 0;
+        double personalMonthsTotal = 0;
+        double personalPagesPerMonthTotal = 0;
+
+        for (int entry : personalHoursArray) {
+            personalHoursTotal += entry;
+        }
+
+        for (int i = 0; i < personalHoursArray.length; i++) {
+            personalHoursArray[i] = (int)(((double)personalHoursArray[i]
+                    / personalHoursTotal) * 100);
+        }
+
+        for (int entry : personalMonthsArray) {
+            personalMonthsTotal += entry;
+        }
+
+        for (int i = 0; i < personalMonthsArray.length; i++) {
+            personalMonthsArray[i] = (int)(((double)personalMonthsArray[i]
+                    / personalMonthsTotal) * 100);
+        }
+
+        for (int entry : personalPagesPerMonthsArray) {
+            if (entry >= 0)
+                personalPagesPerMonthTotal += entry;
+        }
+
+        // No negative values
+        for (int i = 0; i < personalPagesPerMonthsArray.length; i++) {
+            if (personalPagesPerMonthsArray[i] >= 0) {
+                personalPagesPerMonthsArray[i] = (int)(((double)personalPagesPerMonthsArray[i]
+                        / personalPagesPerMonthTotal) * 100);
+            } else {
+                personalPagesPerMonthsArray[i] = 0;
+            }
+        }
     }
 
     /**
@@ -117,6 +239,51 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
                 universePagesPerMonthsArray[month] = universePagesPerMonthsArray[month] + numPages;
             }
         }
+
+        if(scaled) scaleUniverseValues();
+    }
+
+    /**
+     * Scale universe values for averages
+     */
+    public void scaleUniverseValues() {
+
+        // get totals and divide
+        double universeHoursTotal = 0;
+        double universeMonthsTotal = 0;
+        double universePagesPerMonthTotal = 0;
+
+        for (int entry : universeHoursArray) {
+            universeHoursTotal += entry;
+        }
+
+        for (int i = 0; i < universeHoursArray.length; i++) {
+            universeHoursArray[i] = (int)(((double)universeHoursArray[i]
+                    / universeHoursTotal) * 100);
+        }
+
+        for (int entry : universeMonthsArray) {
+            universeMonthsTotal += entry;
+        }
+
+        for (int i = 0; i < universeMonthsArray.length; i++) {
+            universeMonthsArray[i] = (int)(((double)universeMonthsArray[i]
+                    / universeMonthsTotal) * 100);
+        }
+
+        for (int entry : universePagesPerMonthsArray) {
+            if (entry >= 0)
+                universePagesPerMonthTotal += entry;
+        }
+
+        for (int i = 0; i < universePagesPerMonthsArray.length; i++) {
+            if (universePagesPerMonthsArray[i] >= 0) {
+                universePagesPerMonthsArray[i] = (int)(((double)universePagesPerMonthsArray[i]
+                        / universePagesPerMonthTotal) * 100);
+            } else {
+                universePagesPerMonthsArray[i] = 0;
+            }
+        }
     }
 
     /**
@@ -135,9 +302,15 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
 
+            // Universe
             SubcolumnValue valueUniverse = new SubcolumnValue(universeHoursArray[i],
                     ChartUtils.COLOR_BLUE);
             values.add(valueUniverse);
+
+            // Personal
+            SubcolumnValue valuePersonal = new SubcolumnValue(personalHoursArray[i],
+                    ChartUtils.COLOR_RED);
+            values.add(valuePersonal);
 
             Column column = new Column(values);
             columns.add(column);
@@ -168,7 +341,7 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
         axisX.setName("Hour of Day You Start Reading");
 
         Axis axisY = new Axis().setHasLines(true);
-        axisY.setName("Number of Times");
+        axisY.setName("% of Entries");
 
         hoursData.setAxisXBottom(axisX);
         hoursData.setAxisYLeft(axisY);
@@ -193,9 +366,15 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
 
+            // Universe
             SubcolumnValue valueUniverse = new SubcolumnValue(universeMonthsArray[i],
                     ChartUtils.COLOR_BLUE);
             values.add(valueUniverse);
+
+            // Personal
+            SubcolumnValue valuePersonal = new SubcolumnValue(personalMonthsArray[i],
+                    ChartUtils.COLOR_RED);
+            values.add(valuePersonal);
 
             Column column = new Column(values);
             columns.add(column);
@@ -230,7 +409,7 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
         axisX.setName("Month");
 
         Axis axisY = new Axis().setHasLines(true);
-        axisY.setName("Number of Times");
+        axisY.setName("% of Entries");
 
         monthsData.setAxisXBottom(axisX);
         monthsData.setAxisYLeft(axisY);
@@ -260,16 +439,54 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
             universeHoursRead[universeHours]++;
         }
 
+        // Personal
+        int[] personalHoursRead = new int[6];
+
+        for (int i = 0; i < personalDurationArray.size(); i++) {
+            int personalHours = personalDurationArray.get(i);
+            if (personalHours > 5 ) personalHours = 5;
+            personalHoursRead[personalHours]++;
+        }
+
+        if (scaled) {
+            int universeDurationTotal = 0;
+
+            for (int entry : universeHoursRead) {
+                universeDurationTotal += entry;
+            }
+
+            for (int i = 0; i < universeHoursRead.length; i++) {
+                universeHoursRead[i] = (int)(((double)universeHoursRead[i]
+                        / universeDurationTotal) * 100);
+            }
+
+            int personalDurationTotal = 0;
+
+            for (int entry : personalHoursRead) {
+                personalDurationTotal += entry;
+            }
+
+            for (int i = 0; i < personalHoursRead.length; i++) {
+               personalHoursRead[i] = (int)(((double)personalHoursRead[i]
+                        / personalDurationTotal) * 100);
+            }
+        }
+
         List<Column> columns = new ArrayList<Column>();
 
         for (int i = 0; i < universeHoursRead.length; ++i) {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
 
-            // Universe Info
+            // Universe
             SubcolumnValue valueUniverse = new SubcolumnValue(universeHoursRead[i],
                     ChartUtils.COLOR_BLUE);
             values.add(valueUniverse);
+
+            // Personal
+            SubcolumnValue valuePersonal = new SubcolumnValue(personalHoursRead[i],
+                    ChartUtils.COLOR_RED);
+            values.add(valuePersonal);
 
             Column column = new Column(values);
             columns.add(column);
@@ -299,7 +516,7 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
         axisX.setName("Hours Read");
 
         Axis axisY = new Axis().setHasLines(true);
-        axisY.setName("Number of Times");
+        axisY.setName("% of Entries");
 
         durationData.setAxisXBottom(axisX);
         durationData.setAxisYLeft(axisY);
@@ -330,15 +547,56 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
             universePagesRead[universePagesGroup]++;
         }
 
+        int[] personalPagesRead = new int[5];
+
+        for (int i = 0; i < personalPagesArray.size(); i++) {
+            int personalPages = personalPagesArray.get(i);
+
+            // Group in chunks of 10 pages read
+            int personalPagesGroup = personalPages / 25;
+            if (personalPagesGroup > 4 ) personalPagesGroup = 4;
+            personalPagesRead[personalPagesGroup]++;
+        }
+
+        if (scaled) {
+            int universePagesTotal = 0;
+
+            for (int entry : universePagesRead) {
+                universePagesTotal += entry;
+            }
+
+            for (int i = 0; i < universePagesRead.length; i++) {
+                universePagesRead[i] = (int)(((double)universePagesRead[i]
+                        / universePagesTotal) * 100);
+            }
+
+            int personalPagesTotal = 0;
+
+            for (int entry : personalPagesRead) {
+                personalPagesTotal += entry;
+            }
+
+            for (int i = 0; i < personalPagesRead.length; i++) {
+                personalPagesRead[i] = (int)(((double)personalPagesRead[i]
+                        / personalPagesTotal) * 100);
+            }
+        }
+
         List<Column> columns = new ArrayList<Column>();
 
         for (int i = 0; i < universePagesRead.length; ++i) {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
 
+            // Universe
             SubcolumnValue valueUniverse = new SubcolumnValue(universePagesRead[i],
                     ChartUtils.COLOR_BLUE);
             values.add(valueUniverse);
+
+            // Personal
+            SubcolumnValue valuePersonal = new SubcolumnValue(personalPagesRead[i],
+                    ChartUtils.COLOR_RED);
+            values.add(valuePersonal);
 
             Column column = new Column(values);
             columns.add(column);
@@ -367,7 +625,7 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
         axisX.setName("Pages Read");
 
         Axis axisY = new Axis().setHasLines(true);
-        axisY.setName("Number of Times");
+        axisY.setName("% of Entries");
 
         pagesData.setAxisXBottom(axisX);
         pagesData.setAxisYLeft(axisY);
@@ -392,9 +650,14 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
 
+            // Universe
             SubcolumnValue valueUniverse = new SubcolumnValue(universePagesPerMonthsArray[i],
                     ChartUtils.COLOR_BLUE);
             values.add(valueUniverse);
+
+            SubcolumnValue valuePersonal = new SubcolumnValue(personalPagesPerMonthsArray[i],
+                    ChartUtils.COLOR_RED);
+            values.add(valuePersonal);
 
             Column column = new Column(values);
             columns.add(column);
@@ -430,7 +693,7 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
         axisX.setName("Month");
 
         Axis axisY = new Axis().setHasLines(true);
-        axisY.setName("Number of Pages");
+        axisY.setName("% of Total Pages Read");
 
         monthlyPagesData.setAxisXBottom(axisX);
         monthlyPagesData.setAxisYLeft(axisY);
@@ -448,7 +711,6 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
             GcmIntentService.MessageBinder binder = (GcmIntentService.MessageBinder) service;
             messageService = binder.getService();
 
-            Log.d("hello", "service connected");
             binder.getUIMsgHandler(updateHandler);
             isBound = true;
         }
@@ -468,7 +730,6 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg){
             if(msg.what == GcmIntentService.MSG_INT_VALUE) {
-                Log.d("hello", "message received");
                 message = messageService.getMessage();
                 updateView();
             }
@@ -524,5 +785,22 @@ public class CompareAnalyticsActivity extends AppCompatActivity {
             // Rebind the service
             bindService(messageIntent, serviceConnection, Context.BIND_AUTO_CREATE);
         }
+    }
+
+    @Override
+    public Loader<ArrayList<BookEntry>> onCreateLoader(int id, Bundle args) {
+        LoadBookEntries loadBookEntries = new LoadBookEntries(this);
+        return loadBookEntries;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<ArrayList<BookEntry>> loader, ArrayList<BookEntry> data) {
+        entries = data;
+        updateView();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<ArrayList<BookEntry>> loader) {
+
     }
 }

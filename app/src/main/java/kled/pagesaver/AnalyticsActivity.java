@@ -71,7 +71,6 @@ public class AnalyticsActivity extends AppCompatActivity implements
      * Get durations, start times, and pages read per reading session
      */
     public void getPoints(ArrayList<BookEntry> entries) {
-        Log.d("hello", "getPoints called");
         if(entries==null) return;
 
         hoursArray = new ArrayList<>();
@@ -456,7 +455,6 @@ public class AnalyticsActivity extends AppCompatActivity implements
     @Override
     public Loader<ArrayList<BookEntry>> onCreateLoader(int id, Bundle args) {
         LoadBookEntries loadBookEntries = new LoadBookEntries(this);
-        Log.d("hello", "getLoader called");
         return loadBookEntries;
     }
 
