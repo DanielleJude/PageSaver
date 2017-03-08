@@ -91,9 +91,7 @@ public class PSMapActivity extends FragmentActivity
     public static final String VIEW_SINGLE_ENTRY = "view single entry";
     public static final String LAT_KEY = "lat";
     public static final String LNG_KEY = "long";
-    public static final int CLOSE_DISTANCE = 10000;
-    private double savedLat = 0;
-    private double savedLong = 0;
+
 
     private NumberProgressBar bnp;
     MyTrackingService myTrackingService;
@@ -112,21 +110,15 @@ public class PSMapActivity extends FragmentActivity
     private ArrayList<LatLng> traceLocations;
     private ArrayList<String> mapText;
     private ArrayList<String> progressValues;
-    private ArrayList<Address> curAddresses;
-    private boolean executeFinished;
 
-    Address correctAddress;
     LatLng startLocation;
     LatLng firstLocation;
     LatLng endLocation;
-    LatLng midLocation;
-    int numofPoints = 20;
     double curMaxProgress;
-    private ArrayList<LatLng> pathTrack;
+
 
 
     private CardView cView;
-    private boolean doRedraw = true;
     private boolean isBound;
     ArrayList<LatLng> savedLocations;
     ArrayList<String> booksAtLocation;
@@ -812,7 +804,6 @@ public class PSMapActivity extends FragmentActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            executeFinished = false;
             try {
                 try {
                     //Log.d(TAG, "response code: " + connection.getResponseCode());
@@ -839,10 +830,8 @@ public class PSMapActivity extends FragmentActivity
                     .bearing(0)
                     .tilt(45)
                     .build();
-            savedLat = latitude;
-            savedLong = longitude;
+
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            executeFinished = true;
             super.onPostExecute(aVoid);
         }
     }
@@ -879,7 +868,7 @@ public class PSMapActivity extends FragmentActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            executeFinished = false;
+
             try {
                 try {
 
