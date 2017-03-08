@@ -68,8 +68,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -89,7 +91,7 @@ public class PSMapActivity extends FragmentActivity
     public static final String VIEW_SINGLE_ENTRY = "view single entry";
     public static final String LAT_KEY = "lat";
     public static final String LNG_KEY = "long";
-    public static final int CLOSE_DISTANCE = 10000;
+
 
     private NumberProgressBar bnp;
     MyTrackingService myTrackingService;
@@ -97,8 +99,8 @@ public class PSMapActivity extends FragmentActivity
     private boolean isPlaceMarkerMode;
     private boolean viewAllEntries;
     String bookISBN;
-    Marker currMarker;
     AlertDialog alert;
+    Marker currMarker;
     int animationIndex = 0;
     ImageView bookImage;
 
@@ -108,21 +110,15 @@ public class PSMapActivity extends FragmentActivity
     private ArrayList<LatLng> traceLocations;
     private ArrayList<String> mapText;
     private ArrayList<String> progressValues;
-    private ArrayList<Address> curAddresses;
-    private boolean executeFinished;
 
-    Address correctAddress;
     LatLng startLocation;
     LatLng firstLocation;
     LatLng endLocation;
-    LatLng midLocation;
-    int numofPoints = 20;
     double curMaxProgress;
-    private ArrayList<LatLng> pathTrack;
+
 
 
     private CardView cView;
-    private boolean doRedraw = true;
     private boolean isBound;
     ArrayList<LatLng> savedLocations;
     ArrayList<String> booksAtLocation;
@@ -380,18 +376,18 @@ public class PSMapActivity extends FragmentActivity
                 mapText = extras.getStringArrayList("mapText");
                 bookISBN = extras.getString("isbn");
                 //bookISBN = "9780465026562";
-                if(bookISBN != null && bookISBN.length() > 0) {
+                if (bookISBN != null && bookISBN.length() > 0) {
                     BookAPIHelper bookHelper = new BookAPIHelper(bookISBN);
                     bookHelper.execute();
-                }else {
+                } else {
                     bookImage = (ImageView) findViewById(R.id.imageview_bitmap);
                     bookImage.setImageDrawable(getResources().getDrawable(R.drawable.icon_book));
 
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup
-                            .LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(180,30,0,0);
+                            .LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(70, 80, 0, 0);
                     params.height = 150;
-                    params. width = 150;
+                    params.width = 150;
                     bookImage.setLayoutParams(params);
 
 
@@ -562,7 +558,6 @@ public class PSMapActivity extends FragmentActivity
         textGenre.setText(genre);
 
 
-
     }
 
 
@@ -605,6 +600,7 @@ public class PSMapActivity extends FragmentActivity
     }
 
 
+
     private Location convertLatLngToLocation(LatLng latLng) {
         Location location = new Location("someLoc");
         location.setLatitude(latLng.latitude);
@@ -628,13 +624,14 @@ public class PSMapActivity extends FragmentActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle outState) {
-        //Restore the image when the activity returns from the background
         super.onRestoreInstanceState(outState);
 
+        //Restore the image when the activity returns from the background
     }
 
     //Initialize the map if it is currently null
@@ -775,6 +772,8 @@ public class PSMapActivity extends FragmentActivity
         }
 
 
+
+
         @Override
         protected Void doInBackground(Void... params) {
             try {
@@ -805,7 +804,6 @@ public class PSMapActivity extends FragmentActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            executeFinished = false;
             try {
                 try {
                     //Log.d(TAG, "response code: " + connection.getResponseCode());
@@ -832,8 +830,8 @@ public class PSMapActivity extends FragmentActivity
                     .bearing(0)
                     .tilt(45)
                     .build();
+
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            executeFinished = true;
             super.onPostExecute(aVoid);
         }
     }
@@ -870,7 +868,7 @@ public class PSMapActivity extends FragmentActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            executeFinished = false;
+
             try {
                 try {
 
