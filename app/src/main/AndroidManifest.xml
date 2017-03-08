@@ -130,6 +130,9 @@
 
         </activity>
 
+        <receiver android:name="kled.pagesaver.GoalAlarmReceiver">
+        </receiver>
+
         <service
             android:name=".MyTrackingService"
             android:enabled="true"

@@ -1,5 +1,6 @@
 package kled.pagesaver;
 
+import android.app.AlarmManager;
 import android.app.LoaderManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -23,6 +24,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class GoalsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<ArrayList<GoalEntry>> {
@@ -34,6 +36,9 @@ public class GoalsActivity extends AppCompatActivity implements
     LoaderManager loaderManager;
 
     private NotificationManager mNotificationManager;
+
+    private AlarmManager alarmManager;
+    private PendingIntent alarmIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +92,21 @@ public class GoalsActivity extends AppCompatActivity implements
        if (entries != null) {
             setupNotification();
        }
+
+       /* Set an alarm to update goal range every day at midnight
+        */
+        alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, GoalAlarmReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+
+        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
+                 AlarmManager.INTERVAL_DAY, alarmIntent);
     }
 
     // Toolbar to add
