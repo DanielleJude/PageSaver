@@ -94,6 +94,9 @@
             android:layout_gravity="center_horizontal"
             android:onClick="onShowMapViewClick"
             android:text="MapView"
+            android:background="@color/colorPrimary"
+            android:layout_marginTop="200dp"
+            android:textColor="#FFFFFF"
             android:id="@+id/show_map_view_button"/>
 
 

@@ -172,7 +172,7 @@ public class PSMapActivity extends FragmentActivity
                         animateBar();
                         animationIndex++;
                         try {
-                            Thread.sleep(100);
+                            Thread.sleep(200);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -250,7 +250,7 @@ public class PSMapActivity extends FragmentActivity
                     }
                 });
             }
-        }, 1000, 100);
+        }, 500, 50);
 
     }
 
@@ -286,7 +286,10 @@ public class PSMapActivity extends FragmentActivity
                 }
             }
 
-            redrawUI();
+            if(viewAllEntries == false) {
+
+                redrawUI();
+            }
         }
 
     }
@@ -329,6 +332,7 @@ public class PSMapActivity extends FragmentActivity
                 bookImage.setVisibility(View.INVISIBLE);
                 cView = (CardView) findViewById(R.id.card_view);
                 cView.setVisibility(View.INVISIBLE);
+                viewAllEntries = false;
 
             }
             //If in view all entries mode, get the saved locations and their corresponding books for viewing
@@ -492,16 +496,20 @@ public class PSMapActivity extends FragmentActivity
             //Else we are in one of the view entry modes therefore set markers for locations on the maps
             else {
                 if (savedLocations.size() == 0 || savedLocations == null) {
-                    Log.d("MAP", "no saved locations");
-                    Toast.makeText(getApplicationContext(), "No Saved Locations",
-                            Toast.LENGTH_SHORT);
-                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                            .target(new LatLng(curLat, curLong))
-                            .zoom(17)
-                            .bearing(0)
-                            .tilt(45)
-                            .build();
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    if(viewAllEntries == false) {
+                        Log.d("MAP", "no saved locations");
+                        Toast.makeText(getApplicationContext(), "No Saved Locations", Toast.LENGTH_SHORT);
+
+                        /*
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(new LatLng(curLat, curLong))
+                                .zoom(17)
+                                .bearing(0)
+                                .tilt(45)
+                                .build();
+                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        */
+                    }
 
                 } else {
 
@@ -523,7 +531,7 @@ public class PSMapActivity extends FragmentActivity
                                         .target(new LatLng(savedLocations
                                                 .get(savedLocations.size() - 1).latitude,
                                                 savedLocations.get(savedLocations.size() - 1).longitude))
-                                        .zoom(15)
+                                        .zoom(17)
                                         .bearing(0)
                                         .tilt(45)
                                         .build();
@@ -814,12 +822,12 @@ public class PSMapActivity extends FragmentActivity
                     jsonObj = new JSONObject(sb.toString());
 
                 }
-                Log.d(TAG, "JSON obj: " + jsonObj);
+                //Log.d(TAG, "JSON obj: " + jsonObj);
                 getAddress();
-                Log.d(TAG, "area is: " + getArea());
+                //Log.d(TAG, "area is: " + getArea());
                 getGeoPoint();
-                Log.d("latitude", "" + latitude);
-                Log.d("longitude", "" + longitude);
+                //Log.d("latitude", "" + latitude);
+                //Log.d("longitude", "" + longitude);
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d("Map", "Error onPost 2");
@@ -929,7 +937,7 @@ public class PSMapActivity extends FragmentActivity
                 }
 
 
-                    Log.d("Image Url", imageURL);
+                   // Log.d("Image Url", imageURL);
 
                 }catch(Exception e){
                     e.printStackTrace();
@@ -947,7 +955,7 @@ public class PSMapActivity extends FragmentActivity
                         new StringBuilder("https://www.googleapis.com/books/v1/volumes?q=isbn:");
                 urlStringBuilder.append(isbn);
                 URL = urlStringBuilder.toString();
-                Log.d(TAG, "URL: " + URL);
+               // Log.d(TAG, "URL: " + URL);
 
                 URL url = new URL(URL);
                 connection = (HttpURLConnection) url.openConnection();
@@ -960,7 +968,7 @@ public class PSMapActivity extends FragmentActivity
                 while ((line = br.readLine()) != null) {
                     sb = sb.append(line + "\n");
                 }
-                Log.d("Book JSON", sb.toString());
+               // Log.d("Book JSON", sb.toString());
                 jsonObj = new JSONObject(sb.toString());
                 getImageURL();
                 bmHelper = new BitmapURLHelper(imageURL);
@@ -988,7 +996,7 @@ public class PSMapActivity extends FragmentActivity
                     jsonObj = new JSONObject(sb.toString());
 
                 }
-                Log.d(TAG, "JSON obj: " + jsonObj);
+               // Log.d(TAG, "JSON obj: " + jsonObj);
 
             } catch (Exception e) {
                 e.printStackTrace();
