@@ -19,6 +19,8 @@ import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 
+import java.util.ArrayList;
+
 /*
 This class is used after a user clicks on a past book, it allows them to see previous
 information that they stored
@@ -63,13 +65,32 @@ public class ViewPastBookActivity extends AppCompatActivity {
 
 
     public void onShowMapViewClick(View view) {
-        //TODO CHECK
         Intent intent = new Intent(this, PSMapActivity.class);
         Bundle extras = new Bundle();
+        ArrayList<BookEntry.StartEndPages> pages =  entry.getPageList();
+        ArrayList<String> titles = new ArrayList<String>();
+        ArrayList<String> mapText = new ArrayList<String>();
+        ArrayList<String> values = new ArrayList<String>();
+        for(BookEntry.StartEndPages pg: pages){
+            titles.add(String.valueOf(((double)pg.endPage/(double)entry.getTotalPages())*100)
+                    + "% Complete");
+            // values.add(((double)pg.endPage/(double)entry.getTotalPages())*100);
+            values.add(String.valueOf(((double)pg.endPage/(double)entry.getTotalPages())*100));
+        }
+        mapText.add(entry.getTitle());
+        mapText.add(entry.getAuthor());
+        mapText.add(String.valueOf(entry.getGenre()));
+        mapText.add(entry.getProgressString());
+
+        extras.putString("isbn",entry.getISBN());
+        extras.putStringArrayList("mapText",mapText);
+        extras.putStringArrayList("values", values);
+        extras.putStringArrayList(PSMapActivity.BOOKS_LIST,titles);
         extras.putString(PSMapActivity.MAP_MODE, PSMapActivity.VIEW_SINGLE_ENTRY);
         extras.putByteArray(PSMapActivity.LOCATIONS_LIST, entry.getLocationByteArray());
         intent.putExtras(extras);
         startActivity(intent);
+
     }
 
     @Override
