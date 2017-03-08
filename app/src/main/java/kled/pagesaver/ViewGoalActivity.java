@@ -23,6 +23,7 @@ public class ViewGoalActivity extends AppCompatActivity
     Long entryId;
     public int increment;
     public int goal;
+    public int progress;
 
     DialogFragment newFragment;
 
@@ -40,7 +41,7 @@ public class ViewGoalActivity extends AppCompatActivity
     /* Update goal after user inputs new goal for each day */
     public void onFinishEditGoalUpdateDialog(int inputGoalUpdate){
         goal = inputGoalUpdate;
-        UpdateParams update_goal = new UpdateParams(entryId, 0, goal);
+        UpdateParams update_goal = new UpdateParams(entryId, progress, goal);
         EntryUpdateWorker updateWorkerGoal = new EntryUpdateWorker();
         updateWorkerGoal.execute(update_goal);
         finish();
@@ -75,6 +76,7 @@ public class ViewGoalActivity extends AppCompatActivity
         increment = Integer.parseInt(intent.getStringExtra(GoalsDbHelper.KEY_PAGES_INCREMENT));
         goal = increment;
         incrementText.setText(intent.getStringExtra(GoalsDbHelper.KEY_PAGES_INCREMENT));
+        progress = Integer.parseInt(intent.getStringExtra(GoalsDbHelper.KEY_PROGRESS));
         progressText.setText(intent.getStringExtra(GoalsDbHelper.KEY_PROGRESS));
         totalText.setText(intent.getStringExtra(GoalsDbHelper.KEY_GOALS_PAGES));
 
