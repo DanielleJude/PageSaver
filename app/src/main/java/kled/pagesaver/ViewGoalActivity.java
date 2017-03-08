@@ -101,12 +101,6 @@ public class ViewGoalActivity extends AppCompatActivity
     // Update Goal
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.goal_daily_progress:
-                UpdateParams update_daily = new UpdateParams(entryId, increment, goal);
-                EntryUpdateWorker updateWorkerDaily = new EntryUpdateWorker();
-                updateWorkerDaily.execute(update_daily);
-                finish();
-                return true;
             case R.id.goal_custom_progress:
                 newFragment = new CustomRangeDialogFragment();
                 newFragment.show(getSupportFragmentManager(), "customRange");

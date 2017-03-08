@@ -43,15 +43,14 @@
     <string name="goals_progress">Progress</string>
 
     <string name="goals_menu_complete">Complete/delete this goal</string>
-    <string name="goals_menu_update">Update this goal</string>
-    <string name="goals_menu_finish_daily_goal">Progress today: daily goal</string>
-    <string name="goals_menu_custom_progress">Progress today: custom range</string>
+    <string name="goals_menu_adjust_goal">Adjust this goal</string>
+    <string name="goals_menu_progress">Update your progress</string>
 
     <string name="title_activity_view_goal">View Goal</string>
     <string name="title_activity_add_goal">Add Goal</string>
     <string name="title_activity_goal_reminder">Goal Reminder</string>
 
-    <string name="dialog_custom_range_message">How many pages did you read today?</string>
+    <string name="dialog_custom_range_message">Set bookmark: enter page number</string>
     <string name="dialog_custom_range_title">Input Custom Range:</string>
     <string name="dialog_goal_update_message">Pages to read per day from now on</string>
     <string name="dialog_goal_update_title">Input New Goal:</string>
