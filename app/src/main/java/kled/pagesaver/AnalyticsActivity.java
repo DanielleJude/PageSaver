@@ -154,7 +154,7 @@ public class AnalyticsActivity extends AppCompatActivity implements
         for (int i = 0; i < hours.length; ++i) {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
-            SubcolumnValue value = new SubcolumnValue(hours[i], ChartUtils.COLOR_RED);
+            SubcolumnValue value = new SubcolumnValue(hours[i], ChartUtils.COLOR_VIOLET);
             values.add(value);
 
             Column column = new Column(values);
@@ -218,7 +218,7 @@ public class AnalyticsActivity extends AppCompatActivity implements
         for (int i = 0; i < months.length; ++i) {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
-            SubcolumnValue value = new SubcolumnValue(months[i], ChartUtils.COLOR_RED);
+            SubcolumnValue value = new SubcolumnValue(months[i], ChartUtils.COLOR_VIOLET);
             values.add(value);
 
             Column column = new Column(values);
@@ -288,7 +288,7 @@ public class AnalyticsActivity extends AppCompatActivity implements
         for (int i = 0; i < hoursRead.length; ++i) {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
-            SubcolumnValue value = new SubcolumnValue(hoursRead[i], ChartUtils.COLOR_RED);
+            SubcolumnValue value = new SubcolumnValue(hoursRead[i], ChartUtils.COLOR_VIOLET);
             values.add(value);
 
             Column column = new Column(values);
@@ -355,7 +355,7 @@ public class AnalyticsActivity extends AppCompatActivity implements
         for (int i = 0; i < pagesRead.length; ++i) {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
-            SubcolumnValue value = new SubcolumnValue(pagesRead[i], ChartUtils.COLOR_RED);
+            SubcolumnValue value = new SubcolumnValue(pagesRead[i], ChartUtils.COLOR_VIOLET);
             values.add(value);
 
             Column column = new Column(values);
@@ -409,7 +409,8 @@ public class AnalyticsActivity extends AppCompatActivity implements
         for (int i = 0; i < pagesPerMonthsArray.length; ++i) {
 
             List<SubcolumnValue> values = new ArrayList<SubcolumnValue>();
-            SubcolumnValue value = new SubcolumnValue(pagesPerMonthsArray[i], ChartUtils.COLOR_RED);
+            SubcolumnValue value = new SubcolumnValue(pagesPerMonthsArray[i],
+                    ChartUtils.COLOR_VIOLET);
             values.add(value);
 
             Column column = new Column(values);

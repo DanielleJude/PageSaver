@@ -95,7 +95,7 @@
 
     <!-- Universe Analytics-->
     <string name="title_activity_compare_analytics">Compare Your Trends with All Users</string>
-    <string name="analytics_title_universe">Blue = Everyone; Red = You</string>
+    <string name="analytics_title_universe">Blue = Everyone; Purple = You</string>
     <string name="analytics_time_title_universe">Time of Day</string>
     <string name="analytics_month_title_universe">Month by Number of Entries</string>
     <string name="analytics_duration_title_universe">Duration of Each Reading Session</string>

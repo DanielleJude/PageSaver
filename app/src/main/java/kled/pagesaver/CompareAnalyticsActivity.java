@@ -314,7 +314,7 @@ public class CompareAnalyticsActivity extends AppCompatActivity implements
 
             // Personal
             SubcolumnValue valuePersonal = new SubcolumnValue(personalHoursArray[i],
-                    ChartUtils.COLOR_RED);
+                    ChartUtils.COLOR_VIOLET);
             values.add(valuePersonal);
 
             Column column = new Column(values);
@@ -378,7 +378,7 @@ public class CompareAnalyticsActivity extends AppCompatActivity implements
 
             // Personal
             SubcolumnValue valuePersonal = new SubcolumnValue(personalMonthsArray[i],
-                    ChartUtils.COLOR_RED);
+                    ChartUtils.COLOR_VIOLET);
             values.add(valuePersonal);
 
             Column column = new Column(values);
@@ -490,7 +490,7 @@ public class CompareAnalyticsActivity extends AppCompatActivity implements
 
             // Personal
             SubcolumnValue valuePersonal = new SubcolumnValue(personalHoursRead[i],
-                    ChartUtils.COLOR_RED);
+                    ChartUtils.COLOR_VIOLET);
             values.add(valuePersonal);
 
             Column column = new Column(values);
@@ -600,7 +600,7 @@ public class CompareAnalyticsActivity extends AppCompatActivity implements
 
             // Personal
             SubcolumnValue valuePersonal = new SubcolumnValue(personalPagesRead[i],
-                    ChartUtils.COLOR_RED);
+                    ChartUtils.COLOR_VIOLET);
             values.add(valuePersonal);
 
             Column column = new Column(values);
@@ -661,7 +661,7 @@ public class CompareAnalyticsActivity extends AppCompatActivity implements
             values.add(valueUniverse);
 
             SubcolumnValue valuePersonal = new SubcolumnValue(personalPagesPerMonthsArray[i],
-                    ChartUtils.COLOR_RED);
+                    ChartUtils.COLOR_VIOLET);
             values.add(valuePersonal);
 
             Column column = new Column(values);
