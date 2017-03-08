@@ -13,6 +13,8 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.daimajia.numberprogressbar.NumberProgressBar;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -174,9 +176,12 @@ public class DBEntryAdapter extends BaseAdapter {
     }
     private View setupCurrentView(BookEntry entry, View rowView) {
         TextView textView = (TextView)rowView.findViewById(R.id.first_tv_current);
-        TextView progressView = (TextView) rowView.findViewById(R.id.progress_view_row);
+        //TextView progressView = (TextView) rowView.findViewById(R.id.progress_view_row);
         ImageView bookImage = (ImageView) rowView.findViewById(R.id.imageView_current_books);
-        if(entry.getISBN()!= null && entry.getISBN().length()>0){
+        NumberProgressBar bar = (NumberProgressBar) rowView.findViewById(R.id.progress_bar2);
+        TextView preadView = (TextView) rowView.findViewById(R.id.pages_read);
+
+        if(entry.getISBN()!= null && entry.getISBN().length()== 13){
             BookAPIHelper helper = new BookAPIHelper(entry.getISBN(),bookImage);
             helper.execute();
         }else{
@@ -186,7 +191,18 @@ public class DBEntryAdapter extends BaseAdapter {
         String headerString = entry.getTitle() + ": " + entry.getAuthor();
         textView.setText(headerString);
 
-        progressView.setText(entry.getProgressString());
+        ArrayList<BookEntry.StartEndPages> pages = entry.getPageList();
+        int totalPages = entry.getTotalPages();
+
+        preadView.setText("Pages Read: " + String.valueOf(pages.get(pages.size() - 1).endPage) + "/" + String.valueOf(totalPages));
+
+
+        double percentValue = ((double)pages.get(pages.size() - 1).endPage)/((double)totalPages) *100;
+        bar.setProgress((int) percentValue);
+
+
+
+        //progressView.setText(entry.getProgressString());
 
         return rowView;
     }
