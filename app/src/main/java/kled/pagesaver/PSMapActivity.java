@@ -127,6 +127,7 @@ public class PSMapActivity extends FragmentActivity
     ArrayList<int[]> list;
     Marker mark;
 
+    //Callback for multiple animations
     GoogleMap.CancelableCallback animationCancelableCallback =
             new GoogleMap.CancelableCallback() {
 
@@ -188,12 +189,11 @@ public class PSMapActivity extends FragmentActivity
     @Override
     public void onProgressChange(int current, int max) {
         if (current == max) {
-            //Toast.makeText(getApplicationContext(), getString(R.string.finish), Toast.LENGTH_SHORT).show();
-            //bnp.setProgress(0);
+
         }
     }
 
-
+    //Function that begins the map animation between different locations
     public void animateMap() {
         animationIndex = 0;
         traceLocations = new ArrayList<LatLng>();
@@ -205,7 +205,7 @@ public class PSMapActivity extends FragmentActivity
                         .target(savedLocations.get(animationIndex))
                         .tilt(animationIndex < savedLocations.size() - 1 ? 90 : 0)
                         //.bearing((float)heading)
-                        .zoom(19)
+                        .zoom(18)
                         .build();
 
         mMap.addMarker(new MarkerOptions().position(savedLocations.get(animationIndex))
@@ -227,6 +227,7 @@ public class PSMapActivity extends FragmentActivity
 
     }
 
+    //Function that animates the progress bar
     public void animateBar() {
         curMaxProgress = Double.valueOf(progressValues.get(animationIndex));
 
@@ -286,7 +287,7 @@ public class PSMapActivity extends FragmentActivity
                 }
             }
 
-            if(viewAllEntries == false) {
+            if(isPlaceMarkerMode) {
 
                 redrawUI();
             }
@@ -500,7 +501,6 @@ public class PSMapActivity extends FragmentActivity
                         Log.d("MAP", "no saved locations");
                         Toast.makeText(getApplicationContext(), "No Saved Locations", Toast.LENGTH_SHORT);
 
-                        /*
                         CameraPosition cameraPosition = new CameraPosition.Builder()
                                 .target(new LatLng(curLat, curLong))
                                 .zoom(17)
@@ -508,7 +508,7 @@ public class PSMapActivity extends FragmentActivity
                                 .tilt(45)
                                 .build();
                         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                        */
+
                     }
 
                 } else {
@@ -549,11 +549,12 @@ public class PSMapActivity extends FragmentActivity
         }
     }
 
+
+    //Function that draws the stats corresponding to the current book
     public void drawMapStats() {
         TextView textTitle = (TextView) findViewById(R.id.textview_title);
         TextView textAuthor = (TextView) findViewById(R.id.textview_author);
         TextView textGenre = (TextView) findViewById(R.id.textview_genre);
-        Spinner genreSpinner = (Spinner) findViewById(R.id.add_book_genre);
         String[] genres = getResources().getStringArray(R.array.genre_array);
 
 
@@ -608,14 +609,14 @@ public class PSMapActivity extends FragmentActivity
     }
 
 
-
+    // Function for converting latlng into location objects
     private Location convertLatLngToLocation(LatLng latLng) {
         Location location = new Location("someLoc");
         location.setLatitude(latLng.latitude);
         location.setLongitude(latLng.longitude);
         return location;
     }
-
+    //Function that calculates bearing between objects
     private float bearingBetweenLatLngs(LatLng beginLatLng, LatLng endLatLng) {
         Location beginLocation = convertLatLngToLocation(beginLatLng);
         Location endLocation = convertLatLngToLocation(endLatLng);
@@ -651,7 +652,7 @@ public class PSMapActivity extends FragmentActivity
         }
     }
 
-
+    //Function that sets location list from a byte array
     public void setLocationListFromByteArray(byte[] bytePointArray, ArrayList<LatLng> list) {
 
         ByteBuffer byteBuffer = ByteBuffer.wrap(bytePointArray);
@@ -669,7 +670,7 @@ public class PSMapActivity extends FragmentActivity
         }
     }
 
-
+    //Function that starts the geocoding search call
     public void onSearchClick(View v) {
         search = (EditText) findViewById(R.id.edittext_search);
 
@@ -686,6 +687,7 @@ public class PSMapActivity extends FragmentActivity
 
         stopTrackingService();
     }
+    //Class to get human readable address
     public class GeoCoding extends AsyncTask<Void, Void, Void> {
         private String address;
         private final String TAG = GeoCoding.class.getSimpleName();
@@ -702,9 +704,6 @@ public class PSMapActivity extends FragmentActivity
             this.address = address;
         }
 
-        public String getArea() {
-            return Area;
-        }
 
         public void getAddress() {
             Address1 = "";
@@ -846,7 +845,7 @@ public class PSMapActivity extends FragmentActivity
 
 
 
-
+    //Function that fetches a bitmap from the web
     public class BitmapURLHelper extends AsyncTask<Void, Void, Void> {
         String imgURL;
         Bitmap bm;
