@@ -260,7 +260,7 @@ AsyncTask to add an exercise entry to the database
         long hours = Long.parseLong(mDurationHour.getText().toString());
         long endTime = startTime + 3600000 * hours + 60000 * minutes;
 
-        if(endTime > startTime)
+        if(endTime >= startTime)
             entry.addStartEndTime(startTime, endTime);
 
 
