@@ -26,6 +26,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:id="@+id/edit_book_new_progress"
             android:hint="Enter the furthest page read"
             android:inputType="number"/>
@@ -33,6 +34,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:text="@string/date_started_label"/>
 
         <DatePicker
@@ -45,6 +47,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:text="@string/time_started_label"
             />
 
