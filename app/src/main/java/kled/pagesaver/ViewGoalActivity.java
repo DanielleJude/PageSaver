@@ -16,20 +16,33 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class ViewGoalActivity extends AppCompatActivity
-        implements CustomRangeDialogFragment.CustomRangeDialogListener{
+        implements CustomRangeDialogFragment.CustomRangeDialogListener,
+        GoalUpdateDialogFragment.GoalUpdateDialogListener{
 
     private GoalsDbHelper goalsDataBase;
     Long entryId;
     public int increment;
+    public int goal;
+
     DialogFragment newFragment;
 
     @Override
     /* Update progress after user inputs custom range */
     public void onFinishEditDialog(int inputRange){
         increment = inputRange;
-        UpdateParams update_custom = new UpdateParams(entryId, increment);
+        UpdateParams update_custom = new UpdateParams(entryId, increment, goal);
         EntryUpdateWorker updateWorkerCustom = new EntryUpdateWorker();
         updateWorkerCustom.execute(update_custom);
+        finish();
+    }
+
+    @Override
+    /* Update goal after user inputs new goal for each day */
+    public void onFinishEditGoalUpdateDialog(int inputGoalUpdate){
+        goal = inputGoalUpdate;
+        UpdateParams update_goal = new UpdateParams(entryId, increment, goal);
+        EntryUpdateWorker updateWorkerGoal = new EntryUpdateWorker();
+        updateWorkerGoal.execute(update_goal);
         finish();
     }
 
@@ -60,6 +73,7 @@ public class ViewGoalActivity extends AppCompatActivity
         titleText.setText(intent.getStringExtra(GoalsDbHelper.KEY_TITLE));
         descriptionText.setText(intent.getStringExtra(GoalsDbHelper.KEY_DESCRIPTION));
         increment = Integer.parseInt(intent.getStringExtra(GoalsDbHelper.KEY_PAGES_INCREMENT));
+        goal = increment;
         incrementText.setText(intent.getStringExtra(GoalsDbHelper.KEY_PAGES_INCREMENT));
         progressText.setText(intent.getStringExtra(GoalsDbHelper.KEY_PROGRESS));
         totalText.setText(intent.getStringExtra(GoalsDbHelper.KEY_GOALS_PAGES));
@@ -88,7 +102,7 @@ public class ViewGoalActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.goal_daily_progress:
-                UpdateParams update_daily = new UpdateParams(entryId, increment);
+                UpdateParams update_daily = new UpdateParams(entryId, increment, goal);
                 EntryUpdateWorker updateWorkerDaily = new EntryUpdateWorker();
                 updateWorkerDaily.execute(update_daily);
                 finish();
@@ -96,6 +110,10 @@ public class ViewGoalActivity extends AppCompatActivity
             case R.id.goal_custom_progress:
                 newFragment = new CustomRangeDialogFragment();
                 newFragment.show(getSupportFragmentManager(), "customRange");
+                return true;
+            case R.id.goal_update:
+                newFragment = new GoalUpdateDialogFragment();
+                newFragment.show(getSupportFragmentManager(), "updateGoal");
                 return true;
             case R.id.goal_complete:
                 EntryDeleteWorker deleteWorker = new EntryDeleteWorker();
@@ -129,10 +147,12 @@ public class ViewGoalActivity extends AppCompatActivity
     private static class UpdateParams {
         Long id;
         int pagesRead;
+        int currentGoal;
 
-        UpdateParams(Long _id, int _pagesRead) {
+        UpdateParams(Long _id, int _pagesRead, int _currentGoal) {
             this.id = _id;
             this.pagesRead = _pagesRead;
+            this.currentGoal = _currentGoal;
         }
     }
 
@@ -143,7 +163,7 @@ public class ViewGoalActivity extends AppCompatActivity
     class EntryUpdateWorker extends AsyncTask<UpdateParams, Void, String> {
         @Override
         protected String doInBackground(UpdateParams... params) {
-            goalsDataBase.updateGoalEntry(params[0].id, params[0].pagesRead);
+            goalsDataBase.updateGoalEntry(params[0].id, params[0].pagesRead, params[0].currentGoal);
             return String.valueOf(params[0].id);
         }
 
