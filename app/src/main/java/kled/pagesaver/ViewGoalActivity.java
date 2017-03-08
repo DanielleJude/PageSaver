@@ -40,7 +40,7 @@ public class ViewGoalActivity extends AppCompatActivity
     /* Update goal after user inputs new goal for each day */
     public void onFinishEditGoalUpdateDialog(int inputGoalUpdate){
         goal = inputGoalUpdate;
-        UpdateParams update_goal = new UpdateParams(entryId, increment, goal);
+        UpdateParams update_goal = new UpdateParams(entryId, 0, goal);
         EntryUpdateWorker updateWorkerGoal = new EntryUpdateWorker();
         updateWorkerGoal.execute(update_goal);
         finish();
