@@ -9,6 +9,7 @@ import java.util.Set;
 
 /**
  * Created by eloisedietz on 2/24/17.
+ * A search class to search for
  */
 
 public class Search {
@@ -31,6 +32,9 @@ public class Search {
         words = keyWord.split(" ");
     }
 
+    /*
+    narrows the entries based on the search
+     */
     public Set<BookEntry> narrowEntries() {
         Set<BookEntry> set = new HashSet<>();
 
@@ -40,6 +44,9 @@ public class Search {
 
     }
 
+    /*
+        This class narrows the list of book entries by what the user searched
+     */
     public void narrowList(Set<BookEntry> set) {
         for(BookEntry entry : entries) {
             Map<String, String> entryMap = new HashMap<>();
@@ -48,6 +55,7 @@ public class Search {
             boolean foundFlag = false;
             for(String field : entryMap.values()) {
                 for(String word : words) {
+                    //searches won't be affected by capital vs. lowercase letters
                     if(field != null && field.toLowerCase().contains(word.toLowerCase())) {
                         set.add(entry);
                         foundFlag = true;
@@ -79,6 +87,10 @@ public class Search {
         }
     }
 
+    /*
+    The following classes search based on each information type saved in the database
+     */
+
     public ArrayList<BookEntry> findTitle(){
         ArrayList<BookEntry> result = new ArrayList<>();
         for(BookEntry entry : database.fetchEntries()) {
@@ -88,8 +100,6 @@ public class Search {
         }
         return result;
     }
-
-
 
 
     public ArrayList<BookEntry> findAuthor(){
@@ -143,6 +153,9 @@ public class Search {
         return result;
     }
 
+    /*
+    Converts genre from number to string
+     */
     public static ArrayList<String> getAllGenres(){
         ArrayList<String> result = new ArrayList<String>();
         result.add("Fiction");

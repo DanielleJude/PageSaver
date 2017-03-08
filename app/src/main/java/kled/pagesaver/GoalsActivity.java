@@ -26,6 +26,9 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/*
+Allows the user to set reading goals
+ */
 public class GoalsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<ArrayList<GoalEntry>> {
 

@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 /**
  * Created by Danielle on 2/24/17.
+ * This fragment shows a list of previous books
  */
 
 public class PreviousBooksFragment extends Fragment implements AdapterView.OnItemClickListener {
@@ -20,7 +21,8 @@ public class PreviousBooksFragment extends Fragment implements AdapterView.OnIte
     private ReadInEntriesAsyncTask task;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
         // Set up the adapter and the listView, but don't add database items.
         //They will be added in onResume.

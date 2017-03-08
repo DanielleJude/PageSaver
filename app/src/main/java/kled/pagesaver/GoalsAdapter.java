@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Kelley on 2/26/2017.
+ * An adapter view to see a list of all reading goals created
  */
 
 public class GoalsAdapter extends ArrayAdapter<GoalEntry> {

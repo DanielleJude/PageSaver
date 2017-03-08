@@ -23,6 +23,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.provider.Telephony;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -75,7 +76,8 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class PSMapActivity extends FragmentActivity implements OnMapReadyCallback,OnProgressBarListener {
+public class PSMapActivity extends FragmentActivity
+        implements OnMapReadyCallback,OnProgressBarListener {
 
     private GoogleMap mMap;
     private URL url;
@@ -119,6 +121,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
     private ArrayList<LatLng> pathTrack;
 
 
+    private CardView cView;
     private boolean doRedraw = true;
     private boolean isBound;
     ArrayList<LatLng> savedLocations;
@@ -164,7 +167,9 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                                         .build();
 
 
-                        mark = mMap.addMarker(new MarkerOptions().position(savedLocations.get(animationIndex)).title(booksAtLocation.get(animationIndex))
+                        mark = mMap.addMarker(new MarkerOptions()
+                                .position(savedLocations.get(animationIndex))
+                                .title(booksAtLocation.get(animationIndex))
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_book)));
 
 
@@ -207,7 +212,8 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                         .zoom(19)
                         .build();
 
-        mMap.addMarker(new MarkerOptions().position(savedLocations.get(animationIndex)).title(booksAtLocation.get(animationIndex))
+        mMap.addMarker(new MarkerOptions().position(savedLocations.get(animationIndex))
+                .title(booksAtLocation.get(animationIndex))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_book)));
 
 
@@ -255,7 +261,8 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
     private ServiceConnection mServiceConnection = new ServiceConnection() {
 
         public void onServiceConnected(ComponentName name, IBinder service) {
-            MyTrackingService.TrackingServiceBinder binder = (MyTrackingService.TrackingServiceBinder) service;
+            MyTrackingService.TrackingServiceBinder binder =
+                    (MyTrackingService.TrackingServiceBinder) service;
             myTrackingService = binder.getService();
 
         }
@@ -279,7 +286,7 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                     Bundle extras = intent.getExtras();
                     curLat = (double) extras.get("lat");
                     curLong = (double) extras.get("long");
-                    //Toast.makeText(getApplicationContext(), "Lat: " + String.valueOf(curLat) + " Long: " + String.valueOf(curLong),Toast.LENGTH_SHORT).show();
+
                 }
             }
 
@@ -324,6 +331,9 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                 bnp.setVisibility(View.INVISIBLE);
                 bookImage = (ImageView) findViewById(R.id.imageview_bitmap);
                 bookImage.setVisibility(View.INVISIBLE);
+                cView = (CardView) findViewById(R.id.card_view);
+                cView.setVisibility(View.INVISIBLE);
+
             }
             //If in view all entries mode, get the saved locations and their corresponding books for viewing
             if (extras.get(MAP_MODE).equals(VIEW_ALL_ENTRIES)) {
@@ -337,6 +347,8 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                 searchButton.setVisibility(View.INVISIBLE);
                 bookImage = (ImageView) findViewById(R.id.imageview_bitmap);
                 bookImage.setVisibility(View.INVISIBLE);
+                cView = (CardView) findViewById(R.id.card_view);
+                cView.setVisibility(View.INVISIBLE);
                 byte[] byteArray = extras.getByteArray(LOCATIONS_LIST);
 
                 if (byteArray != null)
@@ -361,7 +373,8 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
 
                 byte[] byteArray = extras.getByteArray(LOCATIONS_LIST);
                 if (byteArray != null)
-                    setLocationListFromByteArray(extras.getByteArray(LOCATIONS_LIST), savedLocations);
+                    setLocationListFromByteArray(extras.getByteArray(LOCATIONS_LIST),
+                            savedLocations);
                 booksAtLocation = extras.getStringArrayList(BOOKS_LIST);
                 progressValues = extras.getStringArrayList("values");
                 mapText = extras.getStringArrayList("mapText");
@@ -374,7 +387,8 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                     bookImage = (ImageView) findViewById(R.id.imageview_bitmap);
                     bookImage.setImageDrawable(getResources().getDrawable(R.drawable.icon_book));
 
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup
+                            .LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
                     params.setMargins(180,30,0,0);
                     params.height = 150;
                     params. width = 150;
@@ -476,13 +490,15 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                         .build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                Log.d("MapActivity", "Lat: " + String.valueOf(curLat) + " Long: " + String.valueOf(curLong));
+                Log.d("MapActivity", "Lat: " + String.valueOf(curLat) + " Long: "
+                        + String.valueOf(curLong));
             }
             //Else we are in one of the view entry modes therefore set markers for locations on the maps
             else {
                 if (savedLocations.size() == 0 || savedLocations == null) {
                     Log.d("MAP", "no saved locations");
-                    Toast.makeText(getApplicationContext(), "No Saved Locations", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), "No Saved Locations",
+                            Toast.LENGTH_SHORT);
                     CameraPosition cameraPosition = new CameraPosition.Builder()
                             .target(new LatLng(curLat, curLong))
                             .zoom(17)
@@ -498,14 +514,19 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                         if (savedLocations.size() > 0) {
                             if (booksAtLocation.size() > 0) {
 
-                                Log.d("map", "saved locations.size: " + String.valueOf(savedLocations.size()));
+                                Log.d("map", "saved locations.size: " +
+                                        String.valueOf(savedLocations.size()));
                                 for (LatLng l : savedLocations) {
-                                    mMap.addMarker(new MarkerOptions().position(l).title(booksAtLocation.get(count))
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_book)));
+                                    mMap.addMarker(new MarkerOptions().position(l)
+                                            .title(booksAtLocation.get(count))
+                                            .icon(BitmapDescriptorFactory.
+                                                    fromResource(R.drawable.icon_book)));
                                     count++;
                                 }
                                 CameraPosition cameraPosition = new CameraPosition.Builder()
-                                        .target(new LatLng(savedLocations.get(savedLocations.size() - 1).latitude, savedLocations.get(savedLocations.size() - 1).longitude))
+                                        .target(new LatLng(savedLocations
+                                                .get(savedLocations.size() - 1).latitude,
+                                                savedLocations.get(savedLocations.size() - 1).longitude))
                                         .zoom(15)
                                         .bearing(0)
                                         .tilt(45)
@@ -665,7 +686,8 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
         private final String TAG = GeoCoding.class.getSimpleName();
         JSONObject jsonObj;
         String URL;
-        private String Address1 = "", Address2 = "", City = "", State = "", Country = "", County = "", PIN = "", Area = "";
+        private String Address1 = "", Address2 = "", City = "", State = "", Country = "",
+                County = "", PIN = "", Area = "";
         private double latitude, longitude;
         HttpURLConnection connection;
         BufferedReader br;
@@ -704,7 +726,8 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
                         JSONArray mtypes = zero2.getJSONArray("types");
                         String Type = mtypes.getString(0);
 
-                        if (!TextUtils.isEmpty(long_name) || !long_name.equals(null) || long_name.length() > 0 || !long_name.equals("")) {
+                        if (!TextUtils.isEmpty(long_name) || !long_name.equals(null) ||
+                                long_name.length() > 0 || !long_name.equals("")) {
                             if (Type.equalsIgnoreCase("street_number")) {
                                 Address1 = long_name + " ";
                             } else if (Type.equalsIgnoreCase("route")) {
@@ -755,7 +778,8 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                StringBuilder urlStringBuilder = new StringBuilder("http://maps.google.com/maps/api/geocode/json");
+                StringBuilder urlStringBuilder =
+                        new StringBuilder("http://maps.google.com/maps/api/geocode/json");
                 urlStringBuilder.append("?address=" + URLEncoder.encode(address, "utf8"));
                 urlStringBuilder.append("&sensor=false");
                 URL = urlStringBuilder.toString();
@@ -921,7 +945,8 @@ public class PSMapActivity extends FragmentActivity implements OnMapReadyCallbac
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                StringBuilder urlStringBuilder = new StringBuilder("https://www.googleapis.com/books/v1/volumes?q=isbn:");
+                StringBuilder urlStringBuilder =
+                        new StringBuilder("https://www.googleapis.com/books/v1/volumes?q=isbn:");
                 urlStringBuilder.append(isbn);
                 URL = urlStringBuilder.toString();
                 Log.d(TAG, "URL: " + URL);

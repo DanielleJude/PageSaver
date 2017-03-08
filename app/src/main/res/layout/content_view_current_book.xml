@@ -22,47 +22,47 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_label"
-            android:textSize="14sp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/current_book_view_title"
             android:layout_marginBottom="10dp"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="italic"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/author_label"
-            android:textSize="14sp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/current_book_view_author"
             android:layout_marginBottom="10dp"
-            android:textSize="12sp"/>
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/genre_label"
-            android:textSize="14sp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/current_book_view_genre"
             android:layout_marginBottom="10dp"
-            android:textSize="12sp"/>
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/progress_label"
-            android:textSize="14sp"
+            android:textSize="16sp"
             />
 
         <TextView
@@ -70,17 +70,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
-            android:textSize="12sp"
+            android:textSize="14sp"
             />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="View Locations"
+            android:text="Locations"
+            android:layout_marginTop="300dp"
             android:layout_gravity="center_horizontal"
             android:onClick="onViewLocationClick"
-            android:id="@+id/view_locations_button"/>
-
+            android:background="@color/colorPrimary"
+            android:textColor="#FFFFFF"
+            android:id="@+id/view_locations_button"
+            android:shadowColor="#000000"
+            android:shadowRadius="2"/>
     </LinearLayout>
 
 </ScrollView>

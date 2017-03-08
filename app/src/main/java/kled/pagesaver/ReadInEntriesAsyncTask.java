@@ -4,12 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 
-/**
- * Created by Danielle on 2/24/17.
+
+/*
+A thread that reads in book entries from the database
  */
-
-
-
 public class ReadInEntriesAsyncTask extends AsyncTask<Void, BookEntry, Void> {
     public final static int PAST_MODE = 1;
     public final static int CURRENT_MODE = 0;

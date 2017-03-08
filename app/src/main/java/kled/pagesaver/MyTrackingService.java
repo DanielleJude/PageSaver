@@ -33,7 +33,9 @@ import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 
 
-
+/*
+Class allows the MapsView to track the user's location
+ */
 public class MyTrackingService extends Service implements LocationListener {
 
     private final IBinder binder = new TrackingServiceBinder();
@@ -144,13 +146,16 @@ public class MyTrackingService extends Service implements LocationListener {
 
 
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
             Log.d("TrackingService", "request location updates");
-            myLocationManager.requestLocationUpdates(myLocationManager.getBestProvider(criteria, true), 0, 15, MyTrackingService.this);
-            doUpdate(myLocationManager.getLastKnownLocation(myLocationManager.getBestProvider(criteria, true)));
+            myLocationManager.requestLocationUpdates(myLocationManager
+                    .getBestProvider(criteria, true), 0, 15, MyTrackingService.this);
+            doUpdate(myLocationManager.getLastKnownLocation(myLocationManager
+                    .getBestProvider(criteria, true)));
         }
         else{
             Log.d("TrackingService", "Permission not granted");
@@ -163,7 +168,8 @@ public class MyTrackingService extends Service implements LocationListener {
             intent.putExtra("update", true);
             intent.putExtra("lat", loc.getLatitude());
             intent.putExtra("long", loc.getLongitude());
-            Log.d("TrackingService", "Lat: " + String.valueOf(loc.getLatitude()) + " Long: " + String.valueOf(loc.getLongitude()));
+            Log.d("TrackingService", "Lat: " + String.valueOf(loc.getLatitude())
+                    + " Long: " + String.valueOf(loc.getLongitude()));
             this.sendBroadcast(intent);
         }
 

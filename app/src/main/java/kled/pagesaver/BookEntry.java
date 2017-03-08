@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by eloisedietz on 2/24/17.
+ * BookEntry defines information about a each new book stored in the datastore
+ *
  */
 
 public class BookEntry {
@@ -254,7 +255,8 @@ public class BookEntry {
         int timeNum = longArray.length / 2;
 
         for (int i = 0; i < timeNum; i++) {
-            StartEndTimes startEndTimes = new StartEndTimes(longArray[i * 2], longArray[i * 2 + 1]);
+            StartEndTimes startEndTimes =
+                    new StartEndTimes(longArray[i * 2], longArray[i * 2 + 1]);
             mTimeList.add(startEndTimes);
         }
     }
@@ -297,7 +299,8 @@ public class BookEntry {
         int pageNum = intArray.length / 2;
 
         for (int i = 0; i < pageNum; i++) {
-            StartEndPages startEndPages = new StartEndPages(intArray[i * 2], intArray[i * 2 + 1]);
+            StartEndPages startEndPages =
+                    new StartEndPages(intArray[i * 2], intArray[i * 2 + 1]);
             mPageList.add(startEndPages);
         }
     }

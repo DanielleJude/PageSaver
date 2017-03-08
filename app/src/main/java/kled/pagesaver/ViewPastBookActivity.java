@@ -19,6 +19,10 @@ import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 
+/*
+This class is used after a user clicks on a past book, it allows them to see previous
+information that they stored
+ */
 public class ViewPastBookActivity extends AppCompatActivity {
     public final static String ID_BUNDLE_KEY = "_idbundle key";
     private long mEntryId;
@@ -34,16 +38,20 @@ public class ViewPastBookActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         mEntryId = bundle.getLong(ID_BUNDLE_KEY);
 
-        entry = new BookEntryDbHelper(this).fetchEntryByIndex(mEntryId);
+        entry = new BookEntryDbHelper(this).fetchEntryByIndex(mEntryId); //fetch an entry based on ID
 
         setUpUI();
 
     }
 
+    /*
+    Set UI information based on entry information from database.
+     */
     public void setUpUI() {
         ((TextView)findViewById(R.id.past_book_view_title)).setText(entry.getTitle());
         ((TextView)findViewById(R.id.past_book_view_author)).setText(entry.getAuthor());
-        ((TextView)findViewById(R.id.past_book_view_genre)).setText(Search.getAllGenres().get(entry.getGenre()));
+        ((TextView)findViewById(R.id.past_book_view_genre)).setText(Search.getAllGenres()
+                .get(entry.getGenre()));
         ((RatingBar)findViewById(R.id.past_book_view_rating_bar)).setRating(entry.getRating());
         ((TextView)findViewById(R.id.past_book_view_comments)).setText(entry.getComment());
 

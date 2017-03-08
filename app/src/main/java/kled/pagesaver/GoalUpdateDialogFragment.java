@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 /**
  * Created by Yu Liu on 3/7/2017.
+ * This class allows users to update goals
  */
 
 public class GoalUpdateDialogFragment extends DialogFragment {

@@ -26,6 +26,9 @@ import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
+/*
+Analytics activity builds graphs based on the user's reading habits
+ */
 public class AnalyticsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<ArrayList<BookEntry>> {
 
@@ -458,6 +461,9 @@ public class AnalyticsActivity extends AppCompatActivity implements
         return loadBookEntries;
     }
 
+    /*
+    Initializes building graphs on Analytics page
+     */
     @Override
     public void onLoadFinished(Loader<ArrayList<BookEntry>> loader, ArrayList<BookEntry> data) {
         getPoints(data);
