@@ -194,7 +194,10 @@
             android:layout_height="wrap_content"
             android:text="@string/add_location_label"
             android:layout_gravity="center_horizontal"
-            android:onClick="onAddLocationClick"/>
+            android:onClick="onAddLocationClick"
+            android:background="@color/colorPrimary"
+            android:textColor="#FFFFFF"
+            android:padding="10dp"/>
 
 
     </LinearLayout>

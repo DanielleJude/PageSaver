@@ -93,10 +93,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:onClick="onShowMapViewClick"
-            android:text="MapView"
+            android:text="RoadMap"
             android:background="@color/colorPrimary"
-            android:layout_marginTop="200dp"
             android:textColor="#FFFFFF"
+            android:layout_marginTop="200dp"
+
             android:id="@+id/show_map_view_button"/>
 
 

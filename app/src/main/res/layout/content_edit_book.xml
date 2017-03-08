@@ -110,6 +110,11 @@
             android:text="@string/add_location_label"
             android:layout_gravity="center_horizontal"
             android:onClick="onAddLocationClick"
+            android:layout_marginLeft="3dp"
+            android:background="@color/colorPrimary"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"
             />
 
         <GridLayout
@@ -126,7 +131,10 @@
                 android:id="@+id/edit_book_save_button"
                 android:onClick="onSaveButtonClicked"
                 android:layout_column="0"
-                android:layout_columnWeight="1"/>
+                android:layout_columnWeight="1"
+                android:layout_marginLeft="3dp"
+                android:background="#25A2CC"
+                android:textColor="#FFFFFF"/>
 
             <Button
                 android:layout_height="wrap_content"
@@ -135,7 +143,10 @@
                 android:onClick="onCancelButtonClicked"
                 android:text="Cancel"
                 android:layout_column="1"
-                android:layout_columnWeight="1"/>
+                android:layout_columnWeight="1"
+                android:layout_marginLeft="3dp"
+                android:background="#25A2CC"
+                android:textColor="#FFFFFF"/>
         </GridLayout>
 
 
