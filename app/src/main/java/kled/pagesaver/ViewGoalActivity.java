@@ -21,7 +21,6 @@ public class ViewGoalActivity extends AppCompatActivity
 
     private GoalsDbHelper goalsDataBase;
     Long entryId;
-    public int increment;
     public int goal;
     public int progress;
 
@@ -30,8 +29,8 @@ public class ViewGoalActivity extends AppCompatActivity
     @Override
     /* Update progress after user inputs custom range */
     public void onFinishEditDialog(int inputRange){
-        increment = inputRange;
-        UpdateParams update_custom = new UpdateParams(entryId, increment, goal);
+        progress = inputRange;
+        UpdateParams update_custom = new UpdateParams(entryId, progress, goal);
         EntryUpdateWorker updateWorkerCustom = new EntryUpdateWorker();
         updateWorkerCustom.execute(update_custom);
         finish();
@@ -73,8 +72,7 @@ public class ViewGoalActivity extends AppCompatActivity
         // Set text according to entry
         titleText.setText(intent.getStringExtra(GoalsDbHelper.KEY_TITLE));
         descriptionText.setText(intent.getStringExtra(GoalsDbHelper.KEY_DESCRIPTION));
-        increment = Integer.parseInt(intent.getStringExtra(GoalsDbHelper.KEY_PAGES_INCREMENT));
-        goal = increment;
+        goal = Integer.parseInt(intent.getStringExtra(GoalsDbHelper.KEY_PAGES_INCREMENT));
         incrementText.setText(intent.getStringExtra(GoalsDbHelper.KEY_PAGES_INCREMENT));
         progress = Integer.parseInt(intent.getStringExtra(GoalsDbHelper.KEY_PROGRESS));
         progressText.setText(intent.getStringExtra(GoalsDbHelper.KEY_PROGRESS));
