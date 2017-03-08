@@ -142,7 +142,7 @@
                 android:layout_centerHorizontal="true"
                 android:textSize="15dp"
                 android:textStyle="normal"
-                android:layout_marginLeft="63dp"/>
+                />
         </LinearLayout>
 
 
