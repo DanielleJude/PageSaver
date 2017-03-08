@@ -76,11 +76,15 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="View Locations"
+            android:text="Locations"
+            android:layout_marginTop="300dp"
             android:layout_gravity="center_horizontal"
             android:onClick="onViewLocationClick"
-            android:id="@+id/view_locations_button"/>
-
+            android:background="@color/colorPrimary"
+            android:textColor="#FFFFFF"
+            android:id="@+id/view_locations_button"
+            android:shadowColor="#000000"
+            android:shadowRadius="2"/>
     </LinearLayout>
 
 </ScrollView>
