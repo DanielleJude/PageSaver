@@ -98,11 +98,9 @@ public class GoalsDbHelper extends SQLiteOpenHelper {
     public long updateGoalEntry(long id, int newProgress, int newGoal) {
         GoalEntry entry = fetchEntryByIndex(id);
 
-        /* if book has not been completed, set current progress to be
-         * the sum of the previous progress and the pages completed today
-         * if book has been completed, set current progress to be total page
+        /* if book has not been completed, set current progress to be the user input number;
+         * otherwise if book has been completed, set current progress to be total page
          */
-
         if (newProgress > 0) {
             if (newProgress >= entry.getPagesToComplete()) {
                 entry.setReadPages(entry.getPagesToComplete());
