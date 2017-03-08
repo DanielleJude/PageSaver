@@ -94,7 +94,7 @@ public class GoalsDbHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public long updateGoalEntry(long id, int pagesReadToday) {
+    public long updateGoalEntry(long id, int pagesReadToday, int newGoal) {
         GoalEntry entry = fetchEntryByIndex(id);
 
         /* if book has not been completed, set current progress to be
@@ -113,6 +113,9 @@ public class GoalsDbHelper extends SQLiteOpenHelper {
         else {
             entry.setReadPages(0);
         }
+
+        // set new goal
+        entry.setDailyPages(newGoal);
 
         /* If goal starting page changes, update goal ending page accordingly */
         int newGoalEndPage = entry.getGoalStartPage() + entry.getDailyPages() - 1;
@@ -195,5 +198,48 @@ public class GoalsDbHelper extends SQLiteOpenHelper {
         entry.setEndTime(cursor.getLong(cursor.getColumnIndex(KEY_END_TIME)));
 
         return entry;
+    }
+
+    // update goal range for next day at midnight
+    public void updateNextDayGoal() {
+        ArrayList<GoalEntry> entryList = new ArrayList<GoalEntry>();
+        entryList = fetchEntries();
+        for(int i=0;i<entryList.size();i++){
+            int totalPage = entryList.get(i).getPagesToComplete();
+
+            // update start page
+            int oldStartPage = entryList.get(i).getGoalStartPage();
+            int newStartPage = oldStartPage + entryList.get(i).getDailyPages();
+            if (newStartPage < totalPage) {
+                entryList.get(i).setGoalStartPage(newStartPage);
+            } else {
+                entryList.get(i).setGoalStartPage(totalPage);
+            }
+
+            // update end page
+            int newEndPage = newStartPage + entryList.get(i).getDailyPages() - 1;
+            if (newEndPage < totalPage) {
+                entryList.get(i).setGoalEndPage(newEndPage);
+            } else {
+                entryList.get(i).setGoalEndPage(totalPage);
+            }
+
+            ContentValues value = new ContentValues();
+
+            value.put(KEY_ID, entryList.get(i).getId());
+            value.put(KEY_TITLE, entryList.get(i).getBookTitle());
+            value.put(KEY_DESCRIPTION, entryList.get(i).getDescription());
+            value.put(KEY_GOALS_PAGES, entryList.get(i).getPagesToComplete());
+            value.put(KEY_PAGES_INCREMENT, entryList.get(i).getDailyPages());
+            value.put(KEY_PROGRESS, entryList.get(i).getReadPages());
+            value.put(KEY_GOAL_START, entryList.get(i).getGoalStartPage());
+            value.put(KEY_GOAL_END, entryList.get(i).getGoalEndPage());
+            value.put(KEY_END_TIME, entryList.get(i).getEndTime());
+
+            SQLiteDatabase database = getWritableDatabase();
+            database.update(TABLE_NAME_ENTRIES, value, KEY_ID + "=" +
+                    entryList.get(i).getId(), null);
+            database.close();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package kled.pagesaver;
 
+import android.app.AlarmManager;
 import android.app.LoaderManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -23,6 +24,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class GoalsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<ArrayList<GoalEntry>> {
@@ -33,7 +35,12 @@ public class GoalsActivity extends AppCompatActivity implements
 
     LoaderManager loaderManager;
 
-    private NotificationManager mNotificationManager;
+    public NotificationManager mGoalNotificationManager;
+
+    private AlarmManager alarmManager;
+    private PendingIntent alarmIntent;
+
+    public static int GOAL_NOTIFICATION_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +94,21 @@ public class GoalsActivity extends AppCompatActivity implements
        if (entries != null) {
             setupNotification();
        }
+
+       /* Set an alarm to update goal range every day at midnight
+        */
+        alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, GoalAlarmReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+
+        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
+                 AlarmManager.INTERVAL_DAY, alarmIntent);
     }
 
     // Toolbar to add
@@ -162,8 +184,8 @@ public class GoalsActivity extends AppCompatActivity implements
                 .setContentText(
                         getString(R.string.goal_reminder_notification_content))
                 .setSmallIcon(R.drawable.icon_book).setContentIntent(pi).build();
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mGoalNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
-        mNotificationManager.notify(0, notification);
+        mGoalNotificationManager.notify(GOAL_NOTIFICATION_ID, notification);
     }
 }
