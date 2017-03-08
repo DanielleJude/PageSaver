@@ -23,6 +23,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.provider.Telephony;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -120,6 +121,7 @@ public class PSMapActivity extends FragmentActivity
     private ArrayList<LatLng> pathTrack;
 
 
+    private CardView cView;
     private boolean doRedraw = true;
     private boolean isBound;
     ArrayList<LatLng> savedLocations;
@@ -329,6 +331,9 @@ public class PSMapActivity extends FragmentActivity
                 bnp.setVisibility(View.INVISIBLE);
                 bookImage = (ImageView) findViewById(R.id.imageview_bitmap);
                 bookImage.setVisibility(View.INVISIBLE);
+                cView = (CardView) findViewById(R.id.card_view);
+                cView.setVisibility(View.INVISIBLE);
+
             }
             //If in view all entries mode, get the saved locations and their corresponding books for viewing
             if (extras.get(MAP_MODE).equals(VIEW_ALL_ENTRIES)) {
@@ -342,6 +347,8 @@ public class PSMapActivity extends FragmentActivity
                 searchButton.setVisibility(View.INVISIBLE);
                 bookImage = (ImageView) findViewById(R.id.imageview_bitmap);
                 bookImage.setVisibility(View.INVISIBLE);
+                cView = (CardView) findViewById(R.id.card_view);
+                cView.setVisibility(View.INVISIBLE);
                 byte[] byteArray = extras.getByteArray(LOCATIONS_LIST);
 
                 if (byteArray != null)
