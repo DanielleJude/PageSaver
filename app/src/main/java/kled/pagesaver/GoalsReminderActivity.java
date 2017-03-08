@@ -1,15 +1,21 @@
 package kled.pagesaver;
 
 import android.app.LoaderManager;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+
+import static kled.pagesaver.GoalsActivity.GOAL_NOTIFICATION_ID;
 
 /**
  * Created by Yu Liu on 3/6/2017.
@@ -78,6 +84,28 @@ public class GoalsReminderActivity extends AppCompatActivity implements
     public void onResume() {
         super.onResume();
         updateEntries();
+    }
+
+    // Make sure delete option is in toolbar
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.goal_reminder_menu, menu);
+        return true;
+    }
+
+    // Update Goal
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.stop_reminder:
+                // cancel goal reminder notification
+                NotificationManager nManager = (NotificationManager)
+                        getSystemService(NOTIFICATION_SERVICE);
+                nManager.cancel(GOAL_NOTIFICATION_ID);
+                finish();
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**

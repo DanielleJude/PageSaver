@@ -35,10 +35,12 @@ public class GoalsActivity extends AppCompatActivity implements
 
     LoaderManager loaderManager;
 
-    private NotificationManager mNotificationManager;
+    public NotificationManager mGoalNotificationManager;
 
     private AlarmManager alarmManager;
     private PendingIntent alarmIntent;
+
+    public static int GOAL_NOTIFICATION_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,8 +184,8 @@ public class GoalsActivity extends AppCompatActivity implements
                 .setContentText(
                         getString(R.string.goal_reminder_notification_content))
                 .setSmallIcon(R.drawable.icon_book).setContentIntent(pi).build();
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mGoalNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
-        mNotificationManager.notify(0, notification);
+        mGoalNotificationManager.notify(GOAL_NOTIFICATION_ID, notification);
     }
 }
